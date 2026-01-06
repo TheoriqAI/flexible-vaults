@@ -9,7 +9,7 @@ import "./tqETHLibrary.sol";
 import "../common/ProofLibrary.sol";
 
 /// @notice Script to generate Aave operations JSON files for tqETH subvaults
-/// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generateProdCurator()"
+/// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generateProdCurator(uint256)" <subvaultIndex>
 contract GenerateAaveOpsJSON is Script, Test {
     // Addresses from tqETH.s.sol
     address public curator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
@@ -19,22 +19,10 @@ contract GenerateAaveOpsJSON is Script, Test {
     address public constant VAULT_PROD = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
     address public constant VAULT_PREPROD = 0x2669a8B27B6f957ddb92Dc0ebdec1f112E6079E4;
 
-    /// @notice Generate JSON for prod vault, curator
-    function generateProdCurator() external {
-        Vault vault = Vault(payable(VAULT_PROD));
-        address subvault = vault.subvaultAt(0); // Change index as needed: 0, 1, 2, etc.
-
-        generateJSON("ethereum:tqETH:prod:aaveOps", subvault, curator);
-    }
-
-    /// @notice Generate JSON for pre-prod vault, curator (default subvault 0)
-    function generatePreProdCurator() external {
-        generatePreProdCuratorWithIndex(0);
-    }
-
     /// @notice Generate JSON for pre-prod vault, curator with specific subvault index
+    /// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generatePreProdCurator(uint256)" <subvaultIndex>
     /// @param subvaultIndex The index of the subvault (0, 1, 2, etc.)
-    function generatePreProdCuratorWithIndex(uint256 subvaultIndex) public {
+    function generatePreProdCurator(uint256 subvaultIndex) public {
         Vault vault = Vault(payable(VAULT_PREPROD));
         address subvault = vault.subvaultAt(subvaultIndex);
 
@@ -45,8 +33,9 @@ contract GenerateAaveOpsJSON is Script, Test {
     }
 
     /// @notice Generate JSON for prod vault, curator with specific subvault index
+    /// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generateProdCurator(uint256)" <subvaultIndex>
     /// @param subvaultIndex The index of the subvault (0, 1, 2, etc.)
-    function generateProdCuratorWithIndex(uint256 subvaultIndex) public {
+    function generateProdCurator(uint256 subvaultIndex) public {
         Vault vault = Vault(payable(VAULT_PROD));
         address subvault = vault.subvaultAt(subvaultIndex);
 
@@ -56,30 +45,30 @@ contract GenerateAaveOpsJSON is Script, Test {
         generateJSON(title, subvault, curator);
     }
 
-    /// @notice Generate JSON for prod vault, agent1
-    function generateProdAgent1() external {
+    /// @notice Generate JSON for prod vault, agent1 with specific subvault index
+    /// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generateProdAgent1(uint256)" <subvaultIndex>
+    /// @param subvaultIndex The index of the subvault (0, 1, 2, etc.)
+    function generateProdAgent1(uint256 subvaultIndex) public {
         Vault vault = Vault(payable(VAULT_PROD));
-        address subvault = vault.subvaultAt(0); // Change index as needed
+        address subvault = vault.subvaultAt(subvaultIndex);
 
-        generateJSON("ethereum:tqETH:prod:aaveOps:agent1", subvault, agent1);
+        string memory title = string(
+            abi.encodePacked("ethereum:tqETH:prod:sv", vm.toString(subvaultIndex), ":aaveOps:agent1")
+        );
+        generateJSON(title, subvault, agent1);
     }
 
-    /// @notice Generate JSON for pre-prod vault, agent1
-    function generatePreProdAgent1() external {
+    /// @notice Generate JSON for pre-prod vault, agent1 with specific subvault index
+    /// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generatePreProdAgent1(uint256)" <subvaultIndex>
+    /// @param subvaultIndex The index of the subvault (0, 1, 2, etc.)
+    function generatePreProdAgent1(uint256 subvaultIndex) public {
         Vault vault = Vault(payable(VAULT_PREPROD));
-        address subvault = vault.subvaultAt(0); // Change index as needed
+        address subvault = vault.subvaultAt(subvaultIndex);
 
-        generateJSON("ethereum:tqETH:preprod:aaveOps:agent1", subvault, agent1);
-    }
-
-    /// @notice (LEGACY) Use generateProdCurator() instead
-    function generateForCurator() external {
-        this.generateProdCurator();
-    }
-
-    /// @notice (LEGACY) Use generateProdAgent1() instead
-    function generateForAgent1() external {
-        this.generateProdAgent1();
+        string memory title = string(
+            abi.encodePacked("ethereum:tqETH:preprod:sv", vm.toString(subvaultIndex), ":aaveOps:agent1")
+        );
+        generateJSON(title, subvault, agent1);
     }
 
     /// @notice Generate JSON for a specific caller
@@ -123,9 +112,6 @@ contract GenerateAaveOpsJSON is Script, Test {
     ) public {
         require(subvault != address(0), "Subvault address not set");
 
-        ProtocolDeployment memory $ = Constants.protocolDeployment();
-
-        // Create custom Aave info
         AaveLibrary.Info memory aaveInfo = tqETHLibrary.getAaveInfo(
             subvault,
             subvaultName,
@@ -135,94 +121,39 @@ contract GenerateAaveOpsJSON is Script, Test {
             categoryId
         );
 
-        // Generate proofs
-        IVerifier.VerificationPayload[] memory leaves = new IVerifier.VerificationPayload[](30);
-        uint256 iterator = 0;
+        _generateCustomJSONInternal(title, aaveInfo, collaterals.length + loans.length);
+    }
 
-        iterator = ArraysLibrary.insert(
+    function _generateCustomJSONInternal(
+        string memory title,
+        AaveLibrary.Info memory aaveInfo,
+        uint256 assetCount
+    ) internal {
+        ProtocolDeployment memory $ = Constants.protocolDeployment();
+
+        // Formula: assetCount * 3 + 1 setUserEMode
+        uint256 expectedOps = assetCount * 3 + 1;
+
+        IVerifier.VerificationPayload[] memory leaves = new IVerifier.VerificationPayload[](expectedOps);
+        uint256 iterator = ArraysLibrary.insert(
             leaves,
             AaveLibrary.getAaveProofs($.bitmaskVerifier, aaveInfo),
-            iterator
+            0
         );
-
-        // Add deposit/redeem operations
-        CoreVaultLibrary.Info memory coreVaultInfo = CoreVaultLibrary.Info({
-            subvault: subvault,
-            subvaultName: subvaultName,
-            curator: caller,
-            vault: Constants.TQETH,
-            depositQueues: tqETHLibrary.getDepositQueues(),
-            redeemQueues: tqETHLibrary.getRedeemQueues()
-        });
-        iterator = ArraysLibrary.insert(
-            leaves,
-            CoreVaultLibrary.getCoreVaultProofs($.bitmaskVerifier, coreVaultInfo),
-            iterator
-        );
-
-        assembly {
-            mstore(leaves, iterator)
-        }
+        assembly { mstore(leaves, iterator) }
 
         (bytes32 merkleRoot, IVerifier.VerificationPayload[] memory leavesWithProofs) =
             ProofLibrary.generateMerkleProofs(leaves);
 
-        // Generate descriptions
-        string[] memory descriptions = new string[](30);
-        iterator = 0;
+        string[] memory descriptions = new string[](expectedOps);
+        iterator = ArraysLibrary.insert(descriptions, AaveLibrary.getAaveDescriptions(aaveInfo), 0);
+        assembly { mstore(descriptions, iterator) }
 
-        iterator = ArraysLibrary.insert(
-            descriptions,
-            AaveLibrary.getAaveDescriptions(aaveInfo),
-            iterator
-        );
-
-        iterator = ArraysLibrary.insert(
-            descriptions,
-            CoreVaultLibrary.getCoreVaultDescriptions(coreVaultInfo),
-            iterator
-        );
-
-        assembly {
-            mstore(descriptions, iterator)
-        }
-
-        // Store to JSON file
         ProofLibrary.storeProofs(title, merkleRoot, leavesWithProofs, descriptions);
 
-        console.log("Generated custom JSON file:", string(abi.encodePacked("./scripts/jsons/", title, ".json")));
+        console.log("Generated custom JSON file for:", title);
         console.log("Merkle root:", vm.toString(merkleRoot));
         console.log("Number of operations:", leavesWithProofs.length);
     }
 
-    /// @notice Example: Generate JSON with all 5 assets you mentioned
-    function generateAllAssetsExample() external {
-        address subvault = address(0); // TODO: Replace with actual subvault address
-
-        // Collaterals: WETH, wstETH, USDC, USDT, USDE
-        address[] memory collaterals = new address[](5);
-        collaterals[0] = Constants.WETH;
-        collaterals[1] = Constants.WSTETH;
-        collaterals[2] = Constants.USDC;
-        collaterals[3] = Constants.USDT;
-        collaterals[4] = Constants.USDE;
-
-        // Loans: WETH, wstETH, USDC, USDT, USDE (all assets for max flexibility)
-        address[] memory loans = new address[](5);
-        loans[0] = Constants.WETH;
-        loans[1] = Constants.WSTETH;
-        loans[2] = Constants.USDC;
-        loans[3] = Constants.USDT;
-        loans[4] = Constants.USDE;
-
-        generateCustomJSON(
-            "ethereum:tqETH:aaveOpsAll",
-            subvault,
-            "aaveOpsAll",
-            curator,
-            collaterals,
-            loans,
-            0 // No eMode - category 0
-        );
-    }
 }
