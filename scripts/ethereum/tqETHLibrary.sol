@@ -267,7 +267,7 @@ library tqETHLibrary {
     }
 
     /// @notice Helper to get Aave info for tqETH Aave operations subvault
-    /// @dev Configured for WETH, wstETH, USDE as collateral; USDC, USDT, USDE as loans
+    /// @dev Configured for WETH, wstETH, USDE as collateral; WETH, wstETH, USDC, USDT, USDE as loans
     /// @param subvault The subvault address
     /// @param curator The curator address
     /// @return AaveLibrary.Info struct
@@ -278,11 +278,13 @@ library tqETHLibrary {
         collaterals[1] = Constants.WSTETH;
         collaterals[2] = Constants.USDE;
 
-        // USDC, USDT, USDE can be borrowed (borrow/repay)
-        address[] memory loans = new address[](3);
-        loans[0] = Constants.USDC;
-        loans[1] = Constants.USDT;
-        loans[2] = Constants.USDE;
+        // WETH, WSTETH,USDC, USDT, USDE can be borrowed (borrow/repay)
+        address[] memory loans = new address[](5);
+        loans[0] = Constants.WETH;
+        loans[1] = Constants.WSTETH;
+        loans[2] = Constants.USDC;
+        loans[3] = Constants.USDT;
+        loans[4] = Constants.USDE;
 
         return AaveLibrary.Info({
             subvault: subvault,
@@ -309,8 +311,8 @@ library tqETHLibrary {
     {
         ProtocolDeployment memory $ = Constants.protocolDeployment();
 
-        // Aave operations: (3 collaterals + 3 loans) * 3 operations each + 1 setUserEMode = 19
-        leaves = new IVerifier.VerificationPayload[](20);
+        // Aave operations: (3 collaterals + 5 loans) * 3 operations each + 1 setUserEMode = 25
+        leaves = new IVerifier.VerificationPayload[](26);
         uint256 iterator = 0;
 
         // Add Aave operations (supply, withdraw, borrow, repay for all assets + setUserEMode)
@@ -340,7 +342,7 @@ library tqETHLibrary {
         returns (string[] memory descriptions)
     {
         vault; // silence unused variable warning
-        descriptions = new string[](20);
+        descriptions = new string[](26);
         uint256 iterator = 0;
 
         AaveLibrary.Info memory aaveInfo = getAaveOperationsInfo(subvault, curator);
