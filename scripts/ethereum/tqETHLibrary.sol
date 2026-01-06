@@ -30,7 +30,16 @@ library tqETHLibrary {
             subvaultName: "subvault0",
             swapModule: swapModule,
             curators: curators,
-            assets: ArraysLibrary.makeAddressArray(abi.encode(Constants.ETH, Constants.WETH, Constants.WSTETH))
+            assets: ArraysLibrary.makeAddressArray(
+                abi.encode(
+                    Constants.ETH,
+                    Constants.WETH,
+                    Constants.WSTETH,
+                    Constants.USDC,
+                    Constants.USDT,
+                    Constants.USDE
+                )
+            )
         });
     }
 
