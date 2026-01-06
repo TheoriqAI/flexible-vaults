@@ -278,11 +278,13 @@ library tqETHLibrary {
         collaterals[1] = Constants.WSTETH;
         collaterals[2] = Constants.USDE;
 
-        // USDC, USDT, USDE can be borrowed (borrow/repay)
-        address[] memory loans = new address[](3);
-        loans[0] = Constants.USDC;
-        loans[1] = Constants.USDT;
-        loans[2] = Constants.USDE;
+        // WETH, WSTETH,USDC, USDT, USDE can be borrowed (borrow/repay)
+        address[] memory loans = new address[](5);
+        loans[0] = Constants.WETH;
+        loans[1] = Constants.WSTETH;
+        loans[2] = Constants.USDC;
+        loans[3] = Constants.USDT;
+        loans[4] = Constants.USDE;
 
         return AaveLibrary.Info({
             subvault: subvault,
