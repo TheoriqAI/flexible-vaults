@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD:scripts/jsons/ethereum:tqETHPreProd:subvault3.json
   "title": "ethereum:tqETHPreProd:subvault3",
-=======
-  "title": "ethereum:tqETH:preprod:sv3:aaveOps",
->>>>>>> c1905ca (feat: add more borrow assets):scripts/jsons/ethereum:tqETH:preprod:sv3:aaveOps.json
   "merkle_root": "0x8f05b50810959b23dc0e6979551ebcfc1bb1b348050c77637e5279fc6b0984bc",
   "merkle_proofs": [
     {
