@@ -21,7 +21,7 @@ contract GenerateSwapModuleJSON is Script, Test {
 
     // SwapModule addresses
     address public constant SWAP_MODULE_PREPROD = 0x17aeAbfD3cB214A8757bF07D2E248d526c8C4809;
-    address public constant SWAP_MODULE_PROD = 0x17aeAbfD3cB214A8757bF07D2E248d526c8C4809; // TODO: Update with prod address
+    address public constant SWAP_MODULE_PROD = 0x1cb790068c9a08392BeA1E47Ca53396fA7811BB6;
 
     /// @notice Generate JSON for preprod subvault0 (swap module operations)
     function generatePreProd() public {
