@@ -30,7 +30,16 @@ library tqETHLibrary {
             subvaultName: "subvault0",
             swapModule: swapModule,
             curators: curators,
-            assets: ArraysLibrary.makeAddressArray(abi.encode(Constants.ETH, Constants.WETH, Constants.WSTETH))
+            assets: ArraysLibrary.makeAddressArray(
+                abi.encode(
+                    Constants.ETH,
+                    Constants.WETH,
+                    Constants.WSTETH,
+                    Constants.USDC,
+                    Constants.USDT,
+                    Constants.USDE
+                )
+            )
         });
     }
 
@@ -267,7 +276,7 @@ library tqETHLibrary {
     }
 
     /// @notice Helper to get Aave info for tqETH Aave operations subvault
-    /// @dev Configured for WETH, wstETH, USDE as collateral; USDC, USDT, USDE as loans
+    /// @dev Configured for WETH, wstETH, USDE as collateral; WETH, wstETH, USDC, USDT, USDE as loans
     /// @param subvault The subvault address
     /// @param curator The curator address
     /// @return AaveLibrary.Info struct
@@ -311,10 +320,8 @@ library tqETHLibrary {
     {
         ProtocolDeployment memory $ = Constants.protocolDeployment();
 
-        // Allocate enough space for Aave operations + deposit/redeem operations
-        // Aave: (2 collaterals + 3 loans) * 3 operations each + 1 setUserEMode = 16
-        // CoreVault: estimate ~10 for deposit/redeem queues
-        leaves = new IVerifier.VerificationPayload[](30);
+        // Aave operations: (3 collaterals + 5 loans) * 3 operations each + 1 setUserEMode = 25
+        leaves = new IVerifier.VerificationPayload[](26);
         uint256 iterator = 0;
 
         // Add Aave operations (supply, withdraw, borrow, repay for all assets + setUserEMode)
@@ -324,9 +331,6 @@ library tqETHLibrary {
             AaveLibrary.getAaveProofs($.bitmaskVerifier, aaveInfo),
             iterator
         );
-
-        // Note: Deposit/redeem operations are NOT included here
-        // If you need them, add them separately with the correct deposit/redeem queues for your vault
 
         // Trim array to actual size
         assembly {
@@ -338,7 +342,7 @@ library tqETHLibrary {
 
     /// @notice Get descriptions for Aave operations
     /// @param subvault The subvault address
-    /// @param vault The main vault address
+    /// @param vault The main vault address (unused, kept for interface compatibility)
     /// @param curator The curator address
     /// @return descriptions Array of human-readable descriptions
     function getAaveOperationsDescriptions(address subvault, address vault, address curator)
@@ -346,19 +350,16 @@ library tqETHLibrary {
         view
         returns (string[] memory descriptions)
     {
-        descriptions = new string[](30);
+        vault; // silence unused variable warning
+        descriptions = new string[](26);
         uint256 iterator = 0;
 
-        // Add Aave descriptions
         AaveLibrary.Info memory aaveInfo = getAaveOperationsInfo(subvault, curator);
         iterator = ArraysLibrary.insert(
             descriptions,
             AaveLibrary.getAaveDescriptions(aaveInfo),
             iterator
         );
-
-        // Note: Deposit/redeem descriptions are NOT included here
-        // If you need them, add them separately with the correct deposit/redeem queues for your vault
 
         // Trim array to actual size
         assembly {
@@ -368,59 +369,22 @@ library tqETHLibrary {
 
     /// @notice Get test calls for Aave operations
     /// @param subvault The subvault address
-    /// @param vault The main vault address
     /// @param curator The curator address
     /// @param leaves The verification payloads
     /// @return calls SubvaultCalls struct with test cases
     function getAaveOperationsSubvaultCalls(
         address subvault,
-        address vault,
         address curator,
         IVerifier.VerificationPayload[] memory leaves
-    ) internal view returns (SubvaultCalls memory calls) {
+    ) internal pure returns (SubvaultCalls memory calls) {
         calls.payloads = leaves;
         calls.calls = new Call[][](leaves.length);
-        uint256 iterator = 0;
 
-        // Add Aave test calls
         AaveLibrary.Info memory aaveInfo = getAaveOperationsInfo(subvault, curator);
-        iterator = ArraysLibrary.insert(
+        ArraysLibrary.insert(
             calls.calls,
             AaveLibrary.getAaveCalls(aaveInfo),
-            iterator
+            0
         );
-
-        // Add deposit/redeem test calls
-        CoreVaultLibrary.Info memory coreVaultInfo = CoreVaultLibrary.Info({
-            subvault: subvault,
-            subvaultName: "aaveOps",
-            curator: curator,
-            vault: vault,
-            depositQueues: getDepositQueues(),
-            redeemQueues: getRedeemQueues()
-        });
-        iterator = ArraysLibrary.insert(
-            calls.calls,
-            CoreVaultLibrary.getCoreVaultCalls(coreVaultInfo),
-            iterator
-        );
-    }
-
-    /// @notice Get deposit queues for tqETH vault
-    /// @return Array of deposit queue addresses
-    function getDepositQueues() internal pure returns (address[] memory) {
-        address[] memory queues = new address[](3);
-        queues[0] = Constants.STRETH_DEPOSIT_QUEUE_ETH;
-        queues[1] = Constants.STRETH_DEPOSIT_QUEUE_WETH;
-        queues[2] = Constants.STRETH_DEPOSIT_QUEUE_WSTETH;
-        return queues;
-    }
-
-    /// @notice Get redeem queues for tqETH vault
-    /// @return Array of redeem queue addresses
-    function getRedeemQueues() internal pure returns (address[] memory) {
-        address[] memory queues = new address[](1);
-        queues[0] = Constants.STRETH_REDEEM_QUEUE_WSTETH;
-        return queues;
     }
 }
