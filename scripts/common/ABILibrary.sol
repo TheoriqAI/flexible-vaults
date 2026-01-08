@@ -12,6 +12,7 @@ import {ICCIPRouterClient} from "./interfaces/ICCIPRouterClient.sol";
 
 import {ICapLender} from "./interfaces/ICapLender.sol";
 import {ICowswapSettlement} from "./interfaces/ICowswapSettlement.sol";
+import {IKyberSwapRouter} from "./interfaces/IKyberSwapRouter.sol";
 import {ICurveGauge} from "./interfaces/ICurveGauge.sol";
 import {ICurvePool} from "./interfaces/ICurvePool.sol";
 import {IL1GatewayRouter} from "./interfaces/IL1GatewayRouter.sol";
@@ -31,12 +32,13 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 library ABILibrary {
     function getABI(bytes4 selector) internal pure returns (string memory) {
-        function() pure returns (bytes4[] memory, string[] memory)[20] memory functions = [
+        function() pure returns (bytes4[] memory, string[] memory)[21] memory functions = [
             getERC20Interfaces,
             getERC4626Interfaces,
             getAaveInterfaces,
             getWETHInterfaces,
             getCowSwapInterfaces,
+            getKyberSwapInterfaces,
             getCurveInterfaces,
             getBracketFinanceInterfaces,
             getL1GatewayRouter,
@@ -160,6 +162,19 @@ library ABILibrary {
             '{"inputs":[{"internalType":"bytes","name":"orderUid","type":"bytes"},{"internalType":"bool","name":"signed","type":"bool"}],"name":"setPreSignature","outputs":[],"stateMutability":"nonpayable","type":"function"}';
         abis[1] =
             '{"inputs":[{"internalType":"bytes","name":"orderUid","type":"bytes"}],"name":"invalidateOrder","outputs":[],"stateMutability":"nonpayable","type":"function"}';
+    }
+
+    function getKyberSwapInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
+        selectors = new bytes4[](2);
+        abis = new string[](2);
+
+        selectors[0] = IKyberSwapRouter.swap.selector;
+        selectors[1] = IKyberSwapRouter.swapGeneric.selector;
+
+        abis[0] =
+            '{"inputs":[{"components":[{"internalType":"address","name":"callTarget","type":"address"},{"internalType":"address","name":"approveTarget","type":"address"},{"internalType":"bytes","name":"targetData","type":"bytes"},{"components":[{"internalType":"address","name":"srcToken","type":"address"},{"internalType":"address","name":"dstToken","type":"address"},{"internalType":"address[]","name":"srcReceivers","type":"address[]"},{"internalType":"uint256[]","name":"srcAmounts","type":"uint256[]"},{"internalType":"address[]","name":"feeReceivers","type":"address[]"},{"internalType":"uint256[]","name":"feeAmounts","type":"uint256[]"},{"internalType":"address","name":"dstReceiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturnAmount","type":"uint256"},{"internalType":"uint256","name":"flags","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct MetaAggregationRouterV2.SwapDescriptionV2","name":"desc","type":"tuple"},{"internalType":"bytes","name":"clientData","type":"bytes"}],"internalType":"struct MetaAggregationRouterV2.SwapExecutionParams","name":"execution","type":"tuple"}],"name":"swap","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"},{"internalType":"uint256","name":"gasUsed","type":"uint256"}],"stateMutability":"payable","type":"function"}';
+        abis[1] =
+            '{"inputs":[{"components":[{"internalType":"address","name":"callTarget","type":"address"},{"internalType":"address","name":"approveTarget","type":"address"},{"internalType":"bytes","name":"targetData","type":"bytes"},{"components":[{"internalType":"address","name":"srcToken","type":"address"},{"internalType":"address","name":"dstToken","type":"address"},{"internalType":"address[]","name":"srcReceivers","type":"address[]"},{"internalType":"uint256[]","name":"srcAmounts","type":"uint256[]"},{"internalType":"address[]","name":"feeReceivers","type":"address[]"},{"internalType":"uint256[]","name":"feeAmounts","type":"uint256[]"},{"internalType":"address","name":"dstReceiver","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"minReturnAmount","type":"uint256"},{"internalType":"uint256","name":"flags","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct MetaAggregationRouterV2.SwapDescriptionV2","name":"desc","type":"tuple"},{"internalType":"bytes","name":"clientData","type":"bytes"}],"internalType":"struct MetaAggregationRouterV2.SwapExecutionParams","name":"execution","type":"tuple"}],"name":"swapGeneric","outputs":[{"internalType":"uint256","name":"returnAmount","type":"uint256"},{"internalType":"uint256","name":"gasUsed","type":"uint256"}],"stateMutability":"payable","type":"function"}';
     }
 
     function getL2GatewayRouter() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
