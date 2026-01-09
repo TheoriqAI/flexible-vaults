@@ -26,35 +26,22 @@ library KyberSwapLibrary {
     {
         // Operations per curator:
         // 1. approve each asset to kyberRouter
-        // 2. swap function
-        // 3. swapGeneric function
+        // 2. swap function (MERKLE_COMPACT - variable length calldata)
+        // 3. swapGeneric function (MERKLE_COMPACT - variable length calldata)
         // Total: assets.length + 2
 
         uint256 length = $.assets.length + 2;
         leaves = new IVerifier.VerificationPayload[](length);
         uint256 index = 0;
 
-        // Proof for swap function - allow any execution params
-        leaves[index++] = ProofLibrary.makeVerificationPayload(
-            bitmaskVerifier,
-            $.curator,
-            $.kyberRouter,
-            0,
-            _encodeSwap(),
-            ProofLibrary.makeBitmask(true, true, true, true, _encodeSwap())
-        );
+        // Proof for swap function - use MERKLE_COMPACT for variable-length calldata
+        // MERKLE_COMPACT only checks (who, where, selector) - ignores calldata content/length
+        leaves[index++] = _makeMerkleCompactPayload($.curator, $.kyberRouter, IKyberSwapRouter.swap.selector);
 
-        // Proof for swapGeneric function - allow any execution params
-        leaves[index++] = ProofLibrary.makeVerificationPayload(
-            bitmaskVerifier,
-            $.curator,
-            $.kyberRouter,
-            0,
-            _encodeSwapGeneric(),
-            ProofLibrary.makeBitmask(true, true, true, true, _encodeSwapGeneric())
-        );
+        // Proof for swapGeneric function - use MERKLE_COMPACT for variable-length calldata
+        leaves[index++] = _makeMerkleCompactPayload($.curator, $.kyberRouter, IKyberSwapRouter.swapGeneric.selector);
 
-        // Approvals for each asset
+        // Approvals for each asset - use BitmaskVerifier (fixed-length calldata)
         for (uint256 i = 0; i < $.assets.length; i++) {
             address asset = $.assets[i];
             if (asset == TransferLibrary.ETH) continue; // Skip ETH, no approval needed
@@ -74,6 +61,20 @@ library KyberSwapLibrary {
         assembly {
             mstore(leaves, index)
         }
+    }
+
+    /// @dev Creates a MERKLE_COMPACT verification payload for selector-only verification
+    /// This is used for functions with variable-length calldata (like swap functions)
+    function _makeMerkleCompactPayload(address who, address where, bytes4 selector)
+        internal
+        pure
+        returns (IVerifier.VerificationPayload memory payload)
+    {
+        // MERKLE_COMPACT verificationData is the hash of (who, where, selector)
+        bytes32 compactHash = keccak256(abi.encode(who, where, selector));
+        payload.verificationType = IVerifier.VerificationType.MERKLE_COMPACT;
+        payload.verificationData = abi.encodePacked(compactHash);
+        // proof will be populated by generateMerkleProofs
     }
 
     function getKyberSwapDescriptions(Info memory $) internal view returns (string[] memory descriptions) {
@@ -123,12 +124,15 @@ library KyberSwapLibrary {
         uint256 index = 0;
         calls = new Call[][]($.assets.length + 2);
 
-        // swap test calls
+        // swap test calls - MERKLE_COMPACT accepts any calldata length
         {
             Call[] memory tmp = new Call[](8);
             uint256 i = 0;
+            // MERKLE_COMPACT only checks selector - any calldata length works
             tmp[i++] = Call($.curator, $.kyberRouter, 0, _encodeSwap(), true);
             tmp[i++] = Call($.curator, $.kyberRouter, 1 ether, _encodeSwap(), true); // with ETH value
+            // Test with different calldata (just selector) - should still work
+            tmp[i++] = Call($.curator, $.kyberRouter, 0, abi.encodeWithSelector(IKyberSwapRouter.swap.selector), true);
             tmp[i++] = Call(address(0xdead), $.kyberRouter, 0, _encodeSwap(), false); // wrong caller
             tmp[i++] = Call($.curator, address(0xdead), 0, _encodeSwap(), false); // wrong target
             assembly {
@@ -137,12 +141,14 @@ library KyberSwapLibrary {
             calls[index++] = tmp;
         }
 
-        // swapGeneric test calls
+        // swapGeneric test calls - MERKLE_COMPACT accepts any calldata length
         {
             Call[] memory tmp = new Call[](8);
             uint256 i = 0;
             tmp[i++] = Call($.curator, $.kyberRouter, 0, _encodeSwapGeneric(), true);
             tmp[i++] = Call($.curator, $.kyberRouter, 1 ether, _encodeSwapGeneric(), true);
+            // Test with different calldata (just selector) - should still work
+            tmp[i++] = Call($.curator, $.kyberRouter, 0, abi.encodeWithSelector(IKyberSwapRouter.swapGeneric.selector), true);
             tmp[i++] = Call(address(0xdead), $.kyberRouter, 0, _encodeSwapGeneric(), false);
             tmp[i++] = Call($.curator, address(0xdead), 0, _encodeSwapGeneric(), false);
             assembly {
