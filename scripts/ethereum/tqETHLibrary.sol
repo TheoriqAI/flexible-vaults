@@ -12,6 +12,7 @@ import {ProofLibrary} from "../common/ProofLibrary.sol";
 import {CoreVaultLibrary} from "../common/protocols/CoreVaultLibrary.sol";
 
 import {AaveLibrary} from "../common/protocols/AaveLibrary.sol";
+import {KyberSwapLibrary} from "../common/protocols/KyberSwapLibrary.sol";
 import {StakeWiseLibrary} from "../common/protocols/StakeWiseLibrary.sol";
 import {SwapModuleLibrary} from "../common/protocols/SwapModuleLibrary.sol";
 import {WethLibrary} from "../common/protocols/WethLibrary.sol";
@@ -43,6 +44,23 @@ library tqETHLibrary {
         });
     }
 
+    function getKyberSwapInfo(address curator) internal pure returns (KyberSwapLibrary.Info memory) {
+        return KyberSwapLibrary.Info({
+            kyberRouter: Constants.KYBERSWAP_ROUTER,
+            curator: curator,
+            assets: ArraysLibrary.makeAddressArray(
+                abi.encode(
+                    Constants.ETH,
+                    Constants.WETH,
+                    Constants.WSTETH,
+                    Constants.USDC,
+                    Constants.USDT,
+                    Constants.USDE
+                )
+            )
+        });
+    }
+
     function getSubvault0Proofs(address subvault, address swapModule, address[] memory curators)
         internal
         pure
@@ -50,13 +68,28 @@ library tqETHLibrary {
     {
         ProtocolDeployment memory $ = Constants.protocolDeployment();
 
-        leaves = new IVerifier.VerificationPayload[](50);
+        // SwapModule: 3 ops per asset per curator = 3 * 6 * 2 = 36
+        // KyberSwap: (2 + assets.length) per curator = 7 * 2 = 14
+        // Total: ~50 (with some margin)
+        leaves = new IVerifier.VerificationPayload[](100);
         uint256 iterator = 0;
+
+        // SwapModule proofs
         iterator = ArraysLibrary.insert(
             leaves,
             SwapModuleLibrary.getSwapModuleProofs($.bitmaskVerifier, getSubvault0Info(subvault, curators, swapModule)),
             iterator
         );
+
+        // KyberSwap proofs for each curator
+        for (uint256 i = 0; i < curators.length; i++) {
+            iterator = ArraysLibrary.insert(
+                leaves,
+                KyberSwapLibrary.getKyberSwapProofs($.bitmaskVerifier, getKyberSwapInfo(curators[i])),
+                iterator
+            );
+        }
+
         assembly {
             mstore(leaves, iterator)
         }
@@ -68,14 +101,24 @@ library tqETHLibrary {
         view
         returns (string[] memory descriptions)
     {
-        descriptions = new string[](50);
+        descriptions = new string[](100);
         uint256 iterator = 0;
 
+        // SwapModule descriptions
         iterator = ArraysLibrary.insert(
             descriptions,
             SwapModuleLibrary.getSwapModuleDescriptions(getSubvault0Info(subvault, curators, swapModule)),
             iterator
         );
+
+        // KyberSwap descriptions for each curator
+        for (uint256 i = 0; i < curators.length; i++) {
+            iterator = ArraysLibrary.insert(
+                descriptions,
+                KyberSwapLibrary.getKyberSwapDescriptions(getKyberSwapInfo(curators[i])),
+                iterator
+            );
+        }
 
         assembly {
             mstore(descriptions, iterator)
@@ -93,11 +136,21 @@ library tqETHLibrary {
 
         uint256 iterator = 0;
 
+        // SwapModule calls
         iterator = ArraysLibrary.insert(
             calls.calls,
             SwapModuleLibrary.getSwapModuleCalls(getSubvault0Info(subvault, curators, swapModule)),
             iterator
         );
+
+        // KyberSwap calls for each curator
+        for (uint256 i = 0; i < curators.length; i++) {
+            iterator = ArraysLibrary.insert(
+                calls.calls,
+                KyberSwapLibrary.getKyberSwapCalls(getKyberSwapInfo(curators[i])),
+                iterator
+            );
+        }
     }
 
     function getSubvault1CoreVaultInfo(address subvault, address[] memory curators)
