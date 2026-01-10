@@ -246,6 +246,112 @@ library AaveLibrary {
         }
     }
 
+    // God, please, fix stack-too-deep 🙏
+    function getAaveDescriptionsLean(Info memory $) internal view returns (string[] memory descriptions) {
+        uint256 length = ($.collaterals.length + $.loans.length) * 3 + 1;
+        descriptions = new string[](length);
+        uint256 index = 0;
+
+        ParameterLibrary.Parameter[] memory innerParameters =
+            ParameterLibrary.build("categoryId", Strings.toString($.categoryId));
+        descriptions[index++] = JsonLibrary.toJsonLean(
+            string(
+                abi.encodePacked(
+                    "AaveInstance(",
+                    $.aaveInstanceName,
+                    ").setUserEMode(categoryId=",
+                    Strings.toString($.categoryId),
+                    ")"
+                )
+            ),
+            ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+            innerParameters
+        );
+
+        for (uint256 i = 0; i < $.collaterals.length; i++) {
+            string memory asset = IERC20Metadata($.collaterals[i]).symbol();
+
+            innerParameters = ParameterLibrary.build("to", Strings.toHexString($.aaveInstance)).addAny("amount");
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(abi.encodePacked("IERC20(", asset, ").approve(AaveInstance(", $.aaveInstanceName, "), anyInt)")),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.collaterals[i]), "0"),
+                innerParameters
+            );
+
+            innerParameters = ParameterLibrary.add2("asset", Strings.toHexString($.collaterals[i]), "amount", "any")
+                .add2("onBehalfOf", Strings.toHexString($.subvault), "referralCode", "0");
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked(
+                        "AaveInstance(",
+                        $.aaveInstanceName,
+                        ").supply(",
+                        asset,
+                        ", anyInt, ",
+                        $.subvaultName,
+                        ", anyInt)"
+                    )
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+                innerParameters
+            );
+
+            innerParameters = ParameterLibrary.add2("asset", Strings.toHexString($.collaterals[i]), "amount", "any").add(
+                "to", Strings.toHexString($.subvault)
+            );
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked(
+                        "AaveInstance(", $.aaveInstanceName, ").withdraw(", asset, ", anyInt, ", $.subvaultName, ")"
+                    )
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+                innerParameters
+            );
+        }
+        for (uint256 i = 0; i < $.loans.length; i++) {
+            string memory asset = IERC20Metadata($.loans[i]).symbol();
+
+            innerParameters = ParameterLibrary.build("to", Strings.toHexString($.aaveInstance)).addAny("amount");
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(abi.encodePacked("IERC20(", asset, ").approve(AaveInstance(", $.aaveInstanceName, "), anyInt)")),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.loans[i]), "0"),
+                innerParameters
+            );
+            innerParameters = ParameterLibrary.add2("asset", Strings.toHexString($.loans[i]), "amount", "any").add2(
+                "interestRateMode", "2", "referralCode", "0"
+            );
+            innerParameters = innerParameters.add("onBehalfOf", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked(
+                        "AaveInstance(",
+                        $.aaveInstanceName,
+                        ").borrow(",
+                        asset,
+                        ", anyInt, interestRateMode=2, anyInt, ",
+                        $.subvaultName,
+                        ")"
+                    )
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+                innerParameters
+            );
+            innerParameters = ParameterLibrary.add2("asset", Strings.toHexString($.loans[i]), "amount", "any").add2(
+                "interestRateMode", "2", "onBehalfOf", Strings.toHexString($.subvault)
+            );
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked(
+                        "AaveInstance(", $.aaveInstanceName, ").repay(", asset, ", anyInt, 2, ", $.subvaultName, ")"
+                    )
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+                innerParameters
+            );
+        }
+    }
+
     function getAaveCalls(Info memory $) internal pure returns (Call[][] memory calls) {
         uint256 index = 0;
         calls = new Call[][](($.collaterals.length + $.loans.length) * 3 + 1);

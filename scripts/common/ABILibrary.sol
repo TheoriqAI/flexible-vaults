@@ -23,6 +23,7 @@ import {ILidoV3Dashboard} from "./interfaces/ILidoV3Dashboard.sol";
 
 import {ILayerZeroOFT} from "./interfaces/ILayerZeroOFT.sol";
 import {IMorpho} from "./interfaces/IMorpho.sol";
+import {IPendleRouter} from "./interfaces/IPendleRouter.sol";
 import {IStUSR} from "./interfaces/IStUSR.sol";
 import {IStakeWiseEthVault} from "./interfaces/IStakeWiseEthVault.sol";
 import {IUsrExternalRequestsManager} from "./interfaces/IUsrExternalRequestsManager.sol";
@@ -32,7 +33,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 library ABILibrary {
     function getABI(bytes4 selector) internal pure returns (string memory) {
-        function() pure returns (bytes4[] memory, string[] memory)[21] memory functions = [
+        function() pure returns (bytes4[] memory, string[] memory)[22] memory functions = [
             getERC20Interfaces,
             getERC4626Interfaces,
             getAaveInterfaces,
@@ -53,7 +54,8 @@ library ABILibrary {
             getOFTInterfaces,
             getFluidInterfaces,
             getMorphoInterfaces,
-            getLidoV3Interfaces
+            getLidoV3Interfaces,
+            getPendleInterfaces
         ];
         for (uint256 i = 0; i < functions.length; i++) {
             (bytes4[] memory selectors, string[] memory abis) = functions[i]();
@@ -400,5 +402,21 @@ library ABILibrary {
             '{"type":"function","name":"rebalanceVaultWithShares","inputs":[{"name":"shares_","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"}';
         abis[5] =
             '{"type":"function","name":"rebalanceVaultWithEther","inputs":[{"name":"ether_","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"payable"}';
+    }
+
+    function getPendleInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
+        selectors = new bytes4[](3);
+        abis = new string[](3);
+
+        selectors[0] = IPendleRouter.swapExactTokenForPt.selector;
+        selectors[1] = IPendleRouter.swapExactPtForToken.selector;
+        selectors[2] = IPendleRouter.exitPostExpToToken.selector;
+
+        abis[0] =
+            '{"inputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"address","name":"market","type":"address"},{"internalType":"uint256","name":"minPtOut","type":"uint256"},{"components":[{"internalType":"uint256","name":"guessMin","type":"uint256"},{"internalType":"uint256","name":"guessMax","type":"uint256"},{"internalType":"uint256","name":"guessOffchain","type":"uint256"},{"internalType":"uint256","name":"maxIteration","type":"uint256"},{"internalType":"uint256","name":"eps","type":"uint256"}],"internalType":"struct ApproxParams","name":"guessPtOut","type":"tuple"},{"components":[{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"netTokenIn","type":"uint256"},{"internalType":"address","name":"tokenMintSy","type":"address"},{"internalType":"address","name":"pendleSwap","type":"address"},{"components":[{"internalType":"enum SwapType","name":"swapType","type":"uint8"},{"internalType":"address","name":"extRouter","type":"address"},{"internalType":"bytes","name":"extCalldata","type":"bytes"},{"internalType":"bool","name":"needScale","type":"bool"}],"internalType":"struct SwapData","name":"swapData","type":"tuple"}],"internalType":"struct TokenInput","name":"input","type":"tuple"},{"components":[{"internalType":"address","name":"limitRouter","type":"address"},{"internalType":"uint256","name":"epsSkipMarket","type":"uint256"},{"components":[{"internalType":"enum OrderType","name":"orderType","type":"uint8"},{"internalType":"uint256","name":"salt","type":"uint256"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"lnImpliedRate","type":"uint256"},{"internalType":"uint256","name":"failSafeRate","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct Order","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"}],"internalType":"struct FillOrderParams[]","name":"normalFills","type":"tuple[]"},{"components":[{"components":[{"internalType":"enum OrderType","name":"orderType","type":"uint8"},{"internalType":"uint256","name":"salt","type":"uint256"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"lnImpliedRate","type":"uint256"},{"internalType":"uint256","name":"failSafeRate","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct Order","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"}],"internalType":"struct FillOrderParams[]","name":"flashFills","type":"tuple[]"},{"internalType":"bytes","name":"optData","type":"bytes"}],"internalType":"struct LimitOrderData","name":"limit","type":"tuple"}],"name":"swapExactTokenForPt","outputs":[{"internalType":"uint256","name":"netPtOut","type":"uint256"},{"internalType":"uint256","name":"netSyFee","type":"uint256"},{"internalType":"uint256","name":"netSyInterm","type":"uint256"}],"stateMutability":"payable","type":"function"}';
+        abis[1] =
+            '{"inputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"address","name":"market","type":"address"},{"internalType":"uint256","name":"exactPtIn","type":"uint256"},{"components":[{"internalType":"address","name":"tokenOut","type":"address"},{"internalType":"uint256","name":"minTokenOut","type":"uint256"},{"internalType":"address","name":"tokenRedeemSy","type":"address"},{"internalType":"address","name":"pendleSwap","type":"address"},{"components":[{"internalType":"enum SwapType","name":"swapType","type":"uint8"},{"internalType":"address","name":"extRouter","type":"address"},{"internalType":"bytes","name":"extCalldata","type":"bytes"},{"internalType":"bool","name":"needScale","type":"bool"}],"internalType":"struct SwapData","name":"swapData","type":"tuple"}],"internalType":"struct TokenOutput","name":"output","type":"tuple"},{"components":[{"internalType":"address","name":"limitRouter","type":"address"},{"internalType":"uint256","name":"epsSkipMarket","type":"uint256"},{"components":[{"internalType":"enum OrderType","name":"orderType","type":"uint8"},{"internalType":"uint256","name":"salt","type":"uint256"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"lnImpliedRate","type":"uint256"},{"internalType":"uint256","name":"failSafeRate","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct Order","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"}],"internalType":"struct FillOrderParams[]","name":"normalFills","type":"tuple[]"},{"components":[{"components":[{"internalType":"enum OrderType","name":"orderType","type":"uint8"},{"internalType":"uint256","name":"salt","type":"uint256"},{"internalType":"address","name":"maker","type":"address"},{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"makingAmount","type":"uint256"},{"internalType":"uint256","name":"lnImpliedRate","type":"uint256"},{"internalType":"uint256","name":"failSafeRate","type":"uint256"},{"internalType":"bytes","name":"permit","type":"bytes"}],"internalType":"struct Order","name":"order","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"},{"internalType":"uint256","name":"makingAmount","type":"uint256"}],"internalType":"struct FillOrderParams[]","name":"flashFills","type":"tuple[]"},{"internalType":"bytes","name":"optData","type":"bytes"}],"internalType":"struct LimitOrderData","name":"limit","type":"tuple"}],"name":"swapExactPtForToken","outputs":[{"internalType":"uint256","name":"netTokenOut","type":"uint256"},{"internalType":"uint256","name":"netSyFee","type":"uint256"},{"internalType":"uint256","name":"netSyInterm","type":"uint256"}],"stateMutability":"nonpayable","type":"function"}';
+        abis[2] =
+            '{"inputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"address","name":"market","type":"address"},{"internalType":"uint256","name":"exactPtIn","type":"uint256"},{"internalType":"uint256","name":"minTokenOut","type":"uint256"},{"components":[{"internalType":"address","name":"tokenOut","type":"address"},{"internalType":"uint256","name":"minTokenOut","type":"uint256"},{"internalType":"address","name":"tokenRedeemSy","type":"address"},{"internalType":"address","name":"pendleSwap","type":"address"},{"components":[{"internalType":"enum SwapType","name":"swapType","type":"uint8"},{"internalType":"address","name":"extRouter","type":"address"},{"internalType":"bytes","name":"extCalldata","type":"bytes"},{"internalType":"bool","name":"needScale","type":"bool"}],"internalType":"struct SwapData","name":"swapData","type":"tuple"}],"internalType":"struct TokenOutput","name":"output","type":"tuple"}],"name":"exitPostExpToToken","outputs":[{"internalType":"uint256","name":"netTokenOut","type":"uint256"}],"stateMutability":"nonpayable","type":"function"}';
     }
 }

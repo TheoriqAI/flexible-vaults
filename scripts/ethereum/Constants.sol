@@ -26,6 +26,17 @@ library Constants {
 
     address public constant USDE = 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3;
     address public constant SUSDE = 0x9D39A5DE30e57443BfF2A8307A4256c8797A3497;
+    address public constant JRUSDE = 0x4F6673346aB4813F1665327aB39087008Cc7d76F;
+
+    address public constant NUSD = 0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE;
+    address public constant SNUSD = 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313;
+
+    // Pendle
+    address public constant PENDLE_ROUTER = 0x888888888889758F76e7103c6CbF23ABbF58F946;
+    address public constant PT_JRUSDE_27MAR2025 = 0xd0609Ac13000d88B0BEbf5Bb21074916eDd92Bb1;
+    address public constant PENDLE_MARKET_PT_JRUSDE_27MAR2025 = 0xfAbEEFC5369aA5270B401f4Ee062D17fb5f1EC2A;
+    address public constant PT_SNUSD_04MAR2026 = 0x54Bf2659B5CdFd86b75920e93C0844c0364F5166;
+    address public constant PENDLE_MARKET_PT_SNUSD_04MAR2026 = 0x6D8C4DE7071D5AeE27fc3a810764E62a4a00Ceb9;
 
     address public constant MUSD = 0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186;
 

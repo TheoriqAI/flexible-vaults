@@ -117,6 +117,24 @@ library JsonLibrary {
         );
     }
 
+    function toJsonLean(
+        string memory description,
+        ParameterLibrary.Parameter[] memory parameters,
+        ParameterLibrary.Parameter[] memory innerParameters
+    ) internal pure returns (string memory json) {
+        json = string(
+            abi.encodePacked(
+                '{"description": "',
+                description,
+                '", "parameters": ',
+                toJson(parameters),
+                ', "innerParameters": ',
+                toJson(innerParameters),
+                "}"
+            )
+        );
+    }
+
     function toJson(ParameterLibrary.Parameter[] memory p) internal pure returns (string memory json) {
         json = "{";
         for (uint256 i = 0; i < p.length; i++) {
