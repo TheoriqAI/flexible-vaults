@@ -253,6 +253,134 @@ contract GeneratePendleJSON is Script, Test {
         console.log("Number of operations:", leavesWithProofs.length);
     }
 
+    /// @notice Generate Pendle PT JSON with custom strategies
+    /// @param subvaultIndex The subvault index
+    /// @param isProd true for prod vault, false for preprod vault
+    /// @param strategies Array of PT strategies
+    function generateWithCustomStrategies(
+        uint256 subvaultIndex,
+        bool isProd,
+        PendleLibrary.PTStrategy[] memory strategies
+    ) public {
+        address vaultAddress = isProd ? VAULT_PROD : VAULT_PREPROD;
+        string memory env = isProd ? "prod" : "preprod";
+
+        Vault vault = Vault(payable(vaultAddress));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        string memory title = string(
+            abi.encodePacked("ethereum:tqETH:", env, ":sv", vm.toString(subvaultIndex), ":pendlePT")
+        );
+
+        string memory subvaultName = string(abi.encodePacked("subvault", vm.toString(subvaultIndex)));
+
+        console.log("=== Generating Pendle PT Operations JSON ===");
+        console.log("Environment:", env);
+        console.log("Subvault index:", subvaultIndex);
+        console.log("Subvault address:", subvault);
+        console.log("Number of PT strategies:", strategies.length);
+        console.log("");
+
+        ProtocolDeployment memory $ = Constants.protocolDeployment();
+
+        // Create Pendle info
+        PendleLibrary.Info memory pendleInfo = PendleLibrary.Info({
+            subvault: subvault,
+            subvaultName: subvaultName,
+            curator: curator,
+            pendleRouter: Constants.PENDLE_ROUTER,
+            pendleRouterName: "PendleRouterV3",
+            strategies: strategies
+        });
+
+        // Generate proofs
+        IVerifier.VerificationPayload[] memory leaves = new IVerifier.VerificationPayload[](100);
+        uint256 iterator = 0;
+
+        iterator = ArraysLibrary.insert(
+            leaves,
+            PendleLibrary.getPendleProofs($.bitmaskVerifier, pendleInfo),
+            iterator
+        );
+
+        assembly {
+            mstore(leaves, iterator)
+        }
+
+        (bytes32 merkleRoot, IVerifier.VerificationPayload[] memory leavesWithProofs) =
+            ProofLibrary.generateMerkleProofs(leaves);
+
+        // Generate descriptions (lean version)
+        string[] memory descriptionsLean = new string[](100);
+        iterator = 0;
+
+        iterator = ArraysLibrary.insert(
+            descriptionsLean,
+            PendleLibrary.getPendleDescriptionsLean(pendleInfo),
+            iterator
+        );
+
+        assembly {
+            mstore(descriptionsLean, iterator)
+        }
+
+        // Store lean version
+        string memory leanTitle = string(abi.encodePacked(title, "-lean"));
+        ProofLibrary.storeProofs(leanTitle, merkleRoot, leavesWithProofs, descriptionsLean);
+
+        console.log("");
+        console.log("=== Generation Complete ===");
+        console.log("Lean JSON file:", string(abi.encodePacked("./scripts/jsons/", leanTitle, ".json")));
+        console.log("Merkle root:", vm.toString(merkleRoot));
+        console.log("Number of operations:", leavesWithProofs.length);
+    }
+
+
+    /// @notice Generate Pendle PT JSON from a config file
+    /// @param configPath Path to config file (relative to scripts/configs/)
+    function generateFromConfig(string memory configPath) public {
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/configs/", configPath, ".json");
+        string memory json = vm.readFile(path);
+
+        uint256 subvaultIndex = vm.parseJsonUint(json, ".subvaultIndex");
+        bool isProd = vm.parseJsonBool(json, ".isProd");
+
+        // Parse strategies - count them first
+        uint256 numStrategies = 0;
+        for (uint256 i = 0; i < 20; i++) {
+            string memory basePath = string.concat(".strategies[", vm.toString(i), "].ptToken");
+            try vm.parseJsonAddress(json, basePath) {
+                numStrategies++;
+            } catch {
+                break;
+            }
+        }
+
+        PendleLibrary.PTStrategy[] memory strategies = new PendleLibrary.PTStrategy[](numStrategies);
+
+        for (uint256 i = 0; i < numStrategies; i++) {
+            string memory basePath = string.concat(".strategies[", vm.toString(i), "]");
+
+            address ptToken = vm.parseJsonAddress(json, string.concat(basePath, ".ptToken"));
+            address market = vm.parseJsonAddress(json, string.concat(basePath, ".market"));
+            address mintSyToken = vm.parseJsonAddress(json, string.concat(basePath, ".mintSyToken"));
+
+            // Parse inputTokens array
+            bytes memory inputTokensData = vm.parseJson(json, string.concat(basePath, ".inputTokens"));
+            address[] memory inputTokens = abi.decode(inputTokensData, (address[]));
+
+            strategies[i] = PendleLibrary.PTStrategy({
+                ptToken: ptToken,
+                market: market,
+                inputTokens: inputTokens,
+                mintSyToken: mintSyToken
+            });
+        }
+
+        generateWithCustomStrategies(subvaultIndex, isProd, strategies);
+    }
+
     /// @notice Example: Add a different PT strategy
     function generateMultiPTExample() external {
         address subvault = address(0); // TODO: Replace with actual subvault address

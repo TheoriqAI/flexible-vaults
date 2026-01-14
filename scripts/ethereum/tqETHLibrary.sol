@@ -334,6 +334,11 @@ library tqETHLibrary {
     /// @param curator The curator address
     /// @return AaveLibrary.Info struct
     function getAaveOperationsInfo(address subvault, address curator) internal pure returns (AaveLibrary.Info memory) {
+        return getAaveCoreOperationsInfo(subvault, curator);
+    }
+
+    /// @notice Get Aave Core pool configuration
+    function getAaveCoreOperationsInfo(address subvault, address curator) internal pure returns (AaveLibrary.Info memory) {
         // WETH, wstETH, USDE can be used as collateral (supply/withdraw)
         address[] memory collaterals = new address[](3);
         collaterals[0] = Constants.WETH;
@@ -350,10 +355,38 @@ library tqETHLibrary {
 
         return AaveLibrary.Info({
             subvault: subvault,
-            subvaultName: "aaveOps",
+            subvaultName: "aaveCore",
             curator: curator,
             aaveInstance: Constants.AAVE_CORE,
-            aaveInstanceName: "Core",
+            aaveInstanceName: "AaveCore",
+            collaterals: collaterals,
+            loans: loans,
+            categoryId: 0 // No eMode - mixed asset types
+        });
+    }
+
+    /// @notice Get Spark pool configuration (same assets as Aave Core)
+    function getSparkOperationsInfo(address subvault, address curator) internal pure returns (AaveLibrary.Info memory) {
+        // WETH, wstETH, USDE can be used as collateral (supply/withdraw)
+        address[] memory collaterals = new address[](3);
+        collaterals[0] = Constants.WETH;
+        collaterals[1] = Constants.WSTETH;
+        collaterals[2] = Constants.USDE;
+
+        // WETH, wstETH, USDC, USDT, USDE can be borrowed (borrow/repay)
+        address[] memory loans = new address[](5);
+        loans[0] = Constants.WETH;
+        loans[1] = Constants.WSTETH;
+        loans[2] = Constants.USDC;
+        loans[3] = Constants.USDT;
+        loans[4] = Constants.USDE;
+
+        return AaveLibrary.Info({
+            subvault: subvault,
+            subvaultName: "spark",
+            curator: curator,
+            aaveInstance: Constants.SPARK,
+            aaveInstanceName: "Spark",
             collaterals: collaterals,
             loans: loans,
             categoryId: 0 // No eMode - mixed asset types
@@ -373,17 +406,25 @@ library tqETHLibrary {
     {
         ProtocolDeployment memory $ = Constants.protocolDeployment();
 
-        // Allocate enough space for Aave operations + deposit/redeem operations
-        // Aave: (2 collaterals + 3 loans) * 3 operations each + 1 setUserEMode = 16
-        // CoreVault: estimate ~10 for deposit/redeem queues
-        leaves = new IVerifier.VerificationPayload[](30);
+        // Allocate enough space for Aave Core + Spark operations
+        // Each pool: (3 collaterals + 5 loans) * 3 operations each + 1 setUserEMode = 25 ops per pool
+        // 2 pools = 50 operations total
+        leaves = new IVerifier.VerificationPayload[](60);
         uint256 iterator = 0;
 
-        // Add Aave operations (supply, withdraw, borrow, repay for all assets + setUserEMode)
-        AaveLibrary.Info memory aaveInfo = getAaveOperationsInfo(subvault, curator);
+        // Add Aave Core operations (supply, withdraw, borrow, repay for all assets + setUserEMode)
+        AaveLibrary.Info memory aaveCoreInfo = getAaveCoreOperationsInfo(subvault, curator);
         iterator = ArraysLibrary.insert(
             leaves,
-            AaveLibrary.getAaveProofs($.bitmaskVerifier, aaveInfo),
+            AaveLibrary.getAaveProofs($.bitmaskVerifier, aaveCoreInfo),
+            iterator
+        );
+
+        // Add Spark operations (same assets, different pool)
+        AaveLibrary.Info memory sparkInfo = getSparkOperationsInfo(subvault, curator);
+        iterator = ArraysLibrary.insert(
+            leaves,
+            AaveLibrary.getAaveProofs($.bitmaskVerifier, sparkInfo),
             iterator
         );
 
@@ -408,14 +449,22 @@ library tqETHLibrary {
         view
         returns (string[] memory descriptions)
     {
-        descriptions = new string[](30);
+        descriptions = new string[](60);
         uint256 iterator = 0;
 
-        // Add Aave descriptions
-        AaveLibrary.Info memory aaveInfo = getAaveOperationsInfo(subvault, curator);
+        // Add Aave Core descriptions
+        AaveLibrary.Info memory aaveCoreInfo = getAaveCoreOperationsInfo(subvault, curator);
         iterator = ArraysLibrary.insert(
             descriptions,
-            AaveLibrary.getAaveDescriptions(aaveInfo),
+            AaveLibrary.getAaveDescriptions(aaveCoreInfo),
+            iterator
+        );
+
+        // Add Spark descriptions
+        AaveLibrary.Info memory sparkInfo = getSparkOperationsInfo(subvault, curator);
+        iterator = ArraysLibrary.insert(
+            descriptions,
+            AaveLibrary.getAaveDescriptions(sparkInfo),
             iterator
         );
 
@@ -438,14 +487,22 @@ library tqETHLibrary {
         view
         returns (string[] memory descriptions)
     {
-        descriptions = new string[](30);
+        descriptions = new string[](60);
         uint256 iterator = 0;
 
-        // Add Aave lean descriptions
-        AaveLibrary.Info memory aaveInfo = getAaveOperationsInfo(subvault, curator);
+        // Add Aave Core lean descriptions
+        AaveLibrary.Info memory aaveCoreInfo = getAaveCoreOperationsInfo(subvault, curator);
         iterator = ArraysLibrary.insert(
             descriptions,
-            AaveLibrary.getAaveDescriptionsLean(aaveInfo),
+            AaveLibrary.getAaveDescriptionsLean(aaveCoreInfo),
+            iterator
+        );
+
+        // Add Spark lean descriptions
+        AaveLibrary.Info memory sparkInfo = getSparkOperationsInfo(subvault, curator);
+        iterator = ArraysLibrary.insert(
+            descriptions,
+            AaveLibrary.getAaveDescriptionsLean(sparkInfo),
             iterator
         );
 

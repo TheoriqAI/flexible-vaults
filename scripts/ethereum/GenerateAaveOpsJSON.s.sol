@@ -231,6 +231,126 @@ contract GenerateAaveOpsJSON is Script, Test {
         console.log("Number of operations:", leavesWithProofs.length);
     }
 
+    /// @notice Generate Aave JSON with custom collateral and borrow tokens
+    /// @param subvaultIndex The subvault index (0, 1, 2, etc.)
+    /// @param isProd true for prod vault, false for preprod vault
+    /// @param pool Aave pool address (use Constants.AAVE_CORE or Constants.SPARK)
+    /// @param collaterals Array of collateral asset addresses
+    /// @param borrows Array of borrow asset addresses
+    /// @param outputSuffix Suffix for output filename (e.g., "aaveOps")
+    function generateWithCustomAssets(
+        uint256 subvaultIndex,
+        bool isProd,
+        address pool,
+        address[] memory collaterals,
+        address[] memory borrows,
+        string memory outputSuffix
+    ) public {
+        address vaultAddress = isProd ? VAULT_PROD : VAULT_PREPROD;
+        string memory env = isProd ? "prod" : "preprod";
+
+        Vault vault = Vault(payable(vaultAddress));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        string memory title = string(
+            abi.encodePacked("ethereum:tqETH:", env, ":sv", vm.toString(subvaultIndex), ":", outputSuffix)
+        );
+
+        console.log("=== Generating Aave Operations JSON ===");
+        console.log("Environment:", env);
+        console.log("Subvault index:", subvaultIndex);
+        console.log("Subvault address:", subvault);
+        console.log("Pool:", pool);
+        console.log("Collaterals:", collaterals.length);
+        console.log("Borrows:", borrows.length);
+        console.log("");
+
+        ProtocolDeployment memory $ = Constants.protocolDeployment();
+
+        // Determine pool name for subvault naming
+        string memory poolName = pool == Constants.AAVE_CORE ? "aave" : "spark";
+        string memory subvaultName = string(
+            abi.encodePacked("subvault", vm.toString(subvaultIndex), "_", poolName)
+        );
+
+        // Create Aave info with custom assets
+        AaveLibrary.Info memory aaveInfo = AaveLibrary.Info({
+            subvault: subvault,
+            subvaultName: subvaultName,
+            curator: curator,
+            aaveInstance: pool,
+            aaveInstanceName: poolName,
+            collaterals: collaterals,
+            loans: borrows,
+            categoryId: 0 // Set to appropriate eMode category if needed
+        });
+
+        // Generate proofs
+        IVerifier.VerificationPayload[] memory leaves = new IVerifier.VerificationPayload[](100);
+        uint256 iterator = 0;
+
+        iterator = ArraysLibrary.insert(
+            leaves,
+            AaveLibrary.getAaveProofs($.bitmaskVerifier, aaveInfo),
+            iterator
+        );
+
+        assembly {
+            mstore(leaves, iterator)
+        }
+
+        (bytes32 merkleRoot, IVerifier.VerificationPayload[] memory leavesWithProofs) =
+            ProofLibrary.generateMerkleProofs(leaves);
+
+        // Generate descriptions (lean version)
+        string[] memory descriptionsLean = new string[](100);
+        iterator = 0;
+
+        iterator = ArraysLibrary.insert(
+            descriptionsLean,
+            AaveLibrary.getAaveDescriptionsLean(aaveInfo),
+            iterator
+        );
+
+        assembly {
+            mstore(descriptionsLean, iterator)
+        }
+
+        // Store lean version
+        string memory leanTitle = string(abi.encodePacked(title, "-lean"));
+        ProofLibrary.storeProofs(leanTitle, merkleRoot, leavesWithProofs, descriptionsLean);
+
+        console.log("");
+        console.log("=== Generation Complete ===");
+        console.log("Lean JSON file:", string(abi.encodePacked("./scripts/jsons/", leanTitle, ".json")));
+        console.log("Merkle root:", vm.toString(merkleRoot));
+        console.log("Number of operations:", leavesWithProofs.length);
+    }
+
+    /// @notice Helper: Generate Aave ops for preprod subvault 4 with PT tokens
+    function generatePreProdSv4Aave() public {
+        // Collaterals: wstETH, PT-USDE, PT-sUSDe
+        address[] memory collaterals = new address[](3);
+        collaterals[0] = Constants.WSTETH; // 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0
+        collaterals[1] = 0x1F84a51296691320478c98b8d77f2Bbd17D34350; // PT-USDE (checksummed)
+        collaterals[2] = 0xE8483517077afa11A9B07f849cee2552f040d7b2; // PT-sUSDe (checksummed)
+
+        // Borrows: USDC, USDT, USDE
+        address[] memory borrows = new address[](3);
+        borrows[0] = Constants.USDC; // 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+        borrows[1] = Constants.USDT; // 0xdAC17F958D2ee523a2206206994597C13D831ec7
+        borrows[2] = Constants.USDE; // 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3
+
+        generateWithCustomAssets(
+            4, // subvault 4
+            false, // preprod
+            Constants.AAVE_CORE, // Aave pool (not Spark)
+            collaterals,
+            borrows,
+            "aaveOps"
+        );
+    }
+
     /// @notice Example: Generate JSON with all 5 assets you mentioned
     function generateAllAssetsExample() external {
         address subvault = address(0); // TODO: Replace with actual subvault address
