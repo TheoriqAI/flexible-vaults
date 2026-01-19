@@ -310,6 +310,23 @@ contract GeneratePendleJSON is Script, Test {
         (bytes32 merkleRoot, IVerifier.VerificationPayload[] memory leavesWithProofs) =
             ProofLibrary.generateMerkleProofs(leaves);
 
+        // Generate descriptions (full version with ABIs)
+        string[] memory descriptions = new string[](100);
+        iterator = 0;
+
+        iterator = ArraysLibrary.insert(
+            descriptions,
+            PendleLibrary.getPendleDescriptions(pendleInfo),
+            iterator
+        );
+
+        assembly {
+            mstore(descriptions, iterator)
+        }
+
+        // Store full version
+        ProofLibrary.storeProofs(title, merkleRoot, leavesWithProofs, descriptions);
+
         // Generate descriptions (lean version)
         string[] memory descriptionsLean = new string[](100);
         iterator = 0;
@@ -330,6 +347,7 @@ contract GeneratePendleJSON is Script, Test {
 
         console.log("");
         console.log("=== Generation Complete ===");
+        console.log("JSON file:", string(abi.encodePacked("./scripts/jsons/", title, ".json")));
         console.log("Lean JSON file:", string(abi.encodePacked("./scripts/jsons/", leanTitle, ".json")));
         console.log("Merkle root:", vm.toString(merkleRoot));
         console.log("Number of operations:", leavesWithProofs.length);

@@ -124,42 +124,143 @@ contract MergeJSONs is Script, Test {
         uint256 targetIndex
     ) private view {
         string memory basePath = string(abi.encodePacked(".merkle_proofs[", vm.toString(index), "]"));
-        
+
         // Extract verificationType
         bytes memory vtData = vm.parseJson(jsonString, string(abi.encodePacked(basePath, ".verificationType")));
         uint8 vt = abi.decode(vtData, (uint8));
-        
+
         // Extract verificationData (as hex string)
         bytes memory vdData = vm.parseJson(jsonString, string(abi.encodePacked(basePath, ".verificationData")));
         bytes memory verificationData = abi.decode(vdData, (bytes));
-        
-        // Extract description
-        // Always try nested format first (Aave/Pendle have .description.description)
-        bytes memory nestedDescData;
+
+        // Extract description - preserve the full JSON object if it exists
         string memory description;
-        bool foundNested = false;
 
-        // Try to parse nested format
-        try vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description.description"))) returns (string memory nested) {
-            description = nested;
-            foundNested = true;
+        // First check if description is a nested object (has .description.description)
+        // If so, extract the entire description object as raw JSON to preserve abi, parameters, etc.
+        try vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description.description"))) returns (string memory) {
+            // It's a nested object - extract the whole thing as raw JSON
+            description = _extractRawJsonObject(jsonString, basePath, ".description");
         } catch {
-            // Not nested, try simple format
+            // It's a simple string - just get the string value
+            description = string(abi.encodePacked('"', vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description"))), '"'));
         }
 
-        // If nested format didn't work, try simple string format
-        if (!foundNested) {
-            description = vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description")));
-        }
-        
         // Store (proofs will be regenerated, so we leave them empty)
         allLeaves[targetIndex] = IVerifier.VerificationPayload({
             verificationType: IVerifier.VerificationType(vt),
             verificationData: verificationData,
             proof: new bytes32[](0)
         });
-        
+
         allDescriptions[targetIndex] = description;
+    }
+
+    /// @notice Extract a raw JSON object from a JSON string at a given path
+    /// @dev This manually parses the JSON to extract the object with all nested content
+    function _extractRawJsonObject(
+        string memory jsonString,
+        string memory basePath,
+        string memory fieldPath
+    ) private view returns (string memory) {
+        // Build the full path to search for
+        string memory searchKey = string(abi.encodePacked('"description":'));
+        bytes memory jsonBytes = bytes(jsonString);
+        bytes memory searchBytes = bytes(searchKey);
+
+        // Find the index position in the original JSON
+        // We need to find the nth occurrence based on basePath index
+        uint256 proofIndex = _parseIndexFromPath(basePath);
+
+        // Find the nth "description" key that's part of a merkle_proof entry
+        uint256 occurrenceCount = 0;
+        uint256 startPos = 0;
+
+        for (uint256 i = 0; i < jsonBytes.length - searchBytes.length; i++) {
+            bool found = true;
+            for (uint256 j = 0; j < searchBytes.length && found; j++) {
+                if (jsonBytes[i + j] != searchBytes[j]) {
+                    found = false;
+                }
+            }
+            if (found) {
+                // Check if this is inside a merkle_proofs entry by looking for "verificationType" before it
+                if (_isInMerkleProof(jsonBytes, i)) {
+                    if (occurrenceCount == proofIndex) {
+                        startPos = i + searchBytes.length;
+                        break;
+                    }
+                    occurrenceCount++;
+                }
+            }
+        }
+
+        // Skip whitespace
+        while (startPos < jsonBytes.length && (jsonBytes[startPos] == ' ' || jsonBytes[startPos] == '\n' || jsonBytes[startPos] == '\t')) {
+            startPos++;
+        }
+
+        // Now extract the JSON object (handle nested braces)
+        if (jsonBytes[startPos] == '{') {
+            uint256 braceCount = 1;
+            uint256 endPos = startPos + 1;
+
+            while (endPos < jsonBytes.length && braceCount > 0) {
+                if (jsonBytes[endPos] == '{') braceCount++;
+                else if (jsonBytes[endPos] == '}') braceCount--;
+                endPos++;
+            }
+
+            // Extract the substring
+            bytes memory result = new bytes(endPos - startPos);
+            for (uint256 i = 0; i < endPos - startPos; i++) {
+                result[i] = jsonBytes[startPos + i];
+            }
+            return string(result);
+        }
+
+        // Fallback: if it's a simple string, wrap it
+        revert("Expected JSON object for description");
+    }
+
+    function _parseIndexFromPath(string memory path) private pure returns (uint256) {
+        // Parse index from ".merkle_proofs[X]"
+        bytes memory pathBytes = bytes(path);
+        uint256 start = 0;
+        uint256 end = 0;
+
+        for (uint256 i = 0; i < pathBytes.length; i++) {
+            if (pathBytes[i] == '[') start = i + 1;
+            if (pathBytes[i] == ']') end = i;
+        }
+
+        uint256 result = 0;
+        for (uint256 i = start; i < end; i++) {
+            result = result * 10 + (uint8(pathBytes[i]) - 48);
+        }
+        return result;
+    }
+
+    function _isInMerkleProof(bytes memory json, uint256 pos) private pure returns (bool) {
+        // Look backwards for "verificationType" to confirm we're in a merkle_proof entry
+        bytes memory marker = bytes("verificationType");
+
+        // Search backwards up to 500 chars
+        uint256 searchStart = pos > 500 ? pos - 500 : 0;
+
+        for (uint256 i = pos; i > searchStart; i--) {
+            if (json[i] == '{') {
+                // Found opening brace, check if verificationType follows
+                for (uint256 j = i; j < pos && j < i + 100; j++) {
+                    bool found = true;
+                    for (uint256 k = 0; k < marker.length && found && j + k < pos; k++) {
+                        if (json[j + k] != marker[k]) found = false;
+                    }
+                    if (found) return true;
+                }
+            }
+        }
+        return false;
     }
 
     /// @notice Helper function to try decoding bytes as string
