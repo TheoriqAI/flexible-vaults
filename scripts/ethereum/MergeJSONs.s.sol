@@ -33,13 +33,12 @@ contract MergeJSONs is Script, Test {
         merge(files, outputTitle);
     }
 
-    /// @notice Merge preprod subvault 4 (Aave + Pendle + Curve + EnterExit) - lean version first
+    /// @notice Merge preprod subvault 4 (Aave + Pendle + Curve) - lean version
     function mergePreProdSv4() external {
-        string[] memory files = new string[](4);
+        string[] memory files = new string[](3);
         files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-lean";
         files[1] = "ethereum:tqETH:preprod:sv4:pendlePT-lean";
         files[2] = "ethereum:tqETH:preprod:sv4:curveNUSD-lean";
-        files[3] = "ethereum:tqETH:preprod:sv4:enterExit-lean";
 
         string memory outputTitle = "ethereum:tqETHPreProd:subvault4-lean";
 
