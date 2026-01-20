@@ -348,7 +348,8 @@ contract GenerateAaveOpsJSON is Script, Test {
     }
 
     /// @notice Helper: Generate Aave ops for preprod subvault 4 with PT tokens
-    function generatePreProdSv4Aave() public {
+    /// @param categoryId eMode category ID
+    function generatePreProdSv4Aave(uint8 categoryId) public {
         // Collaterals: wstETH, PT-USDE, PT-sUSDe
         address[] memory collaterals = new address[](3);
         collaterals[0] = Constants.WSTETH; // 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0
@@ -361,15 +362,22 @@ contract GenerateAaveOpsJSON is Script, Test {
         borrows[1] = Constants.USDT; // 0xdAC17F958D2ee523a2206206994597C13D831ec7
         borrows[2] = Constants.USDE; // 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3
 
+        string memory suffix = string(abi.encodePacked("aaveOps-emode", vm.toString(uint256(categoryId))));
         generateWithCustomAssets(
             4, // subvault 4
             false, // preprod
             Constants.AAVE_CORE, // Aave pool (not Spark)
             collaterals,
             borrows,
-            "aaveOps",
-            32 // eMode category ID
+            suffix,
+            categoryId
         );
+    }
+
+    /// @notice Generate ALL sv4 ops (Aave with both eMode 0 and 32)
+    function generatePreProdSv4All() public {
+        generatePreProdSv4Aave(0);
+        generatePreProdSv4Aave(32);
     }
 
     /// @notice Helper: Generate Spark ops for preprod subvault 3
@@ -388,13 +396,14 @@ contract GenerateAaveOpsJSON is Script, Test {
         borrows[3] = Constants.USDT;
         borrows[4] = Constants.USDE;
 
+        string memory suffix = string(abi.encodePacked("sparkOps-emode", vm.toString(uint256(categoryId))));
         generateWithCustomAssets(
             3, // subvault 3
             false, // preprod
             Constants.SPARK, // Spark pool
             collaterals,
             borrows,
-            "sparkOps",
+            suffix,
             categoryId
         );
     }
@@ -415,15 +424,24 @@ contract GenerateAaveOpsJSON is Script, Test {
         borrows[3] = Constants.USDT;
         borrows[4] = Constants.USDE;
 
+        string memory suffix = string(abi.encodePacked("aaveOps-emode", vm.toString(uint256(categoryId))));
         generateWithCustomAssets(
             3, // subvault 3
             false, // preprod
             Constants.AAVE_CORE, // Aave Core pool
             collaterals,
             borrows,
-            "aaveOps",
+            suffix,
             categoryId
         );
+    }
+
+    /// @notice Generate ALL sv3 ops (Aave + Spark with both eMode 0 and 32)
+    function generatePreProdSv3All() public {
+        generatePreProdSv3Aave(0);
+        generatePreProdSv3Aave(32);
+        generatePreProdSv3Spark(0);
+        generatePreProdSv3Spark(32);
     }
 
     /// @notice Example: Generate JSON with all 5 assets you mentioned
