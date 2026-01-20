@@ -16,9 +16,33 @@ contract MergeJSONs is Script, Test {
         string[] memory files = new string[](2);
         files[0] = "ethereum:tqETH:preprod:sv5:uniswapV3-lean";
         files[1] = "ethereum:tqETH:preprod:sv5:uniswapV4-lean";
-        
+
         string memory outputTitle = "ethereum:tqETH:preprod:sv5:uniswapV3+V4-lean";
-        
+
+        merge(files, outputTitle);
+    }
+
+    /// @notice Merge preprod subvault 3 (Aave + Spark) - lean version
+    function mergePreProdSv3() external {
+        string[] memory files = new string[](2);
+        files[0] = "ethereum:tqETH:preprod:sv3:aaveOps-lean";
+        files[1] = "ethereum:tqETH:preprod:sv3:sparkOps-lean";
+
+        string memory outputTitle = "ethereum:tqETHPreProd:subvault3-lean";
+
+        merge(files, outputTitle);
+    }
+
+    /// @notice Merge preprod subvault 4 (Aave + Pendle + Curve + EnterExit) - lean version first
+    function mergePreProdSv4() external {
+        string[] memory files = new string[](4);
+        files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-lean";
+        files[1] = "ethereum:tqETH:preprod:sv4:pendlePT-lean";
+        files[2] = "ethereum:tqETH:preprod:sv4:curveNUSD-lean";
+        files[3] = "ethereum:tqETH:preprod:sv4:enterExit-lean";
+
+        string memory outputTitle = "ethereum:tqETHPreProd:subvault4-lean";
+
         merge(files, outputTitle);
     }
     
@@ -133,17 +157,12 @@ contract MergeJSONs is Script, Test {
         bytes memory vdData = vm.parseJson(jsonString, string(abi.encodePacked(basePath, ".verificationData")));
         bytes memory verificationData = abi.decode(vdData, (bytes));
 
-        // Extract description - preserve the full JSON object if it exists
+        // Extract description as simple string (lean format)
         string memory description;
-
-        // First check if description is a nested object (has .description.description)
-        // If so, extract the entire description object as raw JSON to preserve abi, parameters, etc.
-        try vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description.description"))) returns (string memory) {
-            // It's a nested object - extract the whole thing as raw JSON
-            description = _extractRawJsonObject(jsonString, basePath, ".description");
+        try vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description"))) returns (string memory simpleDesc) {
+            description = string(abi.encodePacked('"', simpleDesc, '"'));
         } catch {
-            // It's a simple string - just get the string value
-            description = string(abi.encodePacked('"', vm.parseJsonString(jsonString, string(abi.encodePacked(basePath, ".description"))), '"'));
+            description = '"Unknown operation"';
         }
 
         // Store (proofs will be regenerated, so we leave them empty)
@@ -154,6 +173,175 @@ contract MergeJSONs is Script, Test {
         });
 
         allDescriptions[targetIndex] = description;
+    }
+
+    /// @notice Build description JSON from individual fields
+    function _buildDescriptionJson(
+        string memory jsonString,
+        string memory basePath,
+        string memory innerDesc
+    ) private view returns (string memory) {
+        // Get the abi as raw JSON (it's an object)
+        string memory abiJson = _extractRawJsonAtPath(jsonString, basePath, ".description.abi");
+
+        // Get parameters as raw JSON
+        string memory paramsJson = _extractRawJsonAtPath(jsonString, basePath, ".description.parameters");
+
+        // Get innerParameters as raw JSON
+        string memory innerParamsJson = _extractRawJsonAtPath(jsonString, basePath, ".description.innerParameters");
+
+        // Build the full description JSON object
+        return string(abi.encodePacked(
+            '{"description":"', innerDesc, '","abi":', abiJson, ',"parameters":', paramsJson, ',"innerParameters":', innerParamsJson, '}'
+        ));
+    }
+
+    /// @notice Extract raw JSON at a specific path by finding it in the original string
+    function _extractRawJsonAtPath(
+        string memory jsonString,
+        string memory basePath,
+        string memory fieldPath
+    ) private view returns (string memory) {
+        // Parse the index from basePath
+        uint256 proofIndex = _parseIndexFromPath(basePath);
+
+        // Extract the field name from fieldPath (e.g., ".description.abi" -> "abi")
+        string memory fieldName = _getLastFieldName(fieldPath);
+
+        // Build search key
+        bytes memory jsonBytes = bytes(jsonString);
+        bytes memory searchKey = bytes(string(abi.encodePacked('"', fieldName, '":')));
+
+        // Find the proof entry first, then find the field within it
+        uint256 proofStart = _findNthMerkleProofStart(jsonBytes, proofIndex);
+        uint256 proofEnd = _findMerkleProofEnd(jsonBytes, proofStart);
+
+        // Now search for the field within this proof entry
+        for (uint256 i = proofStart; i < proofEnd - searchKey.length; i++) {
+            bool found = true;
+            for (uint256 j = 0; j < searchKey.length && found; j++) {
+                if (jsonBytes[i + j] != searchKey[j]) {
+                    found = false;
+                }
+            }
+            if (found) {
+                uint256 startPos = i + searchKey.length;
+                // Skip whitespace
+                while (startPos < jsonBytes.length && (jsonBytes[startPos] == ' ' || jsonBytes[startPos] == '\n' || jsonBytes[startPos] == '\t')) {
+                    startPos++;
+                }
+
+                // Extract the value (handle objects {}, arrays [], or strings "")
+                return _extractJsonValue(jsonBytes, startPos);
+            }
+        }
+
+        return "{}"; // Default empty object if not found
+    }
+
+    function _getLastFieldName(string memory path) private pure returns (string memory) {
+        bytes memory pathBytes = bytes(path);
+        uint256 lastDot = 0;
+        for (uint256 i = 0; i < pathBytes.length; i++) {
+            if (pathBytes[i] == '.') {
+                lastDot = i;
+            }
+        }
+
+        bytes memory result = new bytes(pathBytes.length - lastDot - 1);
+        for (uint256 i = lastDot + 1; i < pathBytes.length; i++) {
+            result[i - lastDot - 1] = pathBytes[i];
+        }
+        return string(result);
+    }
+
+    function _findNthMerkleProofStart(bytes memory json, uint256 n) private pure returns (uint256) {
+        bytes memory marker = bytes("verificationType");
+        uint256 count = 0;
+
+        for (uint256 i = 0; i < json.length - marker.length; i++) {
+            bool found = true;
+            for (uint256 j = 0; j < marker.length && found; j++) {
+                if (json[i + j] != marker[j]) found = false;
+            }
+            if (found) {
+                if (count == n) {
+                    // Go back to find the opening brace
+                    for (uint256 k = i; k > 0; k--) {
+                        if (json[k] == '{') return k;
+                    }
+                }
+                count++;
+            }
+        }
+        return 0;
+    }
+
+    function _findMerkleProofEnd(bytes memory json, uint256 start) private pure returns (uint256) {
+        uint256 braceCount = 0;
+        for (uint256 i = start; i < json.length; i++) {
+            if (json[i] == '{') braceCount++;
+            else if (json[i] == '}') {
+                braceCount--;
+                if (braceCount == 0) return i + 1;
+            }
+        }
+        return json.length;
+    }
+
+    function _extractJsonValue(bytes memory json, uint256 startPos) private pure returns (string memory) {
+        if (json[startPos] == '{') {
+            // Object
+            uint256 braceCount = 1;
+            uint256 endPos = startPos + 1;
+            while (endPos < json.length && braceCount > 0) {
+                if (json[endPos] == '{') braceCount++;
+                else if (json[endPos] == '}') braceCount--;
+                endPos++;
+            }
+            bytes memory result = new bytes(endPos - startPos);
+            for (uint256 i = 0; i < endPos - startPos; i++) {
+                result[i] = json[startPos + i];
+            }
+            return string(result);
+        } else if (json[startPos] == '[') {
+            // Array
+            uint256 bracketCount = 1;
+            uint256 endPos = startPos + 1;
+            while (endPos < json.length && bracketCount > 0) {
+                if (json[endPos] == '[') bracketCount++;
+                else if (json[endPos] == ']') bracketCount--;
+                endPos++;
+            }
+            bytes memory result = new bytes(endPos - startPos);
+            for (uint256 i = 0; i < endPos - startPos; i++) {
+                result[i] = json[startPos + i];
+            }
+            return string(result);
+        } else if (json[startPos] == '"') {
+            // String
+            uint256 endPos = startPos + 1;
+            while (endPos < json.length && json[endPos] != '"') {
+                if (json[endPos] == '\\') endPos++; // Skip escaped chars
+                endPos++;
+            }
+            bytes memory result = new bytes(endPos - startPos + 1);
+            for (uint256 i = 0; i <= endPos - startPos; i++) {
+                result[i] = json[startPos + i];
+            }
+            return string(result);
+        }
+
+        // Number or other primitive - find until comma or closing brace/bracket
+        uint256 endPos = startPos;
+        while (endPos < json.length && json[endPos] != ',' && json[endPos] != '}' && json[endPos] != ']' && json[endPos] != '\n') {
+            endPos++;
+        }
+        bytes memory result = new bytes(endPos - startPos);
+        for (uint256 i = 0; i < endPos - startPos; i++) {
+            result[i] = json[startPos + i];
+        }
+        return string(result);
     }
 
     /// @notice Extract a raw JSON object from a JSON string at a given path

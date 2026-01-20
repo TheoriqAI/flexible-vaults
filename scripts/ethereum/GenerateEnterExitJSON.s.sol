@@ -559,4 +559,46 @@ contract GenerateEnterExitJSON is Script {
 
         generateProdCurveSwaps(subvaultIndex, swaps, outputSuffix);
     }
+
+    /**
+     * @notice Generate enter/exit operations from a JSON config file (preprod)
+     * @param configPath Path to the JSON config file (e.g., "preprod-sv4-enterExit")
+     */
+    function generatePreProdEnterExitFromConfig(string memory configPath) public {
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/configs/", configPath, ".json");
+        string memory json = vm.readFile(path);
+
+        uint256 subvaultIndex = vm.parseJsonUint(json, ".subvaultIndex");
+        string memory outputSuffix = vm.parseJsonString(json, ".outputSuffix");
+
+        // Parse push and pull assets
+        bytes memory pushData = vm.parseJson(json, ".pushAssets");
+        bytes memory pullData = vm.parseJson(json, ".pullAssets");
+        address[] memory pushAssets = abi.decode(pushData, (address[]));
+        address[] memory pullAssets = abi.decode(pullData, (address[]));
+
+        // Get subvault address
+        address preprodVault = 0x2669a8B27B6f957ddb92Dc0ebdec1f112E6079E4;
+        Vault vault = Vault(payable(preprodVault));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        Config memory config;
+        config.subvault = subvault;
+        config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
+        config.multisig = MULTISIG;
+        config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
+        config.pushAssets = pushAssets;
+        config.pullAssets = pullAssets;
+        config.curveSwaps = new CurveSwap[](0);
+        config.uniV3Swaps = new UniV3Swap[](0);
+
+        string memory outputTitle = string.concat(
+            "ethereum:tqETH:preprod:sv",
+            vm.toString(subvaultIndex),
+            ":",
+            outputSuffix
+        );
+        generateEnterExitJSON(config, outputTitle, true);
+    }
 }
