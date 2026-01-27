@@ -22,25 +22,58 @@ contract MergeJSONs is Script, Test {
         merge(files, outputTitle);
     }
 
-    /// @notice Merge preprod subvault 3 (Aave + Spark) - lean version
+    /// @notice Merge preprod subvault 3 (Aave + Spark with eModes 0, 1, and 32) - lean version
     function mergePreProdSv3() external {
-        string[] memory files = new string[](2);
-        files[0] = "ethereum:tqETH:preprod:sv3:aaveOps-lean";
-        files[1] = "ethereum:tqETH:preprod:sv3:sparkOps-lean";
+        string[] memory files = new string[](6);
+        files[0] = "ethereum:tqETH:preprod:sv3:aaveOps-emode0-lean";
+        files[1] = "ethereum:tqETH:preprod:sv3:aaveOps-emode1-lean";
+        files[2] = "ethereum:tqETH:preprod:sv3:aaveOps-emode32-lean";
+        files[3] = "ethereum:tqETH:preprod:sv3:sparkOps-emode0-lean";
+        files[4] = "ethereum:tqETH:preprod:sv3:sparkOps-emode1-lean";
+        files[5] = "ethereum:tqETH:preprod:sv3:sparkOps-emode32-lean";
 
         string memory outputTitle = "ethereum:tqETHPreProd:subvault3-lean";
 
         merge(files, outputTitle);
     }
 
-    /// @notice Merge preprod subvault 4 (Aave + Pendle + Curve) - lean version
+    /// @notice Merge preprod subvault 3 (Aave + Spark with eModes 0, 1, and 32) - full version
+    function mergePreProdSv3Full() external {
+        string[] memory files = new string[](6);
+        files[0] = "ethereum:tqETH:preprod:sv3:aaveOps-emode0";
+        files[1] = "ethereum:tqETH:preprod:sv3:aaveOps-emode1";
+        files[2] = "ethereum:tqETH:preprod:sv3:aaveOps-emode32";
+        files[3] = "ethereum:tqETH:preprod:sv3:sparkOps-emode0";
+        files[4] = "ethereum:tqETH:preprod:sv3:sparkOps-emode1";
+        files[5] = "ethereum:tqETH:preprod:sv3:sparkOps-emode32";
+
+        string memory outputTitle = "ethereum:tqETHPreProd:subvault3";
+
+        merge(files, outputTitle);
+    }
+
+    /// @notice Merge preprod subvault 4 (Aave both eModes + Pendle + Curve) - lean version
     function mergePreProdSv4() external {
-        string[] memory files = new string[](3);
-        files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-lean";
-        files[1] = "ethereum:tqETH:preprod:sv4:pendlePT-lean";
-        files[2] = "ethereum:tqETH:preprod:sv4:curveNUSD-lean";
+        string[] memory files = new string[](4);
+        files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-emode0-lean";
+        files[1] = "ethereum:tqETH:preprod:sv4:aaveOps-emode32-lean";
+        files[2] = "ethereum:tqETH:preprod:sv4:pendlePT-lean";
+        files[3] = "ethereum:tqETH:preprod:sv4:curveNUSD-lean";
 
         string memory outputTitle = "ethereum:tqETHPreProd:subvault4-lean";
+
+        merge(files, outputTitle);
+    }
+
+    /// @notice Merge preprod subvault 4 (Aave both eModes + Pendle + Curve) - full version
+    function mergePreProdSv4Full() external {
+        string[] memory files = new string[](4);
+        files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-emode0";
+        files[1] = "ethereum:tqETH:preprod:sv4:aaveOps-emode32";
+        files[2] = "ethereum:tqETH:preprod:sv4:pendlePT";
+        files[3] = "ethereum:tqETH:preprod:sv4:curveNUSD";
+
+        string memory outputTitle = "ethereum:tqETHPreProd:subvault4";
 
         merge(files, outputTitle);
     }
