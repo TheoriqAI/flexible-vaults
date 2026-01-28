@@ -238,13 +238,15 @@ contract GenerateAaveOpsJSON is Script, Test {
     /// @param collaterals Array of collateral asset addresses
     /// @param borrows Array of borrow asset addresses
     /// @param outputSuffix Suffix for output filename (e.g., "aaveOps")
+    /// @param categoryId Aave eMode category ID (e.g., 0 for none, 32 for specific eMode)
     function generateWithCustomAssets(
         uint256 subvaultIndex,
         bool isProd,
         address pool,
         address[] memory collaterals,
         address[] memory borrows,
-        string memory outputSuffix
+        string memory outputSuffix,
+        uint8 categoryId
     ) public {
         address vaultAddress = isProd ? VAULT_PROD : VAULT_PREPROD;
         string memory env = isProd ? "prod" : "preprod";
@@ -282,7 +284,7 @@ contract GenerateAaveOpsJSON is Script, Test {
             aaveInstanceName: poolName,
             collaterals: collaterals,
             loans: borrows,
-            categoryId: 0 // Set to appropriate eMode category if needed
+            categoryId: categoryId
         });
 
         // Generate proofs
@@ -301,6 +303,23 @@ contract GenerateAaveOpsJSON is Script, Test {
 
         (bytes32 merkleRoot, IVerifier.VerificationPayload[] memory leavesWithProofs) =
             ProofLibrary.generateMerkleProofs(leaves);
+
+        // Generate descriptions (full version with ABIs)
+        string[] memory descriptions = new string[](100);
+        iterator = 0;
+
+        iterator = ArraysLibrary.insert(
+            descriptions,
+            AaveLibrary.getAaveDescriptions(aaveInfo),
+            iterator
+        );
+
+        assembly {
+            mstore(descriptions, iterator)
+        }
+
+        // Store full version
+        ProofLibrary.storeProofs(title, merkleRoot, leavesWithProofs, descriptions);
 
         // Generate descriptions (lean version)
         string[] memory descriptionsLean = new string[](100);
@@ -322,13 +341,15 @@ contract GenerateAaveOpsJSON is Script, Test {
 
         console.log("");
         console.log("=== Generation Complete ===");
+        console.log("JSON file:", string(abi.encodePacked("./scripts/jsons/", title, ".json")));
         console.log("Lean JSON file:", string(abi.encodePacked("./scripts/jsons/", leanTitle, ".json")));
         console.log("Merkle root:", vm.toString(merkleRoot));
         console.log("Number of operations:", leavesWithProofs.length);
     }
 
     /// @notice Helper: Generate Aave ops for preprod subvault 4 with PT tokens
-    function generatePreProdSv4Aave() public {
+    /// @param categoryId eMode category ID
+    function generatePreProdSv4Aave(uint8 categoryId) public {
         // Collaterals: wstETH, PT-USDE, PT-sUSDe
         address[] memory collaterals = new address[](3);
         collaterals[0] = Constants.WSTETH; // 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0
@@ -341,14 +362,86 @@ contract GenerateAaveOpsJSON is Script, Test {
         borrows[1] = Constants.USDT; // 0xdAC17F958D2ee523a2206206994597C13D831ec7
         borrows[2] = Constants.USDE; // 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3
 
+        string memory suffix = string(abi.encodePacked("aaveOps-emode", vm.toString(uint256(categoryId))));
         generateWithCustomAssets(
             4, // subvault 4
             false, // preprod
             Constants.AAVE_CORE, // Aave pool (not Spark)
             collaterals,
             borrows,
-            "aaveOps"
+            suffix,
+            categoryId
         );
+    }
+
+    /// @notice Generate ALL sv4 ops (Aave with both eMode 0 and 32)
+    function generatePreProdSv4All() public {
+        generatePreProdSv4Aave(0);
+        generatePreProdSv4Aave(32);
+    }
+
+    /// @notice Helper: Generate Spark ops for preprod subvault 3
+    /// @param categoryId eMode category ID for Spark
+    function generatePreProdSv3Spark(uint8 categoryId) public {
+        // Collaterals: WETH, wstETH
+        address[] memory collaterals = new address[](2);
+        collaterals[0] = Constants.WETH;
+        collaterals[1] = Constants.WSTETH;
+
+        // Borrows: WETH, wstETH, USDC, USDT, USDE
+        address[] memory borrows = new address[](5);
+        borrows[0] = Constants.WETH;
+        borrows[1] = Constants.WSTETH;
+        borrows[2] = Constants.USDC;
+        borrows[3] = Constants.USDT;
+        borrows[4] = Constants.USDE;
+
+        string memory suffix = string(abi.encodePacked("sparkOps-emode", vm.toString(uint256(categoryId))));
+        generateWithCustomAssets(
+            3, // subvault 3
+            false, // preprod
+            Constants.SPARK, // Spark pool
+            collaterals,
+            borrows,
+            suffix,
+            categoryId
+        );
+    }
+
+    /// @notice Helper: Generate Aave Core ops for preprod subvault 3
+    /// @param categoryId eMode category ID for Aave
+    function generatePreProdSv3Aave(uint8 categoryId) public {
+        // Collaterals: WETH, wstETH
+        address[] memory collaterals = new address[](2);
+        collaterals[0] = Constants.WETH;
+        collaterals[1] = Constants.WSTETH;
+
+        // Borrows: WETH, wstETH, USDC, USDT, USDE
+        address[] memory borrows = new address[](5);
+        borrows[0] = Constants.WETH;
+        borrows[1] = Constants.WSTETH;
+        borrows[2] = Constants.USDC;
+        borrows[3] = Constants.USDT;
+        borrows[4] = Constants.USDE;
+
+        string memory suffix = string(abi.encodePacked("aaveOps-emode", vm.toString(uint256(categoryId))));
+        generateWithCustomAssets(
+            3, // subvault 3
+            false, // preprod
+            Constants.AAVE_CORE, // Aave Core pool
+            collaterals,
+            borrows,
+            suffix,
+            categoryId
+        );
+    }
+
+    /// @notice Generate ALL sv3 ops (Aave + Spark with both eMode 0 and 32)
+    function generatePreProdSv3All() public {
+        generatePreProdSv3Aave(0);
+        generatePreProdSv3Aave(32);
+        generatePreProdSv3Spark(0);
+        generatePreProdSv3Spark(32);
     }
 
     /// @notice Example: Generate JSON with all 5 assets you mentioned

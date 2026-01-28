@@ -3,9 +3,11 @@ pragma solidity =0.8.25;
 
 import {Script} from "forge-std/Script.sol";
 import {console} from "forge-std/console.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {ProofLibrary} from "../common/ProofLibrary.sol";
 import {JsonLibrary} from "../common/JsonLibrary.sol";
 import {ParameterLibrary} from "../common/ParameterLibrary.sol";
+import {ABILibrary} from "../common/ABILibrary.sol";
 import {IVerifier} from "../../src/permissions/Verifier.sol";
 import {BitmaskVerifier} from "../../src/permissions/BitmaskVerifier.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -192,11 +194,8 @@ contract GenerateEnterExitJSON is Script {
                 )
             );
 
-            descriptions[index] = string.concat(
-                "IERC20(",
-                _getAssetSymbol(swap.assetIn),
-                ").approve(CurveRouter, anyInt)"
-            );
+            // Build description with ABI for approve (using helper to avoid stack too deep)
+            descriptions[index] = _buildCurveApproveDescription(swap.assetIn, config.multisig);
 
             index++;
 
@@ -234,16 +233,14 @@ contract GenerateEnterExitJSON is Script {
                 )
             );
 
-            descriptions[index] = string.concat(
-                "CurveRouter.exchange(pool=",
-                vm.toString(swap.pool),
-                ", from=",
-                _getAssetSymbol(swap.assetIn),
-                ", to=",
-                _getAssetSymbol(swap.assetOut),
-                ", amount=any, expected=any, receiver=",
+            // Build description with ABI for exchange (using helper to avoid stack too deep)
+            descriptions[index] = _buildCurveExchangeDescription(
+                swap.pool,
+                swap.assetIn,
+                swap.assetOut,
+                config.subvault,
                 config.subvaultName,
-                ")"
+                config.multisig
             );
 
             index++;
@@ -365,6 +362,57 @@ contract GenerateEnterExitJSON is Script {
         } catch {
             return vm.toString(asset);
         }
+    }
+
+    /// @notice Build Curve approve description with ABI
+    function _buildCurveApproveDescription(
+        address assetIn,
+        address caller
+    ) internal view returns (string memory) {
+        ParameterLibrary.Parameter[] memory innerParams =
+            ParameterLibrary.build("to", Strings.toHexString(CURVE_ROUTER)).addAny("amount");
+
+        return JsonLibrary.toJson(
+            string.concat("IERC20(", _getAssetSymbol(assetIn), ").approve(CurveRouter, anyInt)"),
+            ABILibrary.getABI(IERC20.approve.selector),
+            ParameterLibrary.build(Strings.toHexString(caller), Strings.toHexString(assetIn), "0"),
+            innerParams
+        );
+    }
+
+    /// @notice Build Curve exchange description with ABI
+    function _buildCurveExchangeDescription(
+        address pool,
+        address assetIn,
+        address assetOut,
+        address subvault,
+        string memory subvaultName,
+        address caller
+    ) internal view returns (string memory) {
+        ParameterLibrary.Parameter[] memory innerParams =
+            ParameterLibrary.build("pool", Strings.toHexString(pool))
+                .add("from", Strings.toHexString(assetIn))
+                .add("to", Strings.toHexString(assetOut))
+                .addAny("amount")
+                .addAny("expected")
+                .add("receiver", Strings.toHexString(subvault));
+
+        return JsonLibrary.toJson(
+            string.concat(
+                "CurveRouter.exchange(pool=",
+                vm.toString(pool),
+                ", from=",
+                _getAssetSymbol(assetIn),
+                ", to=",
+                _getAssetSymbol(assetOut),
+                ", amount=any, expected=any, receiver=",
+                subvaultName,
+                ")"
+            ),
+            ABILibrary.getABI(bytes4(keccak256("exchange(address,address,address,uint256,uint256,address)"))),
+            ParameterLibrary.build(Strings.toHexString(caller), Strings.toHexString(CURVE_ROUTER), "0"),
+            innerParams
+        );
     }
 
     /**
@@ -510,5 +558,47 @@ contract GenerateEnterExitJSON is Script {
         CurveSwap[] memory swaps = abi.decode(swapsData, (CurveSwap[]));
 
         generateProdCurveSwaps(subvaultIndex, swaps, outputSuffix);
+    }
+
+    /**
+     * @notice Generate enter/exit operations from a JSON config file (preprod)
+     * @param configPath Path to the JSON config file (e.g., "preprod-sv4-enterExit")
+     */
+    function generatePreProdEnterExitFromConfig(string memory configPath) public {
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/configs/", configPath, ".json");
+        string memory json = vm.readFile(path);
+
+        uint256 subvaultIndex = vm.parseJsonUint(json, ".subvaultIndex");
+        string memory outputSuffix = vm.parseJsonString(json, ".outputSuffix");
+
+        // Parse push and pull assets
+        bytes memory pushData = vm.parseJson(json, ".pushAssets");
+        bytes memory pullData = vm.parseJson(json, ".pullAssets");
+        address[] memory pushAssets = abi.decode(pushData, (address[]));
+        address[] memory pullAssets = abi.decode(pullData, (address[]));
+
+        // Get subvault address
+        address preprodVault = 0x2669a8B27B6f957ddb92Dc0ebdec1f112E6079E4;
+        Vault vault = Vault(payable(preprodVault));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        Config memory config;
+        config.subvault = subvault;
+        config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
+        config.multisig = MULTISIG;
+        config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
+        config.pushAssets = pushAssets;
+        config.pullAssets = pullAssets;
+        config.curveSwaps = new CurveSwap[](0);
+        config.uniV3Swaps = new UniV3Swap[](0);
+
+        string memory outputTitle = string.concat(
+            "ethereum:tqETH:preprod:sv",
+            vm.toString(subvaultIndex),
+            ":",
+            outputSuffix
+        );
+        generateEnterExitJSON(config, outputTitle, true);
     }
 }
