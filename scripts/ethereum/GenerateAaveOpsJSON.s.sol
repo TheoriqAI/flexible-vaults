@@ -437,7 +437,7 @@ contract GenerateAaveOpsJSON is Script, Test {
         );
     }
 
-    /// @notice Generate ALL sv3 ops (Aave + Spark with both eMode 0 and 32)
+    /// @notice Generate ALL sv3 ops (Aave + Spark with eMode 0, 1, and 32)
     function generatePreProdSv3All() public {
         generatePreProdSv3Aave(32);
         generatePreProdSv3Spark(32);
