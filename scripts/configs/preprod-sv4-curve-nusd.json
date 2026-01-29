@@ -1,0 +1,11 @@
+{
+  "subvaultIndex": 4,
+  "outputSuffix": "curveNUSD",
+  "curveSwaps": [
+    {
+      "pool": "0x7E19F0253A564e026C63eeAA9338d6DBddeF3b09",
+      "assetIn": "0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",
+      "assetOut": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    }
+  ]
+}

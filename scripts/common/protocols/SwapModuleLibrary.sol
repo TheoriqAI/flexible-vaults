@@ -220,6 +220,98 @@ library SwapModuleLibrary {
         }
     }
 
+    function getSwapModuleDescriptionsLean(Info memory $) internal view returns (string[] memory descriptions) {
+        uint256 length = 3 * $.assets.length * $.curators.length;
+        descriptions = new string[](length);
+        uint256 iterator = 0;
+
+        ParameterLibrary.Parameter[] memory innerParameters;
+
+        for (uint256 i = 0; i < $.curators.length; i++) {
+            for (uint256 j = 0; j < $.assets.length; j++) {
+                if ($.assets[j] == TransferLibrary.ETH) {
+                    string memory assetName = "ETH";
+                    innerParameters = ParameterLibrary.add2("asset", Strings.toHexString($.assets[j]), "value", "any");
+                    descriptions[iterator++] = JsonLibrary.toJsonLean(
+                        string(
+                            abi.encodePacked(
+                                "ISwapModule(",
+                                Strings.toHexString($.swapModule),
+                                ").pushAssets{value: any}(",
+                                assetName,
+                                ", msg.value)"
+                            )
+                        ),
+                        ParameterLibrary.build(
+                            Strings.toHexString($.curators[i]), Strings.toHexString($.swapModule), "any"
+                        ),
+                        innerParameters
+                    );
+                    descriptions[iterator++] = JsonLibrary.toJsonLean(
+                        string(
+                            abi.encodePacked(
+                                "ISwapModule(",
+                                Strings.toHexString($.swapModule),
+                                ").pullAssets(",
+                                assetName,
+                                ", msg.value)"
+                            )
+                        ),
+                        ParameterLibrary.build(
+                            Strings.toHexString($.curators[i]), Strings.toHexString($.swapModule), "0"
+                        ),
+                        innerParameters
+                    );
+                } else {
+                    string memory assetName = IERC20Metadata($.assets[j]).symbol();
+                    innerParameters = ParameterLibrary.add2("to", Strings.toHexString($.swapModule), "amount", "any");
+                    descriptions[iterator++] = JsonLibrary.toJsonLean(
+                        string(
+                            abi.encodePacked(
+                                "IERC20(",
+                                assetName,
+                                ").approve(ISwapModule(",
+                                Strings.toHexString($.swapModule),
+                                "), any)"
+                            )
+                        ),
+                        ParameterLibrary.build(
+                            Strings.toHexString($.curators[i]), Strings.toHexString($.assets[j]), "0"
+                        ),
+                        innerParameters
+                    );
+                    innerParameters = ParameterLibrary.add2("asset", Strings.toHexString($.assets[j]), "value", "any");
+                    descriptions[iterator++] = JsonLibrary.toJsonLean(
+                        string(
+                            abi.encodePacked(
+                                "ISwapModule(", Strings.toHexString($.swapModule), ").pushAssets(", assetName, ", any)"
+                            )
+                        ),
+                        ParameterLibrary.build(
+                            Strings.toHexString($.curators[i]), Strings.toHexString($.swapModule), "0"
+                        ),
+                        innerParameters
+                    );
+                    descriptions[iterator++] = JsonLibrary.toJsonLean(
+                        string(
+                            abi.encodePacked(
+                                "ISwapModule(", Strings.toHexString($.swapModule), ").pullAssets(", assetName, ", any)"
+                            )
+                        ),
+                        ParameterLibrary.build(
+                            Strings.toHexString($.curators[i]), Strings.toHexString($.swapModule), "0"
+                        ),
+                        innerParameters
+                    );
+                }
+            }
+        }
+
+        assembly {
+            mstore(descriptions, iterator)
+        }
+    }
+
     function getSwapModuleCalls(Info memory $) internal pure returns (Call[][] memory calls) {
         uint256 length = 3 * $.assets.length * $.curators.length;
 

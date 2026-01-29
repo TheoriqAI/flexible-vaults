@@ -172,6 +172,69 @@ library CoreVaultLibrary {
         }
     }
 
+    function getCoreVaultDescriptionsLean(Info memory $) internal view returns (string[] memory descriptions) {
+        uint256 length = ($.depositQueues.length + $.redeemQueues.length) * 2;
+        descriptions = new string[](length);
+        uint256 index = 0;
+        ParameterLibrary.Parameter[] memory innerParameters;
+        for (uint256 i = 0; i < $.depositQueues.length; i++) {
+            address queue = $.depositQueues[i];
+            address asset = IDepositQueue(queue).asset();
+            if (asset == TransferLibrary.ETH) {
+                innerParameters = ParameterLibrary.build("assets", "any").addAny("referral");
+                innerParameters = innerParameters.add("merkleProof", "[]");
+                descriptions[index++] = JsonLibrary.toJsonLean(
+                    string(
+                        abi.encodePacked("DepositQueue(ETH).deposit(anyInt==msg.value, anyAddress, new bytes32[](0))")
+                    ),
+                    ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(queue), "anyInt"),
+                    innerParameters
+                );
+            } else {
+                string memory symbol = IERC20Metadata(asset).symbol();
+                innerParameters = ParameterLibrary.build("to", Strings.toHexString(queue)).addAny("amount");
+                descriptions[index++] = JsonLibrary.toJsonLean(
+                    string(abi.encodePacked("IERC20(", symbol, ").approve(DepositQueue(", symbol, "), anyInt)")),
+                    ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(asset), "0"),
+                    innerParameters
+                );
+
+                innerParameters = ParameterLibrary.build("assets", "any").addAny("referral");
+                innerParameters = innerParameters.add("merkleProof", "[]");
+                descriptions[index++] = JsonLibrary.toJsonLean(
+                    string(abi.encodePacked("DepositQueue(", symbol, ").deposit(anyInt, anyAddress, new bytes32[](0))")),
+                    ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(queue), "0"),
+                    innerParameters
+                );
+            }
+        }
+
+        for (uint256 i = 0; i < $.redeemQueues.length; i++) {
+            address queue = $.redeemQueues[i];
+            address asset = IRedeemQueue(queue).asset();
+
+            innerParameters = ParameterLibrary.build("shares", "any");
+            string memory symbol = asset == TransferLibrary.ETH ? "ETH" : IERC20Metadata(asset).symbol();
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(abi.encodePacked("RedeemQueue(", symbol, ").redeem(anyInt)")),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(queue), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("receiver", Strings.toHexString($.subvault)).add("timestamps", "[any]");
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(abi.encodePacked("RedeemQueue(", symbol, ").claim(subvault, [antInt32])")),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(queue), "0"),
+                innerParameters
+            );
+        }
+
+        assembly {
+            mstore(descriptions, index)
+        }
+    }
+
     function getCoreVaultCalls(Info memory $) internal view returns (Call[][] memory calls) {
         uint256 length = ($.depositQueues.length + $.redeemQueues.length) * 2;
         calls = new Call[][](length);

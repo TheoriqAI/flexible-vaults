@@ -1,0 +1,41 @@
+{
+  "subvaultIndex": 4,
+  "isProd": true,
+  "strategies": [
+    {
+      "ptToken": "0xC6F3e4Ea2D61c219e68545B90A44A42609D2aaCA",
+      "market": "0x60f42E4a1E2f2bD89fEA2DE82F9a7929df0E0dfe",
+      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
+      "mintSyToken": "0x4457a5B0Ed74F95910f98E8C7Bb0c5E6933f6B8C",
+      "description": "PT-jrUSDe-27MAR2025"
+    },
+    {
+      "ptToken": "0x0776b04d31A30B4E2D2AA7952bD7b19b5ee92A71",
+      "market": "0xE8483517077afa11A9B07f849cee2552f040d7b2",
+      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
+      "mintSyToken": "0x8f1bcb8b6Fb2fd0E4fE81A8Da3F89deEF79d5fC7",
+      "description": "PT-sNUSD-04MAR2026"
+    },
+    {
+      "ptToken": "0x1F84a51296691320478c98b8d77f2Bbd17D34350",
+      "market": "0xAAdbc004dACf10E1FDbD87ca1A40ecAF77Cc5b02",
+      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
+      "mintSyToken": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+      "description": "PT-USDe"
+    },
+    {
+      "ptToken": "0xE8483517077afa11A9B07f849cee2552f040d7b2",
+      "market": "0xEd81F8ba2941c3979DE2265c295748a6B6956567",
+      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
+      "mintSyToken": "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+      "description": "PT-sUSDe"
+    },
+    {
+      "ptToken": "0x9Bf45ab47747F4B4dD09B3C2c73953484b4eB375",
+      "market": "0xAFB7d6d1e9BcA5B675aDC9b4f52F0CDfDdec9654",
+      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3", "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003"],
+      "mintSyToken": "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003",
+      "description": "PT-srUSDe-01APR2026"
+    }
+  ]
+}
