@@ -12,7 +12,8 @@ import "../common/ProofLibrary.sol";
 /// @dev Run with: forge script scripts/ethereum/GenerateAaveOpsJSON.s.sol --sig "generateProdCurator()"
 contract GenerateAaveOpsJSON is Script, Test {
     // Addresses from tqETH.s.sol
-    address public curator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public preProdCurator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
     address public agent1 = 0xfcBEe74406415c0Cbe556317B1aeF8D9950D515D;
 
     // Vault addresses
@@ -24,7 +25,7 @@ contract GenerateAaveOpsJSON is Script, Test {
         Vault vault = Vault(payable(VAULT_PROD));
         address subvault = vault.subvaultAt(0); // Change index as needed: 0, 1, 2, etc.
 
-        generateJSON("ethereum:tqETH:prod:aaveOps", subvault, curator);
+        generateJSON("ethereum:tqETH:prod:aaveOps", subvault, prodCurator);
     }
 
     /// @notice Generate JSON for pre-prod vault, curator (default subvault 0)
@@ -41,7 +42,7 @@ contract GenerateAaveOpsJSON is Script, Test {
         string memory title = string(
             abi.encodePacked("ethereum:tqETH:preprod:sv", vm.toString(subvaultIndex), ":aaveOps")
         );
-        generateJSON(title, subvault, curator);
+        generateJSON(title, subvault, preProdCurator);
     }
 
     /// @notice Generate JSON for prod vault, curator with specific subvault index
@@ -53,7 +54,7 @@ contract GenerateAaveOpsJSON is Script, Test {
         string memory title = string(
             abi.encodePacked("ethereum:tqETH:prod:sv", vm.toString(subvaultIndex), ":aaveOps")
         );
-        generateJSON(title, subvault, curator);
+        generateJSON(title, subvault, prodCurator);
     }
 
     /// @notice Generate JSON for prod vault, agent1
@@ -276,6 +277,7 @@ contract GenerateAaveOpsJSON is Script, Test {
         );
 
         // Create Aave info with custom assets
+        address curator = isProd ? prodCurator : preProdCurator;
         AaveLibrary.Info memory aaveInfo = AaveLibrary.Info({
             subvault: subvault,
             subvaultName: subvaultName,
@@ -551,7 +553,7 @@ contract GenerateAaveOpsJSON is Script, Test {
             "ethereum:tqETH:aaveOpsAll",
             subvault,
             "aaveOpsAll",
-            curator,
+            prodCurator, // Example uses prod curator
             collaterals,
             loans,
             0 // No eMode - category 0

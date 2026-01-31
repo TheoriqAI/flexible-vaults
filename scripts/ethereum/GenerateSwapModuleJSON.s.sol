@@ -13,7 +13,8 @@ import "../common/ArraysLibrary.sol";
 /// @dev Reusable for any subvault + swap module combination
 /// @dev Run with: forge script scripts/ethereum/GenerateSwapModuleJSON.s.sol --sig "generatePreProdWithSwapModule(uint256,address)" 4 <SWAP_MODULE_ADDR> --via-ir --rpc-url https://rpc.mevblocker.io
 contract GenerateSwapModuleJSON is Script, Test {
-    address public curator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public preProdCurator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
 
     address public constant VAULT_PROD = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
     address public constant VAULT_PREPROD = 0x2669a8B27B6f957ddb92Dc0ebdec1f112E6079E4;
@@ -28,7 +29,7 @@ contract GenerateSwapModuleJSON is Script, Test {
         string memory title = string(
             abi.encodePacked("ethereum:tqETH:preprod:sv", vm.toString(subvaultIndex), ":swapModule")
         );
-        generateJSON(title, subvault, swapModule, curator);
+        generateJSON(title, subvault, swapModule, preProdCurator);
     }
 
     /// @notice Generate SwapModule JSON for prod vault with given subvault index and swap module
@@ -41,7 +42,7 @@ contract GenerateSwapModuleJSON is Script, Test {
         string memory title = string(
             abi.encodePacked("ethereum:tqETH:prod:sv", vm.toString(subvaultIndex), ":swapModule")
         );
-        generateJSON(title, subvault, swapModule, curator);
+        generateJSON(title, subvault, swapModule, prodCurator);
     }
 
     /// @notice Get SwapModule config with standard asset set: WETH, wstETH, USDC, USDT, USDE, sUSDe
