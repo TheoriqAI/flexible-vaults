@@ -13,7 +13,8 @@ import "../common/ArraysLibrary.sol";
 /// @dev Run with: forge script scripts/ethereum/GeneratePendleJSON.s.sol --sig "generateProdCurator()" --via-ir
 contract GeneratePendleJSON is Script, Test {
     // Addresses from tqETH.s.sol
-    address public curator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public preProdCurator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
 
     // Vault addresses
     address public constant VAULT_PROD = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
@@ -33,7 +34,7 @@ contract GeneratePendleJSON is Script, Test {
         string memory title = string(
             abi.encodePacked("ethereum:tqETH:prod:sv", vm.toString(subvaultIndex), ":pendlePT")
         );
-        generateJSON(title, subvault, "prod", curator);
+        generateJSON(title, subvault, "prod", prodCurator);
     }
 
     /// @notice Generate JSON for pre-prod vault, curator (default subvault 0)
@@ -50,7 +51,7 @@ contract GeneratePendleJSON is Script, Test {
         string memory title = string(
             abi.encodePacked("ethereum:tqETH:preprod:sv", vm.toString(subvaultIndex), ":pendlePT")
         );
-        generateJSON(title, subvault, "preprod", curator);
+        generateJSON(title, subvault, "preprod", preProdCurator);
     }
 
     /// @notice Generate JSON for a specific caller
@@ -283,6 +284,9 @@ contract GeneratePendleJSON is Script, Test {
 
         ProtocolDeployment memory $ = Constants.protocolDeployment();
 
+        // Select appropriate curator based on environment
+        address curator = isProd ? prodCurator : preProdCurator;
+
         // Create Pendle info
         PendleLibrary.Info memory pendleInfo = PendleLibrary.Info({
             subvault: subvault,
@@ -432,7 +436,7 @@ contract GeneratePendleJSON is Script, Test {
             "ethereum:tqETH:multiPT",
             subvault,
             "multiPT",
-            curator,
+            prodCurator,
             strategies
         );
     }
