@@ -8177,7 +8177,42 @@
     },
     {
       "verificationType": 3,
-      "description": "IERC20(wstETH).approve(LidoWithdrawalQueue, anyInt)",
+      "description": {
+        "description": "IERC20(wstETH).approve(LidoWithdrawalQueue, anyAmount)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3",
+          "target": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x889edc2edab5f40e902b864ad4d7ade8e412f9b1",
+          "amount": "any"
+        }
+      },
       "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a18666c048d99b51587d1cb94b89d6ee718468cb00d5c60582fee039c95055fb5000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "proof": [
         "0x13e3a7251febeae85abc38917af5a57aee18ce4cf0d4f2f61f3fdd8f1876b7f3",
@@ -8191,7 +8226,42 @@
     },
     {
       "verificationType": 3,
-      "description": "LidoWithdrawalQueue.requestWithdrawalsWstETH(anyAmounts[], subvault4)",
+      "description": {
+        "description": "LidoWithdrawalQueue.requestWithdrawalsWstETH(anyAmounts[], subvault4)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256[]",
+              "name": "_amounts",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "name": "requestWithdrawalsWstETH",
+          "outputs": [
+            {
+              "internalType": "uint256[]",
+              "name": "requestIds",
+              "type": "uint256[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3",
+          "target": "0x889edc2edab5f40e902b864ad4d7ade8e412f9b1",
+          "value": "0"
+        },
+        "innerParameters": {
+          "_amounts": "any",
+          "_owner": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3"
+        }
+      },
       "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ad4f9c3189562c489b86fd4a1d2f9e9f9828f67407e04b2a6f2629e80e5025ace000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000f37d9264099fc67448e56e60bc33095f2b2a95d3000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "proof": [
         "0x5f093cfd2887feaff3c0766fe86bc6620bf777f5938ff21b4b206eb70d147902",
@@ -8205,7 +8275,30 @@
     },
     {
       "verificationType": 3,
-      "description": "LidoWithdrawalQueue.claimWithdrawal(anyRequestId)",
+      "description": {
+        "description": "LidoWithdrawalQueue.claimWithdrawal(anyRequestId)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_requestId",
+              "type": "uint256"
+            }
+          ],
+          "name": "claimWithdrawal",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3",
+          "target": "0x889edc2edab5f40e902b864ad4d7ade8e412f9b1",
+          "value": "0"
+        },
+        "innerParameters": {
+          "_requestId": "any"
+        }
+      },
       "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20af6f5054f92d1e652ba8b56af021c3fc4b32325e4d32bb0808da6eeeb769807ab0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000008400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "proof": [
         "0xdd62540b9997034018a29c5b89d2e90763656c46101c3ca26bc8f0a080fc18ed",
@@ -8218,7 +8311,36 @@
     },
     {
       "verificationType": 3,
-      "description": "sUSDe.cooldownShares(anyShares)",
+      "description": {
+        "description": "sUSDe.cooldownShares(anyShares)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "name": "cooldownShares",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3",
+          "target": "0x9d39a5de30e57443bff2a8307a4256c8797a3497",
+          "value": "0"
+        },
+        "innerParameters": {
+          "shares": "any"
+        }
+      },
       "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20af6f5054f92d1e652ba8b56af021c3fc4b32325e4d32bb0808da6eeeb769807ab0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000008400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "proof": [
         "0xdd62540b9997034018a29c5b89d2e90763656c46101c3ca26bc8f0a080fc18ed",
@@ -8231,7 +8353,30 @@
     },
     {
       "verificationType": 3,
-      "description": "sUSDe.unstake(subvault4)",
+      "description": {
+        "description": "sUSDe.unstake(subvault4)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "unstake",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3",
+          "target": "0x9d39a5de30e57443bff2a8307a4256c8797a3497",
+          "value": "0"
+        },
+        "innerParameters": {
+          "receiver": "0xf37d9264099fc67448e56e60bc33095f2b2a95d3"
+        }
+      },
       "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a41bcbd56de4ba924ce434310623481a326c33b63aad3b9b9cb1cc9e410bcecfa0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000008400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000f37d9264099fc67448e56e60bc33095f2b2a95d300000000000000000000000000000000000000000000000000000000",
       "proof": [
         "0x5507ea0505aaa936edec65bc4f553444d4ec47e0bd7225bbe72b5682b092fb8e",
@@ -8591,12 +8736,12 @@
               "type": "address"
             },
             {
-              "internalType": "address",
-              "name": "receiver",
-              "type": "address"
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
             }
           ],
-          "name": "borrow",
+          "name": "repay",
           "outputs": [
             {
               "internalType": "uint256",
@@ -8698,12 +8843,12 @@
               "type": "address"
             },
             {
-              "internalType": "bytes",
-              "name": "data",
-              "type": "bytes"
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
             }
           ],
-          "name": "repay",
+          "name": "borrow",
           "outputs": [
             {
               "internalType": "uint256",
@@ -9295,12 +9440,12 @@
               "type": "address"
             },
             {
-              "internalType": "address",
-              "name": "receiver",
-              "type": "address"
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
             }
           ],
-          "name": "borrow",
+          "name": "repay",
           "outputs": [
             {
               "internalType": "uint256",
@@ -9402,12 +9547,12 @@
               "type": "address"
             },
             {
-              "internalType": "bytes",
-              "name": "data",
-              "type": "bytes"
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
             }
           ],
-          "name": "repay",
+          "name": "borrow",
           "outputs": [
             {
               "internalType": "uint256",
@@ -9997,12 +10142,12 @@
               "type": "address"
             },
             {
-              "internalType": "address",
-              "name": "receiver",
-              "type": "address"
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
             }
           ],
-          "name": "borrow",
+          "name": "repay",
           "outputs": [
             {
               "internalType": "uint256",
@@ -10104,12 +10249,12 @@
               "type": "address"
             },
             {
-              "internalType": "bytes",
-              "name": "data",
-              "type": "bytes"
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
             }
           ],
-          "name": "repay",
+          "name": "borrow",
           "outputs": [
             {
               "internalType": "uint256",
