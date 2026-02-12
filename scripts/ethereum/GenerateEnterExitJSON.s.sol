@@ -384,9 +384,8 @@ contract GenerateEnterExitJSON is Script {
 
             // 2. requestWithdrawalsWstETH(uint256[] amounts, address _owner) - owner locked to subvault
             // Signature: requestWithdrawalsWstETH(uint256[],address) returns (uint256[])
-            // Use 1-element array for consistent bitmask encoding (call multiple times for multiple withdrawals)
+            // Using array of length 1 - bitmask length must match actual calldata length
             uint256[] memory singleAmount = new uint256[](1);
-            singleAmount[0] = 0;
             bytes memory requestCalldata = abi.encodeWithSignature(
                 "requestWithdrawalsWstETH(uint256[],address)",
                 singleAmount,
@@ -406,7 +405,7 @@ contract GenerateEnterExitJSON is Script {
                     false, // selector: fixed
                     abi.encodeWithSignature(
                         "requestWithdrawalsWstETH(uint256[],address)",
-                        singleAmount, // amounts: 1-element array (any value)
+                        singleAmount, // amounts: any (1 element array)
                         config.subvault // _owner: FIXED to subvault
                     )
                 )
@@ -414,9 +413,9 @@ contract GenerateEnterExitJSON is Script {
 
             {
                 ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
-                innerParams = innerParams.addAny("_amounts[0]").add("_owner", Strings.toHexString(config.subvault));
+                innerParams = innerParams.addAny("_amounts").add("_owner", Strings.toHexString(config.subvault));
                 descriptions[index] = JsonLibrary.toJson(
-                    string.concat("LidoWithdrawalQueue.requestWithdrawalsWstETH([anyAmount], ", config.subvaultName, ")"),
+                    string.concat("LidoWithdrawalQueue.requestWithdrawalsWstETH(anyAmounts[], ", config.subvaultName, ")"),
                     ABILibrary.getABI(ILidoWithdrawalQueue.requestWithdrawalsWstETH.selector),
                     ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
                     innerParams

@@ -52,26 +52,28 @@ contract MergeJSONs is Script, Test {
         merge(files, outputTitle);
     }
 
-    /// @notice Merge preprod subvault 4 (Aave both eModes + Pendle + Curve) - lean version
+    /// @notice Merge preprod subvault 4 (Aave both eModes + Pendle + Curve + Lido) - lean version
     function mergePreProdSv4() external {
-        string[] memory files = new string[](4);
+        string[] memory files = new string[](5);
         files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-emode0-lean";
         files[1] = "ethereum:tqETH:preprod:sv4:aaveOps-emode32-lean";
         files[2] = "ethereum:tqETH:preprod:sv4:pendlePT-lean";
         files[3] = "ethereum:tqETH:preprod:sv4:curveNUSD-lean";
+        files[4] = "ethereum:tqETH:preprod:sv4:lidoWithdrawal-lean";
 
         string memory outputTitle = "ethereum:tqETHPreProd:subvault4-lean";
 
         merge(files, outputTitle);
     }
 
-    /// @notice Merge preprod subvault 4 (Aave both eModes + Pendle + Curve) - full version
+    /// @notice Merge preprod subvault 4 (Aave both eModes + Pendle + Curve + Lido) - full version
     function mergePreProdSv4Full() external {
-        string[] memory files = new string[](4);
+        string[] memory files = new string[](5);
         files[0] = "ethereum:tqETH:preprod:sv4:aaveOps-emode0";
         files[1] = "ethereum:tqETH:preprod:sv4:aaveOps-emode32";
         files[2] = "ethereum:tqETH:preprod:sv4:pendlePT";
         files[3] = "ethereum:tqETH:preprod:sv4:curveNUSD";
+        files[4] = "ethereum:tqETH:preprod:sv4:lidoWithdrawal";
 
         string memory outputTitle = "ethereum:tqETHPreProd:subvault4";
 
