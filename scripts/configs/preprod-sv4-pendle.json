@@ -3,32 +3,43 @@
   "isProd": false,
   "strategies": [
     {
-      "ptToken": "0xC6F3e4Ea2D61c219e68545B90A44A42609D2aaCA",
-      "market": "0x60f42E4a1E2f2bD89fEA2DE82F9a7929df0E0dfe",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
-      "mintSyToken": "0x4457a5B0Ed74F95910f98E8C7Bb0c5E6933f6B8C",
-      "description": "PT-jrUSDe-27MAR2025"
+      "ptToken": "0xd0609Ac13000d88B0BEbf5Bb21074916eDd92Bb1",
+      "market": "0xfAbEEFC5369aA5270B401f4Ee062D17fb5f1EC2A",
+      "inputTokens": [
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
+      ],
+      "outputTokens": [
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
+      ]
     },
     {
-      "ptToken": "0x0776b04d31A30B4E2D2AA7952bD7b19b5ee92A71",
-      "market": "0xE8483517077afa11A9B07f849cee2552f040d7b2",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
-      "mintSyToken": "0x8f1bcb8b6Fb2fd0E4fE81A8Da3F89deEF79d5fC7",
-      "description": "PT-sNUSD-04MAR2026"
+      "ptToken": "0x54Bf2659B5CdFd86b75920e93C0844c0364F5166",
+      "market": "0x6D8C4DE7071D5AeE27fc3a810764E62a4a00Ceb9",
+      "inputTokens": [
+        "0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",
+        "0x15BFa696b3eAe3b7E28A7F7e47BfaDaFCa3f0658",
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+        "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      ],
+      "outputTokens": [
+        "0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",
+        "0x15BFa696b3eAe3b7E28A7F7e47BfaDaFCa3f0658",
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+        "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      ]
     },
     {
-      "ptToken": "0x1F84a51296691320478c98b8d77f2Bbd17D34350",
-      "market": "0xAAdbc004dACf10E1FDbD87ca1A40ecAF77Cc5b02",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
-      "mintSyToken": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
-      "description": "PT-USDe"
-    },
-    {
-      "ptToken": "0xE8483517077afa11A9B07f849cee2552f040d7b2",
-      "market": "0xEd81F8ba2941c3979DE2265c295748a6B6956567",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"],
-      "mintSyToken": "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
-      "description": "PT-sUSDe"
+      "ptToken": "0x9Bf45ab47747F4B4dD09B3C2c73953484b4eB375",
+      "market": "0xAFB7d6d1e9BcA5B675aDC9b4f52F0CDfDdec9654",
+      "inputTokens": [
+        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
+      ],
+      "outputTokens": [
+        "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003",
+        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
+      ]
     }
   ]
 }

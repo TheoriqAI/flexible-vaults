@@ -12,6 +12,8 @@ import {IVerifier} from "../../src/permissions/Verifier.sol";
 import {BitmaskVerifier} from "../../src/permissions/BitmaskVerifier.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Vault} from "../../src/vaults/Vault.sol";
+import {ILidoWithdrawalQueue} from "../common/interfaces/ILidoWithdrawalQueue.sol";
+import {ISUSDe} from "../common/interfaces/ISUSDe.sol";
 
 interface IERC20Metadata is IERC20 {
     function symbol() external view returns (string memory);
@@ -36,6 +38,9 @@ contract GenerateEnterExitJSON is Script {
     address constant MULTISIG = 0x78B1fDE522103116891C71977AB8f8344b327C77; // Default multisig
     address constant CURVE_ROUTER = 0xF0d4c12A5768D806021F80a262B4d39d26C58b8D; // Curve Exchange Router
     address constant UNI_V3_ROUTER = 0xE592427A0AEce92De3Edee1F18E0157C05861564; // Uniswap V3 SwapRouter
+    address constant LIDO_WITHDRAWAL_QUEUE = 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1; // Lido Withdrawal Queue
+    address constant WSTETH = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0; // wstETH token
+    address constant SUSDE = 0x9D39A5DE30e57443BfF2A8307A4256c8797A3497; // sUSDe token
 
     struct Config {
         address subvault;
@@ -49,6 +54,10 @@ contract GenerateEnterExitJSON is Script {
         CurveSwap[] curveSwaps;
         // Optional Uniswap V3 swaps
         UniV3Swap[] uniV3Swaps;
+        // Optional Lido wstETH withdrawal queue
+        bool enableLidoWithdrawal;
+        // Optional sUSDe withdrawal (cooldown + unstake)
+        bool enableSusdeWithdrawal;
     }
 
     struct CurveSwap {
@@ -89,12 +98,24 @@ contract GenerateEnterExitJSON is Script {
         totalOps += config.pullAssets.length; // Pull operations (transfer from subvault)
         totalOps += config.curveSwaps.length * 2; // Curve: approve + exchange
         totalOps += config.uniV3Swaps.length * 2; // UniV3: approve + swap
+        if (config.enableLidoWithdrawal) {
+            totalOps += 3; // wstETH approve + requestWithdrawalsWstETH + claimWithdrawal
+        }
+        if (config.enableSusdeWithdrawal) {
+            totalOps += 2; // cooldownShares + unstake
+        }
 
         console.log("Total operations:");
         console.log("  Push assets: %d", config.pushAssets.length);
         console.log("  Pull assets: %d", config.pullAssets.length);
         console.log("  Curve swaps: %d", config.curveSwaps.length);
         console.log("  UniV3 swaps: %d", config.uniV3Swaps.length);
+        if (config.enableLidoWithdrawal) {
+            console.log("  Lido withdrawal: 3 (approve + request + claim)");
+        }
+        if (config.enableSusdeWithdrawal) {
+            console.log("  sUSDe withdrawal: 2 (cooldownShares + unstake)");
+        }
         console.log("  Total: %d", totalOps);
         console.log("");
 
@@ -326,6 +347,192 @@ contract GenerateEnterExitJSON is Script {
                 ", amountIn=any, amountOutMin=any)"
             );
 
+            index++;
+        }
+
+        // Generate Lido wstETH withdrawal queue operations
+        if (config.enableLidoWithdrawal) {
+            console.log("Generating Lido withdrawal queue operations...");
+
+            // 1. Approve wstETH to withdrawal queue
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.subvault, // Called FROM subvault
+                WSTETH,
+                0,
+                abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, 0)),
+                ProofLibrary.makeBitmask(
+                    false, // who: fixed (subvault only)
+                    false, // where: fixed (wstETH)
+                    true, // value: any
+                    false, // selector: fixed
+                    abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.add("to", Strings.toHexString(LIDO_WITHDRAWAL_QUEUE)).addAny("amount");
+                descriptions[index] = JsonLibrary.toJson(
+                    "IERC20(wstETH).approve(LidoWithdrawalQueue, anyAmount)",
+                    ABILibrary.getABI(IERC20.approve.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(WSTETH), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 2. requestWithdrawalsWstETH(uint256[] amounts, address _owner) - owner locked to subvault
+            // Signature: requestWithdrawalsWstETH(uint256[],address) returns (uint256[])
+            uint256[] memory emptyAmounts = new uint256[](0);
+            bytes memory requestCalldata = abi.encodeWithSignature(
+                "requestWithdrawalsWstETH(uint256[],address)",
+                emptyAmounts,
+                config.subvault
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.subvault, // Called FROM subvault
+                LIDO_WITHDRAWAL_QUEUE,
+                0,
+                requestCalldata,
+                ProofLibrary.makeBitmask(
+                    false, // who: fixed (subvault only)
+                    false, // where: fixed (withdrawal queue)
+                    true, // value: any
+                    false, // selector: fixed
+                    abi.encodeWithSignature(
+                        "requestWithdrawalsWstETH(uint256[],address)",
+                        emptyAmounts, // amounts: any (dynamic array)
+                        config.subvault // _owner: FIXED to subvault
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("_amounts").add("_owner", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("LidoWithdrawalQueue.requestWithdrawalsWstETH(anyAmounts[], ", config.subvaultName, ")"),
+                    ABILibrary.getABI(ILidoWithdrawalQueue.requestWithdrawalsWstETH.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 3. claimWithdrawal(uint256 _requestId)
+            bytes memory claimCalldata = abi.encodeWithSignature(
+                "claimWithdrawal(uint256)",
+                uint256(0)
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.subvault, // Called FROM subvault
+                LIDO_WITHDRAWAL_QUEUE,
+                0,
+                claimCalldata,
+                ProofLibrary.makeBitmask(
+                    false, // who: fixed (subvault only)
+                    false, // where: fixed (withdrawal queue)
+                    true, // value: any
+                    false, // selector: fixed
+                    abi.encodeWithSignature(
+                        "claimWithdrawal(uint256)",
+                        uint256(0) // _requestId: any
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("_requestId");
+                descriptions[index] = JsonLibrary.toJson(
+                    "LidoWithdrawalQueue.claimWithdrawal(anyRequestId)",
+                    ABILibrary.getABI(ILidoWithdrawalQueue.claimWithdrawal.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
+                    innerParams
+                );
+            }
+            index++;
+        }
+
+        // Generate sUSDe withdrawal operations
+        if (config.enableSusdeWithdrawal) {
+            console.log("Generating sUSDe withdrawal operations...");
+
+            // 1. cooldownShares(uint256 shares)
+            bytes memory cooldownCalldata = abi.encodeWithSignature(
+                "cooldownShares(uint256)",
+                uint256(0)
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.subvault, // Called FROM subvault
+                SUSDE,
+                0,
+                cooldownCalldata,
+                ProofLibrary.makeBitmask(
+                    false, // who: fixed (subvault only)
+                    false, // where: fixed (sUSDe)
+                    true, // value: any
+                    false, // selector: fixed
+                    abi.encodeWithSignature(
+                        "cooldownShares(uint256)",
+                        uint256(0) // shares: any
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("shares");
+                descriptions[index] = JsonLibrary.toJson(
+                    "sUSDe.cooldownShares(anyShares)",
+                    ABILibrary.getABI(ISUSDe.cooldownShares.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(SUSDE), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 2. unstake(address receiver) - receiver locked to subvault
+            bytes memory unstakeCalldata = abi.encodeWithSignature(
+                "unstake(address)",
+                config.subvault
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.subvault, // Called FROM subvault
+                SUSDE,
+                0,
+                unstakeCalldata,
+                ProofLibrary.makeBitmask(
+                    false, // who: fixed (subvault only)
+                    false, // where: fixed (sUSDe)
+                    true, // value: any
+                    false, // selector: fixed
+                    abi.encodeWithSignature(
+                        "unstake(address)",
+                        config.subvault // receiver: FIXED to subvault
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.add("receiver", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("sUSDe.unstake(", config.subvaultName, ")"),
+                    ABILibrary.getABI(ISUSDe.unstake.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(SUSDE), "0"),
+                    innerParams
+                );
+            }
             index++;
         }
 
@@ -595,6 +802,143 @@ contract GenerateEnterExitJSON is Script {
 
         string memory outputTitle = string.concat(
             "ethereum:tqETH:preprod:sv",
+            vm.toString(subvaultIndex),
+            ":",
+            outputSuffix
+        );
+        generateEnterExitJSON(config, outputTitle, true);
+    }
+
+    /**
+     * @notice Generate Lido wstETH withdrawal queue JSON for preprod subvault
+     * @param subvaultIndex The subvault index (0, 1, 2, etc.)
+     */
+    function generatePreProdLidoWithdrawal(uint256 subvaultIndex) public {
+        address preprodVault = 0x2669a8B27B6f957ddb92Dc0ebdec1f112E6079E4;
+        Vault vault = Vault(payable(preprodVault));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        Config memory config;
+        config.subvault = subvault;
+        config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
+        config.multisig = MULTISIG;
+        config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
+        config.pushAssets = new address[](0);
+        config.pullAssets = new address[](0);
+        config.curveSwaps = new CurveSwap[](0);
+        config.uniV3Swaps = new UniV3Swap[](0);
+        config.enableLidoWithdrawal = true;
+
+        string memory outputTitle = string.concat(
+            "ethereum:tqETH:preprod:sv",
+            vm.toString(subvaultIndex),
+            ":lidoWithdrawal"
+        );
+        generateEnterExitJSON(config, outputTitle, true);
+    }
+
+    /**
+     * @notice Generate Lido wstETH withdrawal queue JSON for prod subvault
+     * @param subvaultIndex The subvault index (0, 1, 2, etc.)
+     */
+    function generateProdLidoWithdrawal(uint256 subvaultIndex) public {
+        address prodVault = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
+        Vault vault = Vault(payable(prodVault));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        Config memory config;
+        config.subvault = subvault;
+        config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
+        config.multisig = MULTISIG;
+        config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
+        config.pushAssets = new address[](0);
+        config.pullAssets = new address[](0);
+        config.curveSwaps = new CurveSwap[](0);
+        config.uniV3Swaps = new UniV3Swap[](0);
+        config.enableLidoWithdrawal = true;
+
+        string memory outputTitle = string.concat(
+            "ethereum:tqETH:prod:sv",
+            vm.toString(subvaultIndex),
+            ":lidoWithdrawal"
+        );
+        generateEnterExitJSON(config, outputTitle, true);
+    }
+
+    /**
+     * @notice Generate from generic config file that supports all features
+     * @param configPath Path to the JSON config file
+     * @param isProd Whether to use prod vault
+     * @dev Config file format:
+     * {
+     *   "subvaultIndex": 4,
+     *   "outputSuffix": "lidoWithdrawal",
+     *   "enableLidoWithdrawal": true,
+     *   "curveSwaps": [],
+     *   "pushAssets": [],
+     *   "pullAssets": []
+     * }
+     */
+    function generateFromConfig(string memory configPath, bool isProd) public {
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/configs/", configPath, ".json");
+        string memory json = vm.readFile(path);
+
+        uint256 subvaultIndex = vm.parseJsonUint(json, ".subvaultIndex");
+        string memory outputSuffix = vm.parseJsonString(json, ".outputSuffix");
+
+        // Get subvault address
+        address vaultAddr = isProd
+            ? 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d
+            : 0x2669a8B27B6f957ddb92Dc0ebdec1f112E6079E4;
+        Vault vault = Vault(payable(vaultAddr));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        Config memory config;
+        config.subvault = subvault;
+        config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
+        config.multisig = MULTISIG;
+        config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
+
+        // Try to parse optional fields
+        try vm.parseJsonBool(json, ".enableLidoWithdrawal") returns (bool enabled) {
+            config.enableLidoWithdrawal = enabled;
+        } catch {
+            config.enableLidoWithdrawal = false;
+        }
+
+        try vm.parseJsonBool(json, ".enableSusdeWithdrawal") returns (bool enabled) {
+            config.enableSusdeWithdrawal = enabled;
+        } catch {
+            config.enableSusdeWithdrawal = false;
+        }
+
+        // Parse optional arrays
+        try vm.parseJson(json, ".curveSwaps") returns (bytes memory swapsData) {
+            config.curveSwaps = abi.decode(swapsData, (CurveSwap[]));
+        } catch {
+            config.curveSwaps = new CurveSwap[](0);
+        }
+
+        try vm.parseJson(json, ".pushAssets") returns (bytes memory pushData) {
+            config.pushAssets = abi.decode(pushData, (address[]));
+        } catch {
+            config.pushAssets = new address[](0);
+        }
+
+        try vm.parseJson(json, ".pullAssets") returns (bytes memory pullData) {
+            config.pullAssets = abi.decode(pullData, (address[]));
+        } catch {
+            config.pullAssets = new address[](0);
+        }
+
+        config.uniV3Swaps = new UniV3Swap[](0);
+
+        string memory env = isProd ? "prod" : "preprod";
+        string memory outputTitle = string.concat(
+            "ethereum:tqETH:",
+            env,
+            ":sv",
             vm.toString(subvaultIndex),
             ":",
             outputSuffix
