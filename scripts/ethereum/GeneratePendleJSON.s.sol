@@ -148,7 +148,7 @@ contract GeneratePendleJSON is Script, Test {
         pure
         returns (PendleLibrary.Info memory)
     {
-        PendleLibrary.PTStrategy[] memory strategies = new PendleLibrary.PTStrategy[](2);
+        PendleLibrary.PTStrategy[] memory strategies = new PendleLibrary.PTStrategy[](3);
 
         // Strategy 1: PT-jrUSDe-27MAR2025
         // Input tokens: USDe and sUSDe
@@ -176,6 +176,19 @@ contract GeneratePendleJSON is Script, Test {
             market: Constants.PENDLE_MARKET_PT_SNUSD_04MAR2026,
             inputTokens: inputTokens2,
             mintSyToken: Constants.SNUSD  // sNUSD is the SY token for this PT
+        });
+
+        // Strategy 3: PT-sUSDe-5FEB2026
+        // Input tokens: USDe and sUSDe
+        address[] memory inputTokens3 = new address[](2);
+        inputTokens3[0] = Constants.USDE;
+        inputTokens3[1] = Constants.SUSDE;
+
+        strategies[2] = PendleLibrary.PTStrategy({
+            ptToken: Constants.PT_SUSDE_5FEB2026,
+            market: Constants.PENDLE_MARKET_PT_SUSDE_5FEB2026,
+            inputTokens: inputTokens3,
+            mintSyToken: Constants.SUSDE  // sUSDe is the SY token for this PT
         });
 
         return PendleLibrary.Info({

@@ -40,6 +40,18 @@
         "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003",
         "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
       ]
+    },
+    {
+      "ptToken": "0xE8483517077afa11A9B07f849cee2552f040d7b2",
+      "market": "0xEd81F8ba2941c3979DE2265c295748a6B6956567",
+      "inputTokens": [
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
+      ],
+      "outputTokens": [
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
+      ]
     }
   ]
 }
