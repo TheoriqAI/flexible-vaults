@@ -47,34 +47,41 @@ def build_description_map(source_files: list) -> dict:
 
 
 def fix_descriptions(merged_file: str, source_files: list):
-    """Fix descriptions in merged file using source files."""
+    """Fix descriptions in merged file by index order from source files.
+
+    merge_jsons.py preserves source order (file1 ops, file2 ops, ...),
+    so we copy descriptions positionally rather than by verificationData key
+    (which can collide for enterExit ops that share the same bitmask).
+    """
     print(f"\n=== Fixing descriptions in {merged_file} ===\n")
 
-    # Build description map from sources
-    desc_map = build_description_map(source_files)
+    # Build ordered list of descriptions matching merge order
+    source_descs = []
+    for filepath in source_files:
+        print(f"Reading descriptions from: {filepath}")
+        data = load_json(filepath)
+        for proof in data.get('merkle_proofs', []):
+            source_descs.append(proof.get('description'))
+
+    print(f"Total descriptions collected: {len(source_descs)}")
 
     # Load merged file
     merged = load_json(merged_file)
+    merged_proofs = merged.get('merkle_proofs', [])
 
-    # Fix descriptions
-    fixed = 0
-    unknown = 0
+    if len(source_descs) != len(merged_proofs):
+        print(f"ERROR: source count ({len(source_descs)}) != merged count ({len(merged_proofs)})")
+        sys.exit(1)
 
-    for proof in merged.get('merkle_proofs', []):
-        vdata = proof.get('verificationData')
-        if vdata in desc_map:
-            proof['description'] = desc_map[vdata]
-            fixed += 1
-        else:
-            unknown += 1
-            print(f"WARNING: No description found for verificationData: {vdata[:66]}...")
+    # Fix descriptions by index
+    for i in range(len(merged_proofs)):
+        merged_proofs[i]['description'] = source_descs[i]
 
     # Save fixed file
     save_json(merged_file, merged)
 
     print(f"\n=== Fix Complete ===")
-    print(f"Fixed: {fixed}")
-    print(f"Unknown: {unknown}")
+    print(f"Fixed: {len(merged_proofs)}")
     print(f"Output: {merged_file}")
 
 

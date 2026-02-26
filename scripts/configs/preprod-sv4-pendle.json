@@ -9,26 +9,20 @@
         "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
         "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
       ],
-      "outputTokens": [
-        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
-        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
-      ]
+      "mintSyToken": "0x4F6673346aB4813F1665327aB39087008Cc7d76F",
+      "description": "PT-jrUSDe-27MAR2025"
     },
     {
       "ptToken": "0x54Bf2659B5CdFd86b75920e93C0844c0364F5166",
       "market": "0x6D8C4DE7071D5AeE27fc3a810764E62a4a00Ceb9",
       "inputTokens": [
         "0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",
-        "0x15BFa696b3eAe3b7E28A7F7e47BfaDaFCa3f0658",
+        "0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313",
         "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
         "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
       ],
-      "outputTokens": [
-        "0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE",
-        "0x15BFa696b3eAe3b7E28A7F7e47BfaDaFCa3f0658",
-        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
-        "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-      ]
+      "mintSyToken": "0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313",
+      "description": "PT-sNUSD-04MAR2026"
     },
     {
       "ptToken": "0x9Bf45ab47747F4B4dD09B3C2c73953484b4eB375",
@@ -36,10 +30,17 @@
       "inputTokens": [
         "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
       ],
-      "outputTokens": [
-        "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003",
-        "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"
-      ]
+      "mintSyToken": "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003",
+      "description": "PT-srUSDe-01APR2026"
+    },
+    {
+      "ptToken": "0xE8483517077afa11A9B07f849cee2552f040d7b2",
+      "market": "0xEd81F8ba2941c3979DE2265c295748a6B6956567",
+      "inputTokens": [
+        "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3"
+      ],
+      "mintSyToken": "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+      "description": "PT-sUSDe"
     }
   ]
 }
