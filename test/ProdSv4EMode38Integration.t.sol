@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 /// @title Prod SV4 eMode 38 Integration Tests
 /// @notice Tests the prod SV4 JSON (sv4-all.json) with eMode 38, Pendle, SwapModule, Morpho, and withdrawals
-/// @dev Uses scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv4:all.json (111 ops)
+/// @dev Uses scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv4:all.json (119 ops)
 ///
 /// Index map:
 /// 0: setUserEMode(38)
@@ -31,14 +31,15 @@ import "@openzeppelin/contracts/interfaces/IERC4626.sol";
 /// 30-37: Morpho reUSD/USDC market
 /// 38-45: Morpho savUSD/USDC market
 /// 46-53: Morpho sUSN/USDC market
-/// 54-76: SwapModule (ETH, WETH, wstETH, USDC, USDT, USDe, sUSDe, NUSD)
-/// 77-85: Pendle PT-sUSDe-06MAY2026 (USDe+sUSDe in, USDe+sUSDe out)
-/// 86-96: Pendle PT-srUSDe-01APR2026 (USDe+sUSDe+srUSDe in, sUSDe+srUSDe out)
-/// 97-101: Pendle PT-sNUSD-03JUN2026 (sNUSD)
-/// 102-104: Lido withdrawal (approve, request, claim)
-/// 105-106: sUSDe (cooldownShares, unstake)
-/// 107-109: sNUSD (approve nUSD, deposit, cooldownShares)
-/// 110: srUSDe withdraw (sUSDe)
+/// 54-61: Morpho PT-savUSD/USDC market
+/// 62-84: SwapModule (ETH, WETH, wstETH, USDC, USDT, USDe, sUSDe, NUSD)
+/// 85-93: Pendle PT-sUSDe-06MAY2026 (USDe+sUSDe in, USDe+sUSDe out)
+/// 94-104: Pendle PT-srUSDe-01APR2026 (USDe+sUSDe+srUSDe in, sUSDe+srUSDe out)
+/// 105-109: Pendle PT-sNUSD-03JUN2026 (sNUSD)
+/// 110-112: Lido withdrawal (approve, request, claim)
+/// 113-114: sUSDe (cooldownShares, unstake)
+/// 115-117: sNUSD (approve nUSD, deposit, cooldownShares)
+/// 118: srUSDe withdraw (sUSDe)
 contract ProdSv4EMode38IntegrationTest is Test {
     address constant prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
     address constant VAULT_PROD = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
@@ -55,6 +56,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
     bytes32 constant MARKET_REUSD_USDC = 0x4565ac05d38b19374ccbb04c17cca60ca9353cd41824f0803d0fc7704f60eaed;
     bytes32 constant MARKET_SAVUSD_USDC = 0xe07d416323a1afbfe0bf2fe27ffb549ff565cf5c86d21b79fc60664038e597c9;
     bytes32 constant MARKET_SUSN_USDC = 0x8924445a76b678c536df977ed9222fb0b23ee5311497dd0223fe6270bb20b4e6;
+    bytes32 constant MARKET_PT_SAVUSD_USDC = 0xc978f01522ff64adafd91856065d602c56e326a0368b895bd9244d5998e60076;
 
     address subvault4;
     IVerifier verifier4;
@@ -272,13 +274,13 @@ contract ProdSv4EMode38IntegrationTest is Test {
 
         deal(Constants.SUSDE, subvault4, 10 ether);
 
-        // Approve sUSDe for Pendle Router (index 78)
+        // Approve sUSDe for Pendle Router (index 86)
         console.log("\n--- Approve sUSDe for Pendle ---");
-        _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 78);
+        _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 86);
         console.log("sUSDe approve - SUCCESS");
         _waitForRPC();
 
-        // swapExactTokenForPt: sUSDe -> PT-sUSDe-06MAY2026 (index 80)
+        // swapExactTokenForPt: sUSDe -> PT-sUSDe-06MAY2026 (index 88)
         console.log("\n--- swapExactTokenForPt (sUSDe -> PT-sUSDe) ---");
         {
             IPendleRouter.TokenInput memory input = IPendleRouter.TokenInput({
@@ -311,7 +313,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
                 IPendleRouter.swapExactTokenForPt,
                 (subvault4, PENDLE_MARKET_PT_SUSDE_06MAY2026, 0, guessPtOut, input, limit)
             );
-            _exec(Constants.PENDLE_ROUTER, 0, callData, 80);
+            _exec(Constants.PENDLE_ROUTER, 0, callData, 88);
 
             uint256 ptBal = IERC20(PT_SUSDE_06MAY2026).balanceOf(subvault4);
             console.log("PT-sUSDe balance:", ptBal);
@@ -320,13 +322,13 @@ contract ProdSv4EMode38IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // Approve PT for Pendle Router (index 81)
+        // Approve PT for Pendle Router (index 89)
         console.log("\n--- Approve PT-sUSDe for Pendle ---");
-        _exec(PT_SUSDE_06MAY2026, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 81);
+        _exec(PT_SUSDE_06MAY2026, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 89);
         console.log("PT approve - SUCCESS");
         _waitForRPC();
 
-        // swapExactPtForToken: PT-sUSDe -> sUSDe (index 83)
+        // swapExactPtForToken: PT-sUSDe -> sUSDe (index 91)
         console.log("\n--- swapExactPtForToken (PT-sUSDe -> sUSDe) ---");
         {
             uint256 ptBal = IERC20(PT_SUSDE_06MAY2026).balanceOf(subvault4);
@@ -355,7 +357,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
                 IPendleRouter.swapExactPtForToken,
                 (subvault4, PENDLE_MARKET_PT_SUSDE_06MAY2026, ptBal, output, limit)
             );
-            _exec(Constants.PENDLE_ROUTER, 0, callData, 83);
+            _exec(Constants.PENDLE_ROUTER, 0, callData, 91);
 
             uint256 susdeAfter = IERC20(Constants.SUSDE).balanceOf(subvault4);
             console.log("sUSDe before:", susdeBefore, "after:", susdeAfter);
@@ -371,13 +373,13 @@ contract ProdSv4EMode38IntegrationTest is Test {
 
         deal(Constants.SNUSD, subvault4, 100 ether);
 
-        // Approve sNUSD for Pendle Router (index 97)
+        // Approve sNUSD for Pendle Router (index 105)
         console.log("\n--- Approve sNUSD for Pendle ---");
-        _exec(Constants.SNUSD, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 97);
+        _exec(Constants.SNUSD, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 105);
         console.log("sNUSD approve - SUCCESS");
         _waitForRPC();
 
-        // swapExactTokenForPt: sNUSD -> PT-sNUSD-03JUN2026 (index 98)
+        // swapExactTokenForPt: sNUSD -> PT-sNUSD-03JUN2026 (index 106)
         console.log("\n--- swapExactTokenForPt (sNUSD -> PT-sNUSD) ---");
         {
             IPendleRouter.TokenInput memory input = IPendleRouter.TokenInput({
@@ -410,7 +412,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
                 IPendleRouter.swapExactTokenForPt,
                 (subvault4, Constants.PENDLE_MARKET_PT_SNUSD_03JUN2026, 0, guessPtOut, input, limit)
             );
-            _exec(Constants.PENDLE_ROUTER, 0, callData, 98);
+            _exec(Constants.PENDLE_ROUTER, 0, callData, 106);
 
             uint256 ptBal = IERC20(Constants.PT_SNUSD_03JUN2026).balanceOf(subvault4);
             console.log("PT-sNUSD balance:", ptBal);
@@ -419,13 +421,13 @@ contract ProdSv4EMode38IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // Approve PT for Pendle Router (index 99)
+        // Approve PT for Pendle Router (index 107)
         console.log("\n--- Approve PT-sNUSD for Pendle ---");
-        _exec(Constants.PT_SNUSD_03JUN2026, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 99);
+        _exec(Constants.PT_SNUSD_03JUN2026, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 107);
         console.log("PT approve - SUCCESS");
         _waitForRPC();
 
-        // swapExactPtForToken: PT-sNUSD -> sNUSD (index 100)
+        // swapExactPtForToken: PT-sNUSD -> sNUSD (index 108)
         console.log("\n--- swapExactPtForToken (PT-sNUSD -> sNUSD) ---");
         {
             uint256 ptBal = IERC20(Constants.PT_SNUSD_03JUN2026).balanceOf(subvault4);
@@ -454,7 +456,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
                 IPendleRouter.swapExactPtForToken,
                 (subvault4, Constants.PENDLE_MARKET_PT_SNUSD_03JUN2026, ptBal, output, limit)
             );
-            _exec(Constants.PENDLE_ROUTER, 0, callData, 100);
+            _exec(Constants.PENDLE_ROUTER, 0, callData, 108);
 
             uint256 snusdAfter = IERC20(Constants.SNUSD).balanceOf(subvault4);
             console.log("sNUSD before:", snusdBefore, "after:", snusdAfter);
@@ -471,13 +473,13 @@ contract ProdSv4EMode38IntegrationTest is Test {
         // PT-srUSDe-01APR2026 is expired, so we can exit post-expiry
         deal(Constants.PT_SRUSDE_01APR2026, subvault4, 1 ether);
 
-        // Approve PT-srUSDe for Pendle Router (index 92)
+        // Approve PT-srUSDe for Pendle Router (index 100)
         console.log("\n--- Approve PT-srUSDe for Pendle ---");
-        _exec(Constants.PT_SRUSDE_01APR2026, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 92);
+        _exec(Constants.PT_SRUSDE_01APR2026, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 100);
         console.log("PT-srUSDe approve - SUCCESS");
         _waitForRPC();
 
-        // exitPostExpToToken: PT-srUSDe -> srUSDe (index 96)
+        // exitPostExpToToken: PT-srUSDe -> srUSDe (index 104)
         console.log("\n--- exitPostExpToToken (PT-srUSDe -> srUSDe) ---");
         {
             uint256 srusdeBefore = IERC20(Constants.SRUSDE).balanceOf(subvault4);
@@ -499,7 +501,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
                 IPendleRouter.exitPostExpToToken,
                 (subvault4, Constants.PENDLE_MARKET_PT_SRUSDE_01APR2026, ptBal, 0, output)
             );
-            _exec(Constants.PENDLE_ROUTER, 0, callData, 96);
+            _exec(Constants.PENDLE_ROUTER, 0, callData, 104);
 
             uint256 srusdeAfter = IERC20(Constants.SRUSDE).balanceOf(subvault4);
             console.log("srUSDe before:", srusdeBefore, "after:", srusdeAfter);
@@ -521,67 +523,67 @@ contract ProdSv4EMode38IntegrationTest is Test {
         deal(Constants.SUSDE, subvault4, 10 ether);
         deal(Constants.NUSD, subvault4, 100 ether);
 
-        // Test WETH: approve (56), push (57), pull (58)
+        // Test WETH: approve (64), push (65), pull (66)
         console.log("\n--- WETH: approve for SwapModule ---");
-        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 56);
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 64);
         console.log("WETH approve - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- WETH: pushAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.WETH, 0.5 ether)), 57);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.WETH, 0.5 ether)), 65);
         console.log("WETH push - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- WETH: pullAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.WETH, 0.1 ether)), 58);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.WETH, 0.1 ether)), 66);
         console.log("WETH pull - SUCCESS");
         _waitForRPC();
 
-        // Test USDC: approve (62), push (63), pull (64)
+        // Test USDC: approve (70), push (71), pull (72)
         console.log("\n--- USDC: approve for SwapModule ---");
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 62);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 70);
         console.log("USDC approve - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- USDC: pushAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.USDC, 100e6)), 63);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.USDC, 100e6)), 71);
         console.log("USDC push - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- USDC: pullAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.USDC, 50e6)), 64);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.USDC, 50e6)), 72);
         console.log("USDC pull - SUCCESS");
         _waitForRPC();
 
-        // Test sUSDe: approve (71), push (72), pull (73)
+        // Test sUSDe: approve (79), push (80), pull (81)
         console.log("\n--- sUSDe: approve for SwapModule ---");
-        _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 71);
+        _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 79);
         console.log("sUSDe approve - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- sUSDe: pushAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.SUSDE, 1 ether)), 72);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.SUSDE, 1 ether)), 80);
         console.log("sUSDe push - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- sUSDe: pullAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.SUSDE, 0.5 ether)), 73);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.SUSDE, 0.5 ether)), 81);
         console.log("sUSDe pull - SUCCESS");
         _waitForRPC();
 
-        // Test NUSD: approve (74), push (75), pull (76)
+        // Test NUSD: approve (82), push (83), pull (84)
         console.log("\n--- NUSD: approve for SwapModule ---");
-        _exec(Constants.NUSD, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 74);
+        _exec(Constants.NUSD, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 82);
         console.log("NUSD approve - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- NUSD: pushAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.NUSD, 10 ether)), 75);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.NUSD, 10 ether)), 83);
         console.log("NUSD push - SUCCESS");
         _waitForRPC();
 
         console.log("\n--- NUSD: pullAssets ---");
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.NUSD, 5 ether)), 76);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.NUSD, 5 ether)), 84);
         console.log("NUSD pull - SUCCESS");
 
         console.log("\n=== All SwapModule Tests Passed ===");
@@ -598,11 +600,13 @@ contract ProdSv4EMode38IntegrationTest is Test {
         IMorpho.MarketParams memory reusdParams = morpho.idToMarketParams(MARKET_REUSD_USDC);
         IMorpho.MarketParams memory savusdParams = morpho.idToMarketParams(MARKET_SAVUSD_USDC);
         IMorpho.MarketParams memory susnParams = morpho.idToMarketParams(MARKET_SUSN_USDC);
+        IMorpho.MarketParams memory ptSavusdParams = morpho.idToMarketParams(MARKET_PT_SAVUSD_USDC);
 
         console.log("sNUSD market - loan:", snusdParams.loanToken, "collateral:", snusdParams.collateralToken);
         console.log("reUSD market - loan:", reusdParams.loanToken, "collateral:", reusdParams.collateralToken);
         console.log("savUSD market - loan:", savusdParams.loanToken, "collateral:", savusdParams.collateralToken);
         console.log("sUSN market - loan:", susnParams.loanToken, "collateral:", susnParams.collateralToken);
+        console.log("PT-savUSD market - loan:", ptSavusdParams.loanToken, "collateral:", ptSavusdParams.collateralToken);
 
         // ===== sNUSD/USDC market (indices 22-29) =====
         console.log("\n========== sNUSD/USDC Market ==========");
@@ -729,6 +733,40 @@ contract ProdSv4EMode38IntegrationTest is Test {
         // Withdraw sUSN collateral (index 53)
         _exec(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdrawCollateral, (susnParams, 100 ether, subvault4, subvault4)), 53);
         console.log("sUSN withdrawCollateral - SUCCESS");
+        _waitForRPC();
+
+        // ===== PT-savUSD/USDC market (indices 54-61) =====
+        console.log("\n========== PT-savUSD/USDC Market ==========");
+        deal(Constants.PT_SAVUSD_14MAY2026, subvault4, 1000 ether);
+
+        // Approve PT-savUSD for Morpho (index 54)
+        _exec(Constants.PT_SAVUSD_14MAY2026, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), 54);
+        console.log("PT-savUSD approve - SUCCESS");
+        _waitForRPC();
+
+        // Approve USDC for Morpho (index 55)
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), 55);
+        console.log("USDC approve (PT-savUSD market) - SUCCESS");
+        _waitForRPC();
+
+        // Supply USDC (index 56)
+        _exec(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supply, (ptSavusdParams, 1000e6, 0, subvault4, "")), 56);
+        console.log("USDC supply - SUCCESS");
+        _waitForRPC();
+
+        // Supply PT-savUSD collateral (index 57)
+        _exec(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supplyCollateral, (ptSavusdParams, 500 ether, subvault4, "")), 57);
+        console.log("PT-savUSD supplyCollateral - SUCCESS");
+        _waitForRPC();
+
+        // Withdraw USDC (index 60)
+        _exec(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdraw, (ptSavusdParams, 500e6, 0, subvault4, subvault4)), 60);
+        console.log("USDC withdraw - SUCCESS");
+        _waitForRPC();
+
+        // Withdraw PT-savUSD collateral (index 61)
+        _exec(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdrawCollateral, (ptSavusdParams, 100 ether, subvault4, subvault4)), 61);
+        console.log("PT-savUSD withdrawCollateral - SUCCESS");
 
         console.log("\n=== All Morpho Tests Passed ===");
     }
@@ -738,33 +776,33 @@ contract ProdSv4EMode38IntegrationTest is Test {
     function test_ProdSv4_WithdrawalOperations() public {
         console.log("\n=== Testing Prod SV4 - Withdrawal & Staking Operations ===");
 
-        // =================== LIDO WITHDRAWAL (indices 102-104) ===================
+        // =================== LIDO WITHDRAWAL (indices 110-112) ===================
         console.log("\n========== LIDO WITHDRAWAL ==========");
 
         deal(Constants.WSTETH, subvault4, 2 ether);
 
-        // Approve wstETH for Lido (index 102)
+        // Approve wstETH for Lido (index 110)
         console.log("\n--- Approve wstETH for Lido ---");
-        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, type(uint256).max)), 102);
+        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, type(uint256).max)), 110);
         console.log("wstETH approve - SUCCESS");
         _waitForRPC();
 
-        // Request withdrawal (index 103)
+        // Request withdrawal (index 111)
         console.log("\n--- Request wstETH withdrawal ---");
         {
             uint256[] memory amounts = new uint256[](1);
             amounts[0] = 0.1 ether;
-            _exec(LIDO_WITHDRAWAL_QUEUE, 0, abi.encodeCall(ILidoWithdrawalQueue.requestWithdrawalsWstETH, (amounts, subvault4)), 103);
+            _exec(LIDO_WITHDRAWAL_QUEUE, 0, abi.encodeCall(ILidoWithdrawalQueue.requestWithdrawalsWstETH, (amounts, subvault4)), 111);
             console.log("Request withdrawal - SUCCESS");
         }
         _waitForRPC();
 
-        // Claim withdrawal (index 104) - expect revert from Lido (not finalized), but proof is valid
+        // Claim withdrawal (index 112) - expect revert from Lido (not finalized), but proof is valid
         console.log("\n--- Claim withdrawal (expect Lido revert) ---");
         {
             bytes memory callData = abi.encodeCall(ILidoWithdrawalQueue.claimWithdrawal, (1));
             vm.prank(prodCurator);
-            try ICallModule(subvault4).call(LIDO_WITHDRAWAL_QUEUE, 0, callData, _payload(104)) {
+            try ICallModule(subvault4).call(LIDO_WITHDRAWAL_QUEUE, 0, callData, _payload(112)) {
                 console.log("Claim succeeded (unexpected but ok)");
             } catch {
                 console.log("Claim reverted (expected - not finalized) - PROOF VALID");
@@ -772,23 +810,23 @@ contract ProdSv4EMode38IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // =================== sUSDe COOLDOWN/UNSTAKE (indices 105-106) ===================
+        // =================== sUSDe COOLDOWN/UNSTAKE (indices 113-114) ===================
         console.log("\n========== sUSDe COOLDOWN/UNSTAKE ==========");
 
         deal(Constants.SUSDE, subvault4, 1 ether);
 
-        // cooldownShares (index 105)
+        // cooldownShares (index 113)
         console.log("\n--- sUSDe cooldownShares ---");
-        _exec(Constants.SUSDE, 0, abi.encodeCall(ISUSDe.cooldownShares, (0.5 ether)), 105);
+        _exec(Constants.SUSDE, 0, abi.encodeCall(ISUSDe.cooldownShares, (0.5 ether)), 113);
         console.log("sUSDe cooldownShares - SUCCESS");
         _waitForRPC();
 
-        // unstake (index 106) - expect revert (cooldown not elapsed)
+        // unstake (index 114) - expect revert (cooldown not elapsed)
         console.log("\n--- sUSDe unstake (expect revert) ---");
         {
             bytes memory callData = abi.encodeCall(ISUSDe.unstake, (subvault4));
             vm.prank(prodCurator);
-            try ICallModule(subvault4).call(Constants.SUSDE, 0, callData, _payload(106)) {
+            try ICallModule(subvault4).call(Constants.SUSDE, 0, callData, _payload(114)) {
                 console.log("unstake succeeded (unexpected but ok)");
             } catch {
                 console.log("unstake reverted (expected - cooldown not elapsed) - PROOF VALID");
@@ -796,35 +834,35 @@ contract ProdSv4EMode38IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // =================== sNUSD DEPOSIT/COOLDOWN (indices 107-109) ===================
+        // =================== sNUSD DEPOSIT/COOLDOWN (indices 115-117) ===================
         console.log("\n========== sNUSD DEPOSIT/COOLDOWN ==========");
 
         deal(Constants.NUSD, subvault4, 100 ether);
 
-        // Approve nUSD for sNUSD (index 107)
+        // Approve nUSD for sNUSD (index 115)
         console.log("\n--- Approve nUSD for sNUSD ---");
-        _exec(Constants.NUSD, 0, abi.encodeCall(IERC20.approve, (Constants.SNUSD, type(uint256).max)), 107);
+        _exec(Constants.NUSD, 0, abi.encodeCall(IERC20.approve, (Constants.SNUSD, type(uint256).max)), 115);
         console.log("nUSD approve - SUCCESS");
         _waitForRPC();
 
-        // Deposit nUSD into sNUSD (index 108)
+        // Deposit nUSD into sNUSD (index 116)
         console.log("\n--- Deposit nUSD into sNUSD ---");
-        _exec(Constants.SNUSD, 0, abi.encodeCall(IERC4626.deposit, (50 ether, subvault4)), 108);
+        _exec(Constants.SNUSD, 0, abi.encodeCall(IERC4626.deposit, (50 ether, subvault4)), 116);
         console.log("sNUSD deposit - SUCCESS");
         _waitForRPC();
 
-        // sNUSD cooldownShares (index 109)
+        // sNUSD cooldownShares (index 117)
         console.log("\n--- sNUSD cooldownShares ---");
-        _exec(Constants.SNUSD, 0, abi.encodeCall(ISUSDe.cooldownShares, (10 ether)), 109);
+        _exec(Constants.SNUSD, 0, abi.encodeCall(ISUSDe.cooldownShares, (10 ether)), 117);
         console.log("sNUSD cooldownShares - SUCCESS");
         _waitForRPC();
 
-        // =================== srUSDe WITHDRAW (index 110) ===================
+        // =================== srUSDe WITHDRAW (index 118) ===================
         console.log("\n========== srUSDe WITHDRAW ==========");
 
         deal(Constants.SRUSDE, subvault4, 10 ether);
 
-        // srUSDe withdraw into sUSDe (index 110)
+        // srUSDe withdraw into sUSDe (index 118)
         console.log("\n--- srUSDe withdraw to sUSDe ---");
         {
             uint256 susdeBefore = IERC20(Constants.SUSDE).balanceOf(subvault4);
@@ -835,7 +873,7 @@ contract ProdSv4EMode38IntegrationTest is Test {
                 subvault4,
                 subvault4
             );
-            _exec(Constants.SRUSDE, 0, callData, 110);
+            _exec(Constants.SRUSDE, 0, callData, 118);
             uint256 susdeAfter = IERC20(Constants.SUSDE).balanceOf(subvault4);
             console.log("sUSDe before:", susdeBefore, "after:", susdeAfter);
             require(susdeAfter > susdeBefore, "Should have received sUSDe from srUSDe withdraw");
@@ -876,53 +914,53 @@ contract ProdSv4EMode38IntegrationTest is Test {
             console.log("REVERTED - SUCCESS");
         }
 
-        // 3. SwapModule WETH approve (index 56)
+        // 3. SwapModule WETH approve (index 64)
         console.log("\n--- Non-curator: SwapModule WETH approve ---");
         {
             bytes memory callData = abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max));
             vm.prank(nonCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.WETH, 0, callData, _payload(56));
+            ICallModule(subvault4).call(Constants.WETH, 0, callData, _payload(64));
             console.log("REVERTED - SUCCESS");
         }
 
-        // 4. Lido wstETH approve (index 102)
+        // 4. Lido wstETH approve (index 110)
         console.log("\n--- Non-curator: Lido wstETH approve ---");
         {
             bytes memory callData = abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, type(uint256).max));
             vm.prank(nonCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.WSTETH, 0, callData, _payload(102));
+            ICallModule(subvault4).call(Constants.WSTETH, 0, callData, _payload(110));
             console.log("REVERTED - SUCCESS");
         }
 
-        // 5. sUSDe cooldownShares (index 105)
+        // 5. sUSDe cooldownShares (index 113)
         console.log("\n--- Non-curator: sUSDe cooldownShares ---");
         {
             bytes memory callData = abi.encodeCall(ISUSDe.cooldownShares, (0.5 ether));
             vm.prank(nonCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.SUSDE, 0, callData, _payload(105));
+            ICallModule(subvault4).call(Constants.SUSDE, 0, callData, _payload(113));
             console.log("REVERTED - SUCCESS");
         }
 
-        // 6. Pendle sNUSD approve (index 97)
+        // 6. Pendle sNUSD approve (index 105)
         console.log("\n--- Non-curator: Pendle sNUSD approve ---");
         {
             bytes memory callData = abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max));
             vm.prank(nonCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.SNUSD, 0, callData, _payload(97));
+            ICallModule(subvault4).call(Constants.SNUSD, 0, callData, _payload(105));
             console.log("REVERTED - SUCCESS");
         }
 
-        // 7. sNUSD deposit (index 108)
+        // 7. sNUSD deposit (index 116)
         console.log("\n--- Non-curator: sNUSD deposit ---");
         {
             bytes memory callData = abi.encodeCall(IERC4626.deposit, (50 ether, subvault4));
             vm.prank(nonCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.SNUSD, 0, callData, _payload(108));
+            ICallModule(subvault4).call(Constants.SNUSD, 0, callData, _payload(116));
             console.log("REVERTED - SUCCESS");
         }
 
@@ -1018,10 +1056,10 @@ contract ProdSv4EMode38IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // 6. Pendle swapExactTokenForPt with wrong receiver (index 80)
+        // 6. Pendle swapExactTokenForPt with wrong receiver (index 88)
         console.log("\n--- Wrong receiver: Pendle swapExactTokenForPt ---");
         {
-            _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 78);
+            _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (Constants.PENDLE_ROUTER, type(uint256).max)), 86);
 
             IPendleRouter.TokenInput memory input = IPendleRouter.TokenInput({
                 tokenIn: Constants.SUSDE,
@@ -1055,16 +1093,16 @@ contract ProdSv4EMode38IntegrationTest is Test {
             );
             vm.prank(prodCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.PENDLE_ROUTER, 0, callData, _payload(80));
+            ICallModule(subvault4).call(Constants.PENDLE_ROUTER, 0, callData, _payload(88));
             console.log("Wrong Pendle receiver REVERTED - SUCCESS");
         }
         _waitForRPC();
 
-        // 7. Lido requestWithdrawalsWstETH with wrong owner (index 103)
+        // 7. Lido requestWithdrawalsWstETH with wrong owner (index 111)
         console.log("\n--- Wrong owner: Lido requestWithdrawals ---");
         {
             deal(Constants.WSTETH, subvault4, 1 ether);
-            _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, type(uint256).max)), 102);
+            _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, type(uint256).max)), 110);
 
             uint256[] memory amounts = new uint256[](1);
             amounts[0] = 0.1 ether;
@@ -1073,32 +1111,32 @@ contract ProdSv4EMode38IntegrationTest is Test {
             );
             vm.prank(prodCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(LIDO_WITHDRAWAL_QUEUE, 0, callData, _payload(103));
+            ICallModule(subvault4).call(LIDO_WITHDRAWAL_QUEUE, 0, callData, _payload(111));
             console.log("Wrong Lido owner REVERTED - SUCCESS");
         }
         _waitForRPC();
 
-        // 8. sUSDe unstake with wrong receiver (index 106)
+        // 8. sUSDe unstake with wrong receiver (index 114)
         console.log("\n--- Wrong receiver: sUSDe unstake ---");
         {
             bytes memory callData = abi.encodeCall(ISUSDe.unstake, (wrongRecipient));
             vm.prank(prodCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.SUSDE, 0, callData, _payload(106));
+            ICallModule(subvault4).call(Constants.SUSDE, 0, callData, _payload(114));
             console.log("Wrong unstake receiver REVERTED - SUCCESS");
         }
         _waitForRPC();
 
-        // 9. sNUSD deposit with wrong receiver (index 108)
+        // 9. sNUSD deposit with wrong receiver (index 116)
         console.log("\n--- Wrong receiver: sNUSD deposit ---");
         {
             deal(Constants.NUSD, subvault4, 100 ether);
-            _exec(Constants.NUSD, 0, abi.encodeCall(IERC20.approve, (Constants.SNUSD, type(uint256).max)), 107);
+            _exec(Constants.NUSD, 0, abi.encodeCall(IERC20.approve, (Constants.SNUSD, type(uint256).max)), 115);
 
             bytes memory callData = abi.encodeCall(IERC4626.deposit, (50 ether, wrongRecipient));
             vm.prank(prodCurator);
             vm.expectRevert(IVerifier.VerificationFailed.selector);
-            ICallModule(subvault4).call(Constants.SNUSD, 0, callData, _payload(108));
+            ICallModule(subvault4).call(Constants.SNUSD, 0, callData, _payload(116));
             console.log("Wrong sNUSD deposit receiver REVERTED - SUCCESS");
         }
         _waitForRPC();
