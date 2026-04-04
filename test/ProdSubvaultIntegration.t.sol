@@ -6,6 +6,7 @@ import "../scripts/ethereum/Constants.sol";
 import "../src/interfaces/modules/ICallModule.sol";
 import "../src/permissions/Verifier.sol";
 import "../scripts/common/interfaces/IAavePoolV3.sol";
+import "../scripts/common/interfaces/IMorpho.sol";
 import "../scripts/common/interfaces/ILidoWithdrawalQueue.sol";
 import "../scripts/common/interfaces/ISUSDe.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -21,6 +22,10 @@ contract ProdSubvaultIntegrationTest is Test {
     address constant VAULT_PROD = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
     address constant activeAdmin = 0x2D95cb50F204B8B84606751F262b407C08528c85;
     address constant LIDO_WITHDRAWAL_QUEUE = 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1;
+
+    // Morpho savETH/WETH market
+    bytes32 constant MARKET_SAVETH_WETH = 0xd98cd88ae5b336086b39fb1d62ba6171282e946105b010143f0e89f8fe7cff36;
+    address constant SAVETH = 0xDA06eE2dACF9245Aa80072a4407deBDea0D7e341;
 
     address subvault3;
 
@@ -70,8 +75,9 @@ contract ProdSubvaultIntegrationTest is Test {
     }
 
     /// @notice Test Aave operations on prod subvault 3 (eMode 1)
+    /// @dev eMode 1 is active on the fork, so only ETH-correlated borrows (WETH, wstETH) work
     function test_ProdSv3_AaveOperations() public {
-        console.log("\n=== Testing Prod Subvault 3 - Aave Operations ===");
+        console.log("\n=== Testing Prod Subvault 3 - Aave Operations (eMode 1) ===");
 
         // Give subvault some WETH to work with
         vm.deal(subvault3, 10 ether);
@@ -82,56 +88,42 @@ contract ProdSubvaultIntegrationTest is Test {
         uint256 wethBalance = IERC20(Constants.WETH).balanceOf(subvault3);
         console.log("Subvault WETH balance:", wethBalance);
 
-        // Load proof data from JSON
-        // For this test, we'll use index 0 for setEMode, then test supply/borrow/repay/withdraw
         string memory root = vm.projectRoot();
         string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
         string memory json = vm.readFile(path);
 
-        // Parse the JSON to get proofs
-        // We'll manually construct the verification payloads for this test
-        // In production, these would come from the JSON file
+        // eMode 1 is already active on fork — only ETH-correlated borrows allowed
 
-        // IMPORTANT: Do USD-based operations BEFORE setting eMode 1 (ETH correlated)
-        // because eMode 1 restricts borrowing to ETH-correlated assets only
-
-        // Test 1: Approve WETH for Aave
-        console.log("\n--- Test 1: Approve WETH ---");
-        _testApprove(subvault3, Constants.WETH, Constants.AAVE_CORE, json);
-        _waitForRPC();
-
-        // Test 2: Supply 2 WETH (need enough collateral for USDC borrow)
-        console.log("\n--- Test 2: Supply WETH ---");
-        _testSupply(subvault3, Constants.AAVE_CORE, Constants.WETH, 2 ether, json);
-        _waitForRPC();
-
-        // Test 3: Borrow 100 USDC (2 = variable rate) - BEFORE setting eMode
-        console.log("\n--- Test 3: Borrow USDC (before eMode) ---");
-        _testBorrow(subvault3, Constants.AAVE_CORE, Constants.USDC, 100e6, 2, json);
-        _waitForRPC();
-
-        // Test 4: Approve USDC for repayment
-        console.log("\n--- Test 4: Approve USDC ---");
-        _testApprove(subvault3, Constants.USDC, Constants.AAVE_CORE, json);
-        _waitForRPC();
-
-        // Test 5: Repay all USDC (use max uint to repay all including interest)
-        console.log("\n--- Test 5: Repay USDC ---");
-        // Deal a tiny bit extra USDC to cover any interest accrued
-        deal(Constants.USDC, subvault3, 101e6);
-        _testRepay(subvault3, Constants.AAVE_CORE, Constants.USDC, type(uint256).max, 2, json);
-        _waitForRPC();
-
-        // Test 6: Now set eMode to 1 (ETH correlated) - after USD debt is cleared
-        console.log("\n--- Test 6: Set eMode ---");
+        // Test 1: Set eMode to 1 (confirm it works)
+        console.log("\n--- Test 1: Set eMode 1 ---");
         _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, 0);
         _waitForRPC();
 
-        // Test 7: Withdraw 0.5 WETH
-        console.log("\n--- Test 7: Withdraw WETH ---");
+        // Test 2: Approve WETH for Aave
+        console.log("\n--- Test 2: Approve WETH ---");
+        _testApprove(subvault3, Constants.WETH, Constants.AAVE_CORE, json);
+        _waitForRPC();
+
+        // Test 3: Supply 2 WETH
+        console.log("\n--- Test 3: Supply WETH ---");
+        _testSupply(subvault3, Constants.AAVE_CORE, Constants.WETH, 2 ether, json);
+        _waitForRPC();
+
+        // Test 4: Borrow 0.1 WETH (ETH-correlated, allowed in eMode 1)
+        console.log("\n--- Test 4: Borrow WETH (eMode 1) ---");
+        _testBorrow(subvault3, Constants.AAVE_CORE, Constants.WETH, 0.1 ether, 2, json);
+        _waitForRPC();
+
+        // Test 5: Repay WETH
+        console.log("\n--- Test 5: Repay WETH ---");
+        _testRepay(subvault3, Constants.AAVE_CORE, Constants.WETH, 0.1 ether, 2, json);
+        _waitForRPC();
+
+        // Test 6: Withdraw 0.5 WETH
+        console.log("\n--- Test 6: Withdraw WETH ---");
         _testWithdraw(subvault3, Constants.AAVE_CORE, Constants.WETH, 0.5 ether, json);
 
-        console.log("\n=== All Prod SV3 Tests Passed ===");
+        console.log("\n=== All Prod SV3 Aave Tests Passed ===");
     }
 
     /// @notice Test Aave and Spark operations on prod subvault 3 when eMode 1 is already set
@@ -239,6 +231,90 @@ contract ProdSubvaultIntegrationTest is Test {
     }
 
     // NOTE: SV4 tests moved to ProdSv4EMode38Integration.t.sol
+
+    /// @notice Test Morpho savETH/WETH market operations on prod subvault 3
+    /// @dev Morpho indices in sv3: 44-51
+    ///   44: savETH approve (collateral), 45: WETH approve (loan)
+    ///   46: supply, 47: supplyCollateral, 48: repay, 49: borrow, 50: withdraw, 51: withdrawCollateral
+    function test_ProdSv3_MorphoOperations() public {
+        console.log("\n=== Testing Prod Subvault 3 - Morpho savETH/WETH Market ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        // Fund subvault with WETH (loan token) and savETH (collateral token)
+        deal(Constants.WETH, subvault3, 10 ether);
+        deal(SAVETH, subvault3, 10 ether);
+
+        IMorpho.MarketParams memory params = IMorpho(Constants.MORPHO).idToMarketParams(MARKET_SAVETH_WETH);
+        console.log("Market loan token:", params.loanToken);
+        console.log("Market collateral token:", params.collateralToken);
+
+        // 1. Approve savETH (collateral) for Morpho - index 44
+        console.log("\n--- Morpho Test 1: Approve savETH (collateral) ---");
+        _execMorphoCall(SAVETH, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), json, 44);
+        console.log("savETH approve - SUCCESS");
+        _waitForRPC();
+
+        // 2. Approve WETH (loan) for Morpho - index 45
+        console.log("\n--- Morpho Test 2: Approve WETH (loan) ---");
+        _execMorphoCall(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), json, 45);
+        console.log("WETH approve - SUCCESS");
+        _waitForRPC();
+
+        // 3. Supply WETH (loan token) - index 46
+        console.log("\n--- Morpho Test 3: Supply WETH ---");
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supply, (params, 1 ether, 0, subvault3, "")), json, 46);
+        console.log("Supply WETH - SUCCESS");
+        _waitForRPC();
+
+        // 4. Supply savETH as collateral - index 47
+        console.log("\n--- Morpho Test 4: Supply savETH collateral ---");
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supplyCollateral, (params, 2 ether, subvault3, "")), json, 47);
+        console.log("Supply savETH collateral - SUCCESS");
+        _waitForRPC();
+
+        // 5. Borrow WETH - index 49
+        console.log("\n--- Morpho Test 5: Borrow WETH ---");
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.borrow, (params, 0.1 ether, 0, subvault3, subvault3)), json, 49);
+        console.log("Borrow WETH - SUCCESS");
+        _waitForRPC();
+
+        // 6. Repay WETH - index 48
+        console.log("\n--- Morpho Test 6: Repay WETH ---");
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.repay, (params, 0.1 ether, 0, subvault3, "")), json, 48);
+        console.log("Repay WETH - SUCCESS");
+        _waitForRPC();
+
+        // 7. Withdraw WETH (loan) - index 50
+        console.log("\n--- Morpho Test 7: Withdraw WETH ---");
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdraw, (params, 0.5 ether, 0, subvault3, subvault3)), json, 50);
+        console.log("Withdraw WETH - SUCCESS");
+        _waitForRPC();
+
+        // 8. Withdraw savETH collateral - index 51
+        console.log("\n--- Morpho Test 8: Withdraw savETH collateral ---");
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdrawCollateral, (params, 1 ether, subvault3, subvault3)), json, 51);
+        console.log("Withdraw savETH collateral - SUCCESS");
+
+        console.log("\n=== All Prod SV3 Morpho Tests Passed ===");
+    }
+
+    /// @notice Helper to execute a call with Morpho proof verification
+    function _execMorphoCall(address target, uint256 value, bytes memory callData, string memory json, uint256 proofIndex) internal {
+        bytes memory verificationData = _getVerificationData(json, proofIndex);
+        bytes32[] memory proof = _getProof(json, proofIndex);
+
+        IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+            verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+            verificationData: verificationData,
+            proof: proof
+        });
+
+        vm.prank(prodCurator);
+        ICallModule(subvault3).call(target, value, callData, payload);
+    }
 
     /// @notice Test that non-curator cannot execute operations
     function test_RevertWhen_NonCuratorCallsOperation() public {
@@ -420,17 +496,14 @@ contract ProdSubvaultIntegrationTest is Test {
         string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
         string memory json = vm.readFile(path);
 
-        // Set eMode, approve, supply and borrow
+        // Set eMode, approve, supply and borrow WETH (ETH-correlated, works in eMode 1)
         _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, 0);
         _testApprove(subvault3, Constants.WETH, Constants.AAVE_CORE, json);
         _testSupply(subvault3, Constants.AAVE_CORE, Constants.WETH, 2 ether, json);
-        _testBorrow(subvault3, Constants.AAVE_CORE, Constants.USDC, 100e6, 2, json);
-
-        // Approve USDC for repayment
-        _testApprove(subvault3, Constants.USDC, Constants.AAVE_CORE, json);
+        _testBorrow(subvault3, Constants.AAVE_CORE, Constants.WETH, 0.1 ether, 2, json);
 
         // Now try to repay with WRONG onBehalfOf
-        uint256 proofIndex = _findProofForRepay(json, Constants.USDC);
+        uint256 proofIndex = _findProofForRepay(json, Constants.WETH);
         bytes memory verificationData = _getVerificationData(json, proofIndex);
         bytes32[] memory proof = _getProof(json, proofIndex);
 
@@ -444,7 +517,7 @@ contract ProdSubvaultIntegrationTest is Test {
         address wrongOnBehalfOf = address(0xBAD);
         bytes memory callData = abi.encodeCall(
             IAavePoolV3.repay,
-            (Constants.USDC, 50e6, 2, wrongOnBehalfOf) // ← WRONG onBehalfOf!
+            (Constants.WETH, 0.1 ether, 2, wrongOnBehalfOf) // ← WRONG onBehalfOf!
         );
 
         vm.prank(prodCurator);
@@ -688,15 +761,15 @@ contract ProdSubvaultIntegrationTest is Test {
 
     // =================== SPARK HELPER FUNCTIONS ===================
     // Spark proof indices (from ethereum:tqETH:prod:sv3:all.json):
-    // Aave now has 25 ops (added EURC borrow), so Spark starts at 25
-    // 25: setUserEMode (Spark)
-    // 26: WETH approve (supply), 27: WETH supply, 28: WETH withdraw
-    // 29: wstETH approve (supply), 30: wstETH supply, 31: wstETH withdraw
-    // 32: WETH approve (borrow), 33: WETH borrow, 34: WETH repay
-    // 35: wstETH approve (borrow), 36: wstETH borrow, 37: wstETH repay
-    // 38: USDC approve, 39: USDC borrow, 40: USDC repay
-    // 41: USDT approve, 42: USDT borrow, 43: USDT repay
-    // 44: USDe approve, 45: USDe borrow, 46: USDe repay
+    // Aave has 22 ops, so Spark starts at 22
+    // 22: setUserEMode (Spark)
+    // 23: WETH approve (supply), 24: WETH supply, 25: WETH withdraw
+    // 26: wstETH approve (supply), 27: wstETH supply, 28: wstETH withdraw
+    // 29: WETH approve (borrow), 30: WETH borrow, 31: WETH repay
+    // 32: wstETH approve (borrow), 33: wstETH borrow, 34: wstETH repay
+    // 35: USDC approve, 36: USDC borrow, 37: USDC repay
+    // 38: USDT approve, 39: USDT borrow, 40: USDT repay
+    // 41: USDe approve, 42: USDe borrow, 43: USDe repay
 
     function _testApproveSpark(address subvault, address token, address spender, string memory json) internal {
         uint256 proofIndex = _findProofForApproveSpark(token);
@@ -846,47 +919,47 @@ contract ProdSubvaultIntegrationTest is Test {
 
     // Spark proof index finders
     function _findProofForApproveSpark(address token) internal pure returns (uint256) {
-        if (token == Constants.WETH) return 26;
-        if (token == Constants.WSTETH) return 29;
-        if (token == Constants.USDC) return 38;
-        if (token == Constants.USDT) return 41;
-        if (token == Constants.USDE) return 44;
+        if (token == Constants.WETH) return 23;
+        if (token == Constants.WSTETH) return 26;
+        if (token == Constants.USDC) return 35;
+        if (token == Constants.USDT) return 38;
+        if (token == Constants.USDE) return 41;
         revert("Spark: Proof not found for approve");
     }
 
     function _findProofForApproveSparkBorrow(address token) internal pure returns (uint256) {
-        if (token == Constants.WETH) return 32;
-        if (token == Constants.WSTETH) return 35;
+        if (token == Constants.WETH) return 29;
+        if (token == Constants.WSTETH) return 32;
         revert("Spark: Proof not found for approve borrow");
     }
 
     function _findProofForSupplySpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 27;
-        if (asset == Constants.WSTETH) return 30;
+        if (asset == Constants.WETH) return 24;
+        if (asset == Constants.WSTETH) return 27;
         revert("Spark: Proof not found for supply");
     }
 
     function _findProofForWithdrawSpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 28;
-        if (asset == Constants.WSTETH) return 31;
+        if (asset == Constants.WETH) return 25;
+        if (asset == Constants.WSTETH) return 28;
         revert("Spark: Proof not found for withdraw");
     }
 
     function _findProofForBorrowSpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 33;
-        if (asset == Constants.WSTETH) return 36;
-        if (asset == Constants.USDC) return 39;
-        if (asset == Constants.USDT) return 42;
-        if (asset == Constants.USDE) return 45;
+        if (asset == Constants.WETH) return 30;
+        if (asset == Constants.WSTETH) return 33;
+        if (asset == Constants.USDC) return 36;
+        if (asset == Constants.USDT) return 39;
+        if (asset == Constants.USDE) return 42;
         revert("Spark: Proof not found for borrow");
     }
 
     function _findProofForRepaySpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 34;
-        if (asset == Constants.WSTETH) return 37;
-        if (asset == Constants.USDC) return 40;
-        if (asset == Constants.USDT) return 43;
-        if (asset == Constants.USDE) return 46;
+        if (asset == Constants.WETH) return 31;
+        if (asset == Constants.WSTETH) return 34;
+        if (asset == Constants.USDC) return 37;
+        if (asset == Constants.USDT) return 40;
+        if (asset == Constants.USDE) return 43;
         revert("Spark: Proof not found for repay");
     }
 }
