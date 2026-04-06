@@ -159,14 +159,15 @@ contract PendleVerifier is OwnedCustomVerifier {
         // Limit router: must be whitelisted if used
         if (limit.limitRouter != address(0) && !hasRole(LIMIT_ROUTER_ROLE, limit.limitRouter)) return false;
 
-        // TWAP check: only when input is the direct SY-mintable token (no intermediate swap)
-        if (twapDuration > 0 && input.tokenIn == input.tokenMintSy) {
-            uint256 expectedPtOut = _getExpectedPtOut(market, input.netTokenIn);
-            if (expectedPtOut > 0) {
-                uint256 minAcceptable = expectedPtOut * (10000 - maxSlippageBps) / 10000;
-                if (minPtOut < minAcceptable) return false;
-            }
-        }
+        // TODO: TWAP check disabled — needs accurate tokenIn → SY → PT conversion
+        // to properly validate minPtOut against oracle. Requires SY exchange rate source.
+        // if (twapDuration > 0 && input.tokenIn == input.tokenMintSy) {
+        //     uint256 expectedPtOut = _getExpectedPtOut(market, input.netTokenIn);
+        //     if (expectedPtOut > 0) {
+        //         uint256 minAcceptable = expectedPtOut * (10000 - maxSlippageBps) / 10000;
+        //         if (minPtOut < minAcceptable) return false;
+        //     }
+        // }
 
         return true;
     }
