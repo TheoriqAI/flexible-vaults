@@ -1,0 +1,465 @@
+// SPDX-License-Identifier: BUSL-1.1
+pragma solidity 0.8.25;
+
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+
+import {ABILibrary} from "../ABILibrary.sol";
+import {ArraysLibrary, Call} from "../ArraysLibrary.sol";
+import {JsonLibrary} from "../JsonLibrary.sol";
+import {ParameterLibrary} from "../ParameterLibrary.sol";
+import {BitmaskVerifier, IVerifier, ProofLibrary} from "../ProofLibrary.sol";
+
+import {IEulerVault} from "../interfaces/IEulerVault.sol";
+
+library EulerLibrary {
+    using ParameterLibrary for ParameterLibrary.Parameter[];
+
+    struct Info {
+        address subvault;
+        string subvaultName;
+        address curator;
+        address[] supplyVaults; // EVault addresses for deposit/withdraw
+        address[] borrowVaults; // EVault addresses for borrow/repay
+    }
+
+    function getEulerProofs(BitmaskVerifier bitmaskVerifier, Info memory $)
+        internal
+        view
+        returns (IVerifier.VerificationPayload[] memory leaves)
+    {
+        uint256 length = ($.supplyVaults.length + $.borrowVaults.length) * 3;
+        leaves = new IVerifier.VerificationPayload[](length);
+        uint256 index = 0;
+
+        for (uint256 i = 0; i < $.supplyVaults.length; i++) {
+            address vault = $.supplyVaults[i];
+            address asset = IERC4626(vault).asset();
+
+            /// @dev approve underlying to EVault
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                asset,
+                0,
+                abi.encodeCall(IERC20.approve, (vault, 0)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
+                )
+            );
+            /// @dev deposit into EVault
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                vault,
+                0,
+                abi.encodeCall(IERC4626.deposit, (0, $.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC4626.deposit, (0, address(type(uint160).max)))
+                )
+            );
+            /// @dev withdraw from EVault
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                vault,
+                0,
+                abi.encodeCall(IERC4626.withdraw, (0, $.subvault, $.subvault)),
+                ProofLibrary.makeBitmask(
+                    true,
+                    true,
+                    true,
+                    true,
+                    abi.encodeCall(IERC4626.withdraw, (0, address(type(uint160).max), address(type(uint160).max)))
+                )
+            );
+        }
+
+        for (uint256 i = 0; i < $.borrowVaults.length; i++) {
+            address vault = $.borrowVaults[i];
+            address asset = IERC4626(vault).asset();
+
+            /// @dev approve underlying to EVault (for repay)
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                asset,
+                0,
+                abi.encodeCall(IERC20.approve, (vault, 0)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
+                )
+            );
+            /// @dev borrow from EVault
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                vault,
+                0,
+                abi.encodeCall(IEulerVault.borrow, (0, $.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IEulerVault.borrow, (0, address(type(uint160).max)))
+                )
+            );
+            /// @dev repay to EVault
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                vault,
+                0,
+                abi.encodeCall(IEulerVault.repay, (0, $.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IEulerVault.repay, (0, address(type(uint160).max)))
+                )
+            );
+        }
+    }
+
+    function getEulerDescriptions(Info memory $) internal view returns (string[] memory descriptions) {
+        uint256 length = ($.supplyVaults.length + $.borrowVaults.length) * 3;
+        descriptions = new string[](length);
+        uint256 index = 0;
+        ParameterLibrary.Parameter[] memory innerParameters;
+
+        for (uint256 i = 0; i < $.supplyVaults.length; i++) {
+            address vault = $.supplyVaults[i];
+            address asset = IERC4626(vault).asset();
+            string memory assetSymbol = IERC20Metadata(asset).symbol();
+            string memory vaultName = IERC20Metadata(vault).symbol();
+
+            innerParameters = ParameterLibrary.build("to", Strings.toHexString(vault)).addAny("amount");
+            descriptions[index++] = JsonLibrary.toJson(
+                string(abi.encodePacked("IERC20(", assetSymbol, ").approve(EulerVault(", vaultName, "), anyInt)")),
+                ABILibrary.getABI(IERC20.approve.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(asset), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("assets", "any").add("receiver", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJson(
+                string(
+                    abi.encodePacked(
+                        "EulerVault(", vaultName, ").deposit(anyInt, ", $.subvaultName, ")"
+                    )
+                ),
+                ABILibrary.getABI(IERC4626.deposit.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+
+            innerParameters = ParameterLibrary.build("assets", "any").add("receiver", Strings.toHexString($.subvault))
+                .add("owner", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJson(
+                string(
+                    abi.encodePacked(
+                        "EulerVault(",
+                        vaultName,
+                        ").withdraw(anyInt, ",
+                        $.subvaultName,
+                        ", ",
+                        $.subvaultName,
+                        ")"
+                    )
+                ),
+                ABILibrary.getABI(IERC4626.withdraw.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+        }
+
+        for (uint256 i = 0; i < $.borrowVaults.length; i++) {
+            address vault = $.borrowVaults[i];
+            address asset = IERC4626(vault).asset();
+            string memory assetSymbol = IERC20Metadata(asset).symbol();
+            string memory vaultName = IERC20Metadata(vault).symbol();
+
+            innerParameters = ParameterLibrary.build("to", Strings.toHexString(vault)).addAny("amount");
+            descriptions[index++] = JsonLibrary.toJson(
+                string(abi.encodePacked("IERC20(", assetSymbol, ").approve(EulerVault(", vaultName, "), anyInt)")),
+                ABILibrary.getABI(IERC20.approve.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(asset), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("amount", "any").add("receiver", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJson(
+                string(
+                    abi.encodePacked("EulerVault(", vaultName, ").borrow(anyInt, ", $.subvaultName, ")")
+                ),
+                ABILibrary.getABI(IEulerVault.borrow.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("amount", "any").add("receiver", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJson(
+                string(
+                    abi.encodePacked("EulerVault(", vaultName, ").repay(anyInt, ", $.subvaultName, ")")
+                ),
+                ABILibrary.getABI(IEulerVault.repay.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+        }
+    }
+
+    function getEulerDescriptionsLean(Info memory $) internal view returns (string[] memory descriptions) {
+        uint256 length = ($.supplyVaults.length + $.borrowVaults.length) * 3;
+        descriptions = new string[](length);
+        uint256 index = 0;
+        ParameterLibrary.Parameter[] memory innerParameters;
+
+        for (uint256 i = 0; i < $.supplyVaults.length; i++) {
+            address vault = $.supplyVaults[i];
+            address asset = IERC4626(vault).asset();
+            string memory assetSymbol = IERC20Metadata(asset).symbol();
+            string memory vaultName = IERC20Metadata(vault).symbol();
+
+            innerParameters = ParameterLibrary.build("to", Strings.toHexString(vault)).addAny("amount");
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(abi.encodePacked("IERC20(", assetSymbol, ").approve(EulerVault(", vaultName, "), anyInt)")),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(asset), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("assets", "any").add("receiver", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked("EulerVault(", vaultName, ").deposit(anyInt, ", $.subvaultName, ")")
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+
+            innerParameters = ParameterLibrary.build("assets", "any").add("receiver", Strings.toHexString($.subvault))
+                .add("owner", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked(
+                        "EulerVault(",
+                        vaultName,
+                        ").withdraw(anyInt, ",
+                        $.subvaultName,
+                        ", ",
+                        $.subvaultName,
+                        ")"
+                    )
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+        }
+
+        for (uint256 i = 0; i < $.borrowVaults.length; i++) {
+            address vault = $.borrowVaults[i];
+            address asset = IERC4626(vault).asset();
+            string memory assetSymbol = IERC20Metadata(asset).symbol();
+            string memory vaultName = IERC20Metadata(vault).symbol();
+
+            innerParameters = ParameterLibrary.build("to", Strings.toHexString(vault)).addAny("amount");
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(abi.encodePacked("IERC20(", assetSymbol, ").approve(EulerVault(", vaultName, "), anyInt)")),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(asset), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("amount", "any").add("receiver", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked("EulerVault(", vaultName, ").borrow(anyInt, ", $.subvaultName, ")")
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+
+            innerParameters =
+                ParameterLibrary.build("amount", "any").add("receiver", Strings.toHexString($.subvault));
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked("EulerVault(", vaultName, ").repay(anyInt, ", $.subvaultName, ")")
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString(vault), "0"),
+                innerParameters
+            );
+        }
+    }
+
+    function getEulerCalls(Info memory $) internal view returns (Call[][] memory calls) {
+        uint256 index = 0;
+        calls = new Call[][](($.supplyVaults.length + $.borrowVaults.length) * 3);
+
+        for (uint256 j = 0; j < $.supplyVaults.length; j++) {
+            address vault = $.supplyVaults[j];
+            address asset = IERC4626(vault).asset();
+
+            /// @dev approve underlying to EVault
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] = Call($.curator, asset, 0, abi.encodeCall(IERC20.approve, (vault, 0)), true);
+                tmp[i++] = Call($.curator, asset, 0, abi.encodeCall(IERC20.approve, (vault, 1 ether)), true);
+                tmp[i++] = Call(address(0xdead), asset, 0, abi.encodeCall(IERC20.approve, (vault, 1 ether)), false);
+                tmp[i++] = Call($.curator, address(0xdead), 0, abi.encodeCall(IERC20.approve, (vault, 1 ether)), false);
+                tmp[i++] = Call($.curator, asset, 0, abi.encodeCall(IERC20.approve, (address(0xdead), 1 ether)), false);
+                tmp[i++] = Call($.curator, asset, 1 wei, abi.encodeCall(IERC20.approve, (vault, 1 ether)), false);
+                tmp[i++] = Call($.curator, asset, 0, abi.encode(IERC20.approve.selector, vault, 1 ether), false);
+                assembly {
+                    mstore(tmp, i)
+                }
+                calls[index++] = tmp;
+            }
+
+            /// @dev deposit into EVault
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] = Call($.curator, vault, 0, abi.encodeCall(IERC4626.deposit, (0, $.subvault)), true);
+                tmp[i++] = Call($.curator, vault, 0, abi.encodeCall(IERC4626.deposit, (1 ether, $.subvault)), true);
+                tmp[i++] =
+                    Call(address(0xdead), vault, 0, abi.encodeCall(IERC4626.deposit, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, address(0xdead), 0, abi.encodeCall(IERC4626.deposit, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encodeCall(IERC4626.deposit, (1 ether, address(0xdead))), false);
+                tmp[i++] =
+                    Call($.curator, vault, 1 wei, abi.encodeCall(IERC4626.deposit, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encode(IERC4626.deposit.selector, 1 ether, $.subvault), false);
+                assembly {
+                    mstore(tmp, i)
+                }
+                calls[index++] = tmp;
+            }
+
+            /// @dev withdraw from EVault
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encodeCall(IERC4626.withdraw, (0, $.subvault, $.subvault)), true);
+                tmp[i++] = Call(
+                    $.curator, vault, 0, abi.encodeCall(IERC4626.withdraw, (1 ether, $.subvault, $.subvault)), true
+                );
+                tmp[i++] = Call(
+                    address(0xdead),
+                    vault,
+                    0,
+                    abi.encodeCall(IERC4626.withdraw, (1 ether, $.subvault, $.subvault)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    address(0xdead),
+                    0,
+                    abi.encodeCall(IERC4626.withdraw, (1 ether, $.subvault, $.subvault)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    vault,
+                    0,
+                    abi.encodeCall(IERC4626.withdraw, (1 ether, address(0xdead), $.subvault)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    vault,
+                    0,
+                    abi.encodeCall(IERC4626.withdraw, (1 ether, $.subvault, address(0xdead))),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    vault,
+                    1 wei,
+                    abi.encodeCall(IERC4626.withdraw, (1 ether, $.subvault, $.subvault)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    vault,
+                    0,
+                    abi.encode(IERC4626.withdraw.selector, 1 ether, $.subvault, $.subvault),
+                    false
+                );
+                assembly {
+                    mstore(tmp, i)
+                }
+                calls[index++] = tmp;
+            }
+        }
+
+        for (uint256 j = 0; j < $.borrowVaults.length; j++) {
+            address vault = $.borrowVaults[j];
+            address asset = IERC4626(vault).asset();
+
+            /// @dev approve underlying to EVault (for repay)
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] = Call($.curator, asset, 0, abi.encodeCall(IERC20.approve, (vault, 0)), true);
+                tmp[i++] = Call($.curator, asset, 0, abi.encodeCall(IERC20.approve, (vault, 1 ether)), true);
+                tmp[i++] = Call(address(0xdead), asset, 0, abi.encodeCall(IERC20.approve, (vault, 1 ether)), false);
+                tmp[i++] = Call($.curator, address(0xdead), 0, abi.encodeCall(IERC20.approve, (vault, 1 ether)), false);
+                tmp[i++] = Call($.curator, asset, 0, abi.encodeCall(IERC20.approve, (address(0xdead), 1 ether)), false);
+                tmp[i++] = Call($.curator, asset, 1 wei, abi.encodeCall(IERC20.approve, (vault, 1 ether)), false);
+                tmp[i++] = Call($.curator, asset, 0, abi.encode(IERC20.approve.selector, vault, 1 ether), false);
+                assembly {
+                    mstore(tmp, i)
+                }
+                calls[index++] = tmp;
+            }
+
+            /// @dev borrow from EVault
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] = Call($.curator, vault, 0, abi.encodeCall(IEulerVault.borrow, (0, $.subvault)), true);
+                tmp[i++] = Call($.curator, vault, 0, abi.encodeCall(IEulerVault.borrow, (1 ether, $.subvault)), true);
+                tmp[i++] =
+                    Call(address(0xdead), vault, 0, abi.encodeCall(IEulerVault.borrow, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, address(0xdead), 0, abi.encodeCall(IEulerVault.borrow, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encodeCall(IEulerVault.borrow, (1 ether, address(0xdead))), false);
+                tmp[i++] =
+                    Call($.curator, vault, 1 wei, abi.encodeCall(IEulerVault.borrow, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encode(IEulerVault.borrow.selector, 1 ether, $.subvault), false);
+                assembly {
+                    mstore(tmp, i)
+                }
+                calls[index++] = tmp;
+            }
+
+            /// @dev repay to EVault
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] = Call($.curator, vault, 0, abi.encodeCall(IEulerVault.repay, (0, $.subvault)), true);
+                tmp[i++] = Call($.curator, vault, 0, abi.encodeCall(IEulerVault.repay, (1 ether, $.subvault)), true);
+                tmp[i++] =
+                    Call(address(0xdead), vault, 0, abi.encodeCall(IEulerVault.repay, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, address(0xdead), 0, abi.encodeCall(IEulerVault.repay, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encodeCall(IEulerVault.repay, (1 ether, address(0xdead))), false);
+                tmp[i++] =
+                    Call($.curator, vault, 1 wei, abi.encodeCall(IEulerVault.repay, (1 ether, $.subvault)), false);
+                tmp[i++] =
+                    Call($.curator, vault, 0, abi.encode(IEulerVault.repay.selector, 1 ether, $.subvault), false);
+                assembly {
+                    mstore(tmp, i)
+                }
+                calls[index++] = tmp;
+            }
+        }
+    }
+}
