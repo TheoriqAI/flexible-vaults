@@ -1,0 +1,165 @@
+{
+  "title": "monad:tqMON:prod:sv0:nttBridge",
+  "merkle_root": "0x6b7fe756c01007dd1009736f0a8689cf5b2ed8fc8d5a8a2cf1d8a6298632f24a",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(WETH).approve(0xfea937f7124e19124671f1685671d3f04a9af4e4, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xee8c0e9f1bffb4eb878d8f15f368a02a35481242",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xfea937f7124e19124671f1685671d3f04a9af4e4",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f782a4a99ebf4e05ac1f27924eda51e520fc2accc68c5c55c1a381c5cb6542503000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xa7f5f99b2511f822ee10b821bb9a2a2ea5ecb5f33fbe869de54df3590c5909e4"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "INttManagerWithExecutor(NttManagerWithExecutor).transfer{value: any}(NttManager,any,2,0x00000000000000000000000036d8d9fc89eeb1abbfc6101cc23945e79416d9f3,0x0000000000000000000000000c7cb4e1241f4b7fd65de59fde5a6dbff190fb20,any(38),(any,0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b,any(165),any(33)),(any,any))",
+        "abi": {
+          "type": "function",
+          "name": "transfer",
+          "inputs": [
+            {
+              "name": "nttManager",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "token",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "recipientChain",
+              "type": "uint16",
+              "internalType": "uint16"
+            },
+            {
+              "name": "recipientAddress",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "refundAddress",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "encodedInstructions",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "executorArgs",
+              "type": "tuple",
+              "internalType": "struct INttManagerWithExecutor.ExecutorArgs",
+              "components": [
+                {
+                  "name": "value",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "refundAddress",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "signedQuote",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "instructions",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                }
+              ]
+            },
+            {
+              "name": "feeArgs",
+              "type": "tuple",
+              "internalType": "struct INttManagerWithExecutor.FeeArgs",
+              "components": [
+                {
+                  "name": "dbps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                },
+                {
+                  "name": "payee",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "msgId",
+              "type": "uint64",
+              "internalType": "uint64"
+            }
+          ],
+          "stateMutability": "payable"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xfea937f7124e19124671f1685671d3f04a9af4e4",
+          "value": "any"
+        },
+        "innerParameters": {
+          "nttManager": "0x36878c6fca7e0e8a88f90dc410cfbbca5b695c95",
+          "amount": "any",
+          "recipientChain": "2",
+          "recipientAddress": "0x00000000000000000000000036d8d9fc89eeb1abbfc6101cc23945e79416d9f3",
+          "refundAddress": "0x0000000000000000000000000c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "transceiverInstructions": "any(38)"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f78cff97d50240e97ad80d3fe30b7169188fe85716ba69440afcfded02f2d2d60000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000003c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000001a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000026000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000000a500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000210000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xed5d97d83581ad63f52f22be9c857c30c72b0be6f1c25ef83bba201eec8eef45"
+      ]
+    }
+  ]
+}

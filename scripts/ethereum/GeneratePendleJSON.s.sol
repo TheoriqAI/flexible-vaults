@@ -14,6 +14,7 @@ import "../common/ArraysLibrary.sol";
 contract GeneratePendleJSON is Script, Test {
     // Addresses from tqETH.s.sol
     address public preProdCurator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
+    address public preProdExecutor = 0xfc5c96303F353c314e468681899C35F424246eBe;
     address public prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
 
     // Vault addresses
@@ -140,6 +141,7 @@ contract GeneratePendleJSON is Script, Test {
     }
 
     /// @notice Get Pendle PT configuration with both PT-jrUSDe-27MAR2025 and PT-sNUSD-04MAR2026
+    /// @dev DEPRECATED: Use generateFromConfig() with a config file instead
     /// @param subvault The subvault address
     /// @param caller The caller address
     /// @return Pendle configuration
@@ -151,16 +153,21 @@ contract GeneratePendleJSON is Script, Test {
         PendleLibrary.PTStrategy[] memory strategies = new PendleLibrary.PTStrategy[](2);
 
         // Strategy 1: PT-jrUSDe-27MAR2025
-        // Input tokens: USDe and sUSDe
+        // Input tokens: USDe and sUSDe (can enter with these)
         address[] memory inputTokens1 = new address[](2);
         inputTokens1[0] = Constants.USDE;
         inputTokens1[1] = Constants.SUSDE;
+
+        // Output tokens: same as input (can exit to these)
+        address[] memory outputTokens1 = new address[](2);
+        outputTokens1[0] = Constants.USDE;
+        outputTokens1[1] = Constants.SUSDE;
 
         strategies[0] = PendleLibrary.PTStrategy({
             ptToken: Constants.PT_JRUSDE_27MAR2025,
             market: Constants.PENDLE_MARKET_PT_JRUSDE_27MAR2025,
             inputTokens: inputTokens1,
-            mintSyToken: Constants.JRUSDE  // jrUSDe is the SY token for this PT
+            outputTokens: outputTokens1
         });
 
         // Strategy 2: PT-sNUSD-04MAR2026
@@ -171,11 +178,18 @@ contract GeneratePendleJSON is Script, Test {
         inputTokens2[2] = Constants.USDE;
         inputTokens2[3] = Constants.USDC;
 
+        // Output tokens: same as input
+        address[] memory outputTokens2 = new address[](4);
+        outputTokens2[0] = Constants.NUSD;
+        outputTokens2[1] = Constants.SNUSD;
+        outputTokens2[2] = Constants.USDE;
+        outputTokens2[3] = Constants.USDC;
+
         strategies[1] = PendleLibrary.PTStrategy({
             ptToken: Constants.PT_SNUSD_04MAR2026,
             market: Constants.PENDLE_MARKET_PT_SNUSD_04MAR2026,
             inputTokens: inputTokens2,
-            mintSyToken: Constants.SNUSD  // sNUSD is the SY token for this PT
+            outputTokens: outputTokens2
         });
 
         return PendleLibrary.Info({
@@ -386,17 +400,20 @@ contract GeneratePendleJSON is Script, Test {
 
             address ptToken = vm.parseJsonAddress(json, string.concat(basePath, ".ptToken"));
             address market = vm.parseJsonAddress(json, string.concat(basePath, ".market"));
-            address mintSyToken = vm.parseJsonAddress(json, string.concat(basePath, ".mintSyToken"));
 
             // Parse inputTokens array
             bytes memory inputTokensData = vm.parseJson(json, string.concat(basePath, ".inputTokens"));
             address[] memory inputTokens = abi.decode(inputTokensData, (address[]));
 
+            // Parse outputTokens array
+            bytes memory outputTokensData = vm.parseJson(json, string.concat(basePath, ".outputTokens"));
+            address[] memory outputTokens = abi.decode(outputTokensData, (address[]));
+
             strategies[i] = PendleLibrary.PTStrategy({
                 ptToken: ptToken,
                 market: market,
                 inputTokens: inputTokens,
-                mintSyToken: mintSyToken
+                outputTokens: outputTokens
             });
         }
 
@@ -404,6 +421,7 @@ contract GeneratePendleJSON is Script, Test {
     }
 
     /// @notice Example: Add a different PT strategy
+    /// @dev DEPRECATED: Use generateFromConfig() with a config file instead
     function generateMultiPTExample() external {
         address subvault = address(0); // TODO: Replace with actual subvault address
 
@@ -414,22 +432,29 @@ contract GeneratePendleJSON is Script, Test {
         inputTokens1[0] = Constants.USDE;
         inputTokens1[1] = Constants.SUSDE;
 
+        address[] memory outputTokens1 = new address[](2);
+        outputTokens1[0] = Constants.USDE;
+        outputTokens1[1] = Constants.SUSDE;
+
         strategies[0] = PendleLibrary.PTStrategy({
             ptToken: Constants.PT_JRUSDE_27MAR2025,
             market: Constants.PENDLE_MARKET_PT_JRUSDE_27MAR2025,
             inputTokens: inputTokens1,
-            mintSyToken: Constants.JRUSDE
+            outputTokens: outputTokens1
         });
 
         // Strategy 2: Another PT (example - replace with actual addresses)
         address[] memory inputTokens2 = new address[](1);
         inputTokens2[0] = Constants.WETH;
 
+        address[] memory outputTokens2 = new address[](1);
+        outputTokens2[0] = Constants.WETH;
+
         strategies[1] = PendleLibrary.PTStrategy({
             ptToken: address(0), // TODO: Add actual PT token
             market: address(0),  // TODO: Add actual market
             inputTokens: inputTokens2,
-            mintSyToken: Constants.WETH
+            outputTokens: outputTokens2
         });
 
         generateCustomJSON(
@@ -439,5 +464,177 @@ contract GeneratePendleJSON is Script, Test {
             prodCurator,
             strategies
         );
+    }
+
+    /// @notice Generate Pendle PT JSON for MULTIPLE callers (entries doubled)
+    /// @param subvaultIndex The subvault index
+    /// @param isProd true for prod vault, false for preprod vault
+    /// @param strategies Array of PT strategies
+    /// @param callers Array of caller addresses
+    function generateWithCustomStrategiesMultiCaller(
+        uint256 subvaultIndex,
+        bool isProd,
+        PendleLibrary.PTStrategy[] memory strategies,
+        address[] memory callers
+    ) public {
+        address vaultAddress = isProd ? VAULT_PROD : VAULT_PREPROD;
+        string memory env = isProd ? "prod" : "preprod";
+
+        Vault vault = Vault(payable(vaultAddress));
+        address subvault = vault.subvaultAt(subvaultIndex);
+
+        string memory title = string(
+            abi.encodePacked("ethereum:tqETH:", env, ":sv", vm.toString(subvaultIndex), ":pendlePT")
+        );
+
+        string memory subvaultName = string(abi.encodePacked("subvault", vm.toString(subvaultIndex)));
+
+        console.log("=== Generating Pendle PT Operations JSON (Multi-Caller) ===");
+        console.log("Environment:", env);
+        console.log("Subvault index:", subvaultIndex);
+        console.log("Subvault address:", subvault);
+        console.log("Number of PT strategies:", strategies.length);
+        console.log("Number of callers:", callers.length);
+        console.log("");
+
+        ProtocolDeployment memory $ = Constants.protocolDeployment();
+
+        // Generate proofs for ALL callers
+        IVerifier.VerificationPayload[] memory leaves = new IVerifier.VerificationPayload[](200);
+        uint256 iterator = 0;
+
+        for (uint256 i = 0; i < callers.length; i++) {
+            console.log("Generating for caller:", callers[i]);
+            PendleLibrary.Info memory pendleInfo = PendleLibrary.Info({
+                subvault: subvault,
+                subvaultName: subvaultName,
+                curator: callers[i],
+                pendleRouter: Constants.PENDLE_ROUTER,
+                pendleRouterName: "PendleRouterV3",
+                strategies: strategies
+            });
+
+            iterator = ArraysLibrary.insert(
+                leaves,
+                PendleLibrary.getPendleProofs($.bitmaskVerifier, pendleInfo),
+                iterator
+            );
+        }
+
+        assembly {
+            mstore(leaves, iterator)
+        }
+
+        (bytes32 merkleRoot, IVerifier.VerificationPayload[] memory leavesWithProofs) =
+            ProofLibrary.generateMerkleProofs(leaves);
+
+        // Generate descriptions for ALL callers
+        string[] memory descriptions = new string[](200);
+        iterator = 0;
+
+        for (uint256 i = 0; i < callers.length; i++) {
+            PendleLibrary.Info memory pendleInfo = PendleLibrary.Info({
+                subvault: subvault,
+                subvaultName: subvaultName,
+                curator: callers[i],
+                pendleRouter: Constants.PENDLE_ROUTER,
+                pendleRouterName: "PendleRouterV3",
+                strategies: strategies
+            });
+
+            iterator = ArraysLibrary.insert(
+                descriptions,
+                PendleLibrary.getPendleDescriptions(pendleInfo),
+                iterator
+            );
+        }
+
+        assembly {
+            mstore(descriptions, iterator)
+        }
+
+        ProofLibrary.storeProofs(title, merkleRoot, leavesWithProofs, descriptions);
+
+        // Generate lean version
+        string[] memory descriptionsLean = new string[](200);
+        iterator = 0;
+
+        for (uint256 i = 0; i < callers.length; i++) {
+            PendleLibrary.Info memory pendleInfo = PendleLibrary.Info({
+                subvault: subvault,
+                subvaultName: subvaultName,
+                curator: callers[i],
+                pendleRouter: Constants.PENDLE_ROUTER,
+                pendleRouterName: "PendleRouterV3",
+                strategies: strategies
+            });
+
+            iterator = ArraysLibrary.insert(
+                descriptionsLean,
+                PendleLibrary.getPendleDescriptionsLean(pendleInfo),
+                iterator
+            );
+        }
+
+        assembly {
+            mstore(descriptionsLean, iterator)
+        }
+
+        string memory leanTitle = string(abi.encodePacked(title, "-lean"));
+        ProofLibrary.storeProofs(leanTitle, merkleRoot, leavesWithProofs, descriptionsLean);
+
+        console.log("");
+        console.log("=== Generation Complete ===");
+        console.log("JSON file:", string(abi.encodePacked("./scripts/jsons/", title, ".json")));
+        console.log("Lean JSON file:", string(abi.encodePacked("./scripts/jsons/", leanTitle, ".json")));
+        console.log("Merkle root:", vm.toString(merkleRoot));
+        console.log("Number of operations:", leavesWithProofs.length);
+    }
+
+    /// @notice Generate Pendle PT ops for preprod sv4 with BOTH curator and executor as callers
+    function generatePreProdSv4PendleMultiCaller() public {
+        PendleLibrary.PTStrategy[] memory strategies = new PendleLibrary.PTStrategy[](2);
+
+        // Strategy 1: PT-jrUSDe-27MAR2025
+        address[] memory inputTokens1 = new address[](2);
+        inputTokens1[0] = Constants.USDE;
+        inputTokens1[1] = Constants.SUSDE;
+
+        address[] memory outputTokens1 = new address[](2);
+        outputTokens1[0] = Constants.USDE;
+        outputTokens1[1] = Constants.SUSDE;
+
+        strategies[0] = PendleLibrary.PTStrategy({
+            ptToken: Constants.PT_JRUSDE_27MAR2025,
+            market: Constants.PENDLE_MARKET_PT_JRUSDE_27MAR2025,
+            inputTokens: inputTokens1,
+            outputTokens: outputTokens1
+        });
+
+        // Strategy 2: PT-sNUSD-04MAR2026
+        address[] memory inputTokens2 = new address[](4);
+        inputTokens2[0] = Constants.NUSD;
+        inputTokens2[1] = Constants.SNUSD;
+        inputTokens2[2] = Constants.USDE;
+        inputTokens2[3] = Constants.USDC;
+
+        address[] memory outputTokens2 = new address[](4);
+        outputTokens2[0] = Constants.NUSD;
+        outputTokens2[1] = Constants.SNUSD;
+        outputTokens2[2] = Constants.USDE;
+        outputTokens2[3] = Constants.USDC;
+
+        strategies[1] = PendleLibrary.PTStrategy({
+            ptToken: Constants.PT_SNUSD_04MAR2026,
+            market: Constants.PENDLE_MARKET_PT_SNUSD_04MAR2026,
+            inputTokens: inputTokens2,
+            outputTokens: outputTokens2
+        });
+
+        address[] memory callers = new address[](2);
+        callers[0] = preProdCurator;
+        callers[1] = preProdExecutor;
+
+        generateWithCustomStrategiesMultiCaller(4, false, strategies, callers);
     }
 }

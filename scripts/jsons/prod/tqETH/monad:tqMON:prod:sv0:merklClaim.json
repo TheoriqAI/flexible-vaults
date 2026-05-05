@@ -1,0 +1,41 @@
+{
+  "title": "monad:tqMON:prod:sv0:merklClaim",
+  "merkle_root": "0xc1e6e2fc9b7e54740039a653bb93da015260090c85d44ec6d39ee21ab335a523",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMerklDistributor(0x3ef3d8ba38ebe18db133cec108f4d14ce00dd9ae).toggleOperator(subvault, curator)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            }
+          ],
+          "name": "toggleOperator",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x3ef3d8ba38ebe18db133cec108f4d14ce00dd9ae",
+          "value": "0"
+        },
+        "innerParameters": {
+          "user": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "operator": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fdd604fb81e548efb9e0524a04cd40a65a207512b2029e71f8f7ddd192e9e9365000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": []
+    }
+  ]
+}

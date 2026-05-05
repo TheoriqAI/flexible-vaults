@@ -19,7 +19,7 @@ import "@openzeppelin/contracts/access/extensions/IAccessControlEnumerable.sol";
 
 /// @title Monad SV0 Integration Tests
 /// @notice Tests actual execution of Euler, SwapModule, and bridge operations on Monad prod subvault 0
-/// @dev Uses scripts/jsons/monad:tqMON:prod:sv0:all.json (68 ops)
+/// @dev Uses scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:all.json (68 ops)
 /// Run: forge test --match-contract MonadSv0IntegrationTest --via-ir -vvv
 ///
 /// Index map:
@@ -84,7 +84,7 @@ contract MonadSv0IntegrationTest is Test {
         console.log("Verifier:", address(verifier));
 
         string memory root = vm.projectRoot();
-        string memory path = string.concat(root, "/scripts/jsons/monad:tqMON:prod:sv0:all.json");
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:all.json");
         json = vm.readFile(path);
         merkleRoot = bytes32(vm.parseJsonBytes32(json, ".merkle_root"));
         console.log("Merkle root:", vm.toString(merkleRoot));

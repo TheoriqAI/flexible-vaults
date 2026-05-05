@@ -321,10 +321,10 @@ library UniswapV3Library {
             0,
             abi.encodeCall(IERC20.approve, (spender, 0)),
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (token address)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to token
+                true,  // value: locked to 0
+                true, // selector: locked
                 abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
             )
         );
@@ -362,10 +362,10 @@ library UniswapV3Library {
             0,
             mintCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 mintCalldata // Use same calldata for bitmask (recipient is fixed)
             )
         );
@@ -395,10 +395,10 @@ library UniswapV3Library {
             0,
             increaseCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 increaseCalldata
             )
         );
@@ -426,10 +426,10 @@ library UniswapV3Library {
             0,
             decreaseCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 decreaseCalldata
             )
         );
@@ -457,10 +457,10 @@ library UniswapV3Library {
             0,
             collectCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 collectCalldata // recipient is fixed
             )
         );
@@ -478,10 +478,10 @@ library UniswapV3Library {
             0,
             abi.encodeWithSignature("burn(uint256)", uint256(0)),
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 abi.encodeWithSignature("burn(uint256)", uint256(0))
             )
         );

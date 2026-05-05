@@ -1,0 +1,122 @@
+{
+  "title": "prod/tqETH/sv4-cctpBridge-USDC-monad",
+  "merkle_root": "0xdaf545165316b7a7ca08fd9a9943a07d606aca952f5a770c74839e045b28bb21",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(0x28b5a0e9c621a5badaa536219b3a228c8168cf5d, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x28b5a0e9c621a5badaa536219b3a228c8168cf5d",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a528ab8d7774b39d2f4141fcd15e5bba1f696d9f7b6e8ebde3c3e40eadf98d3cb000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x61fb5170937c6de59b2c92f794d34039e3fda78b838b42ef43a3720c5214ff60"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "ITokenMessengerV2(TokenMessengerV2).depositForBurn(any,15,0x0000000000000000000000000c7cb4e1241f4b7fd65de59fde5a6dbff190fb20,0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48,any,any,any)",
+        "abi": {
+          "type": "function",
+          "name": "depositForBurn",
+          "inputs": [
+            {
+              "name": "amount",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "destinationDomain",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            {
+              "name": "mintRecipient",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "burnToken",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "destinationCaller",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "maxFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minFinalityThreshold",
+              "type": "uint32",
+              "internalType": "uint32"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "nonce",
+              "type": "uint64",
+              "internalType": "uint64"
+            }
+          ],
+          "stateMutability": "nonpayable"
+        },
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x28b5a0e9c621a5badaa536219b3a228c8168cf5d",
+          "value": "0"
+        },
+        "innerParameters": {
+          "amount": "any",
+          "destinationDomain": "15",
+          "mintRecipient": "0x0000000000000000000000000c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "burnToken": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "destinationCaller": "any",
+          "maxFee": "any",
+          "minFinalityThreshold": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a0ef1dfa880c748583b707492049b321e81264c83af33a41a6c1288d7e20d8ac500000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000144ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xd91536930856a3f3780ed6a9e20dcc5b62cff475dae327b76e88aada9826334b"
+      ]
+    }
+  ]
+}

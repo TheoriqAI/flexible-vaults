@@ -28,4 +28,6 @@ interface IAavePoolV3 {
         );
 
     function getUserEMode(address user) external view returns (uint16);
+
+    function setUserUseReserveAsCollateral(address asset, bool useAsCollateral) external;
 }

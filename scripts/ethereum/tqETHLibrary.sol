@@ -324,6 +324,7 @@ library tqETHLibrary {
             aaveInstanceName: "Core",
             collaterals: collateralAssets,
             loans: loanAssets,
+            collateralToggles: new address[](0),
             categoryId: categoryId
         });
     }
@@ -361,6 +362,7 @@ library tqETHLibrary {
             aaveInstanceName: "AaveCore",
             collaterals: collaterals,
             loans: loans,
+            collateralToggles: new address[](0),
             categoryId: 0 // No eMode - mixed asset types
         });
     }
@@ -389,6 +391,7 @@ library tqETHLibrary {
             aaveInstanceName: "Spark",
             collaterals: collaterals,
             loans: loans,
+            collateralToggles: new address[](0),
             categoryId: 0 // No eMode - mixed asset types
         });
     }

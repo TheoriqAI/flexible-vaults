@@ -173,6 +173,7 @@ contract GenerateAaveOpsJSONCrossChain is Script, Test {
             aaveInstanceName: "AaveV3",
             collaterals: config.collateralAssets,
             loans: config.loanAssets,
+            collateralToggles: new address[](0),
             categoryId: config.eModeCategory
         });
 
@@ -231,6 +232,7 @@ contract GenerateAaveOpsJSONCrossChain is Script, Test {
             aaveInstanceName: "AaveV3",
             collaterals: config.collateralAssets,
             loans: config.loanAssets,
+            collateralToggles: new address[](0),
             categoryId: config.eModeCategory
         });
 

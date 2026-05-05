@@ -10,6 +10,7 @@ import "../common/interfaces/Imports.sol";
 
 import "./strETHLibrary.sol";
 import "./tqETHLibrary.sol";
+import "./tqGLDLibrary.sol";
 
 library Constants {
     string public constant DEPLOYMENT_NAME = "Mellow";
@@ -23,6 +24,10 @@ library Constants {
     address public constant USDT = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
     address public constant USDS = 0xdC035D45d973E3EC169d2276DDab16f1e407384F;
     address public constant USDU = 0xdde3eC717f220Fc6A29D6a4Be73F91DA5b718e55;
+    address public constant EURC = 0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c;
+
+    address public constant XAUT = 0x68749665FF8D2d112Fa859AA293F07A622782F38;
+    address public constant PAXG = 0x45804880De22913dAFE09f4980848ECE6EcbAf78;
 
     address public constant USDE = 0x4c9EDD5852cd905f086C759E8383e09bff1E68B3;
     address public constant SUSDE = 0x9D39A5DE30e57443BfF2A8307A4256c8797A3497;
@@ -40,6 +45,23 @@ library Constants {
     address public constant PENDLE_MARKET_PT_SNUSD_04MAR2026 = 0x6D8C4DE7071D5AeE27fc3a810764E62a4a00Ceb9;
     address public constant PT_SRUSDE_01APR2026 = 0x9Bf45ab47747F4B4dD09B3C2c73953484b4eB375;
     address public constant PENDLE_MARKET_PT_SRUSDE_01APR2026 = 0xAFB7d6d1e9BcA5B675aDC9b4f52F0CDfDdec9654;
+    address public constant PT_SRUSDE_24JUN2026 = 0x619D75E3b790eBC21c289f2805Bb7177A7D732E2;
+    address public constant PENDLE_MARKET_PT_SRUSDE_24JUN2026 = 0xfc82267a9e065Aaf407f64dAdD49BfbDC9511FB1;
+    address public constant PT_SNUSD_03JUN2026 = 0x6C65dB1d88C8edA1e3dEbF2B2eF3D0EcE8600466;
+    address public constant PENDLE_MARKET_PT_SNUSD_03JUN2026 = 0x4bbA42DA555f3D8c2b441ca6D8EF9Bd1Ebf3bff8;
+    address public constant PT_SUSDE_07MAY2026 = 0x3de0ff76E8b528C092d47b9DaC775931cef80F49;
+    address public constant PENDLE_MARKET_PT_SUSDE_07MAY2026 = 0x8dAe8ECe668cf80d348873F23D456448E8694883;
+    address public constant PT_SAVUSD_14MAY2026 = 0x606B5C773dC4D6E625C411cF60565f8c30C467d2;
+
+    address public constant SIERRA = 0x6bf7788EAA948d9fFBA7E9bb386E2D3c9810e0fc;
+
+    address public constant PT_SIERRA_01JUL2026 = 0x1A69154f6f6247E4457332860Fb173251A36E03F;
+    address public constant PENDLE_MARKET_PT_SIERRA_01JUL2026 = 0xa556B5327372aB8AAeFdA2b756Eed0608afD6cA5;
+
+    address public constant APXUSD = 0x98A878b1Cd98131B271883B390f68D2c90674665;
+
+    address public constant PT_APXUSD_17JUN2026 = 0x92a6A01B07984de46c24E8EBa248449beB8B1dCB;
+    address public constant PENDLE_MARKET_PT_APXUSD_17JUN2026 = 0x50DCE085af29CABa28f7308beA57C4043757b491;
 
     address public constant MUSD = 0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186;
 
@@ -55,6 +77,7 @@ library Constants {
     address public constant COWSWAP_VAULT_RELAYER = 0xC92E8bdf79f0507f65a392b0ab4667716BFE0110;
 
     address public constant KYBERSWAP_ROUTER = 0x6131B5fae19EA4f9D964eAc0408E4408b66337b5;
+    address public constant NUSD_ROUTER = 0xa052883ebEe7354FC2Aa0f9c727E657FdeCa744a;
 
     address public constant AAVE_CORE = 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2;
     address public constant AAVE_PRIME = 0x4e033931ad43597d96D6bcc25c280717730B58B1;
@@ -62,6 +85,7 @@ library Constants {
     address public constant SPARK = 0xC13e21B648A5Ee794902342038FF3aDAB66BE987;
 
     address public constant AAVE_V3_ORACLE = 0x54586bE62E3c3580375aE3723C145253060Ca0C2;
+    address public constant TQ_GLD_SWAP_ORACLE = 0x0094b3eBeaF09E7409fe69E3d24d162348AFb762;
 
     address public constant MORPHO = 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb;
     bytes32 public constant MORPHO_WSTUSR_USDC_MARKET_ID =
@@ -86,15 +110,30 @@ library Constants {
     uint64 public constant CCIP_PLASMA_CHAIN_SELECTOR = 9335212494177455608;
     address public constant CCIP_ETHEREUM_ROUTER = 0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D;
     uint64 public constant CCIP_ETHEREUM_CHAIN_SELECTOR = 5009297550715157269;
+    uint64 public constant CCIP_MONAD_CHAIN_SELECTOR = 8481857512324358265;
 
     uint32 public constant LAYER_ZERO_PLASMA_EID = 30383;
     uint32 public constant LAYER_ZERO_ETHEREUM_EID = 30101;
+    uint32 public constant LAYER_ZERO_MONAD_EID = 30274;
 
     address public constant ETHEREUM_USDT_OFT_ADAPTER = 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee;
     address public constant PLASMA_USDT_OFT_ADAPTER = 0x02ca37966753bDdDf11216B73B16C1dE756A7CF9;
 
     address public constant ETHEREUM_WSTUSR_OFT_ADAPTER = 0xab17c1fE647c37ceb9b96d1c27DD189bf8451978;
     address public constant PLASMA_WSTUSR_OFT_ADAPTER = 0x2a52B289bA68bBd02676640aA9F605700c9e5699;
+
+    address public constant ETHEREUM_WETH_OFT_ADAPTER = 0x7853F063B469c2565651Bfc5272a8536F523420e;
+
+    address public constant NTT_ROUTER = 0x03dB430D830601DB368991eE55DAa9A708df7912;
+    address public constant NTT_WETH_MANAGER = 0x556790e948b9920A8868bCAFcC87D25e82e8a075;
+    uint16 public constant WORMHOLE_MONAD_CHAIN_ID = 48;
+
+    address public constant MONAD_VAULT = 0x799d2847cF8Dfcb4f17ec28737f17C0E82Eb445c;
+
+    // CCTP V2 (Circle Cross-Chain Transfer Protocol)
+    address public constant CCTP_TOKEN_MESSENGER_V2 = 0x28b5a0e9C621a5BadaA536219b3a228C8168cf5d;
+    address public constant CCTP_MESSAGE_TRANSMITTER_V2 = 0x81D40F21F12A8F0E3252Bccb954D722d4c464B64;
+    uint32 public constant CCTP_MONAD_DOMAIN = 15;
 
     address public constant STRETH = 0x277C6A642564A91ff78b008022D65683cEE5CCC5;
     address public constant STRETH_DEPOSIT_QUEUE_ETH = 0xE707321B887b9da133AC5fCc5eDB78Ab177a152D;

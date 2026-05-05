@@ -109,6 +109,7 @@ library rstETHPlusPlusLibrary {
             aaveInstanceName: "Core",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.WEETH, Constants.RSETH, Constants.WSTETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WETH)),
+            collateralToggles: new address[](0),
             categoryId: 1
         });
     }
@@ -126,6 +127,7 @@ library rstETHPlusPlusLibrary {
             aaveInstanceName: "Prime",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.WSTETH, Constants.RSETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WETH)),
+            collateralToggles: new address[](0),
             categoryId: 1
         });
     }
@@ -203,6 +205,7 @@ library rstETHPlusPlusLibrary {
             aaveInstanceName: "Core",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.RSETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WSTETH)),
+            collateralToggles: new address[](0),
             categoryId: 3
         });
     }
@@ -220,6 +223,7 @@ library rstETHPlusPlusLibrary {
             aaveInstanceName: "Prime",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.RSETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WSTETH)),
+            collateralToggles: new address[](0),
             categoryId: 5
         });
     }

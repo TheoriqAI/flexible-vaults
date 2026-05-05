@@ -37,6 +37,8 @@ contract Deploy is Script {
     address public pauser = 0x8176Ce5927Abad5EC15a2c92AeB3A8E6E7e74801;
     address public feeManagerOwner = 0x5523462B0dDA6F6D9a26d0d088160995c0332Bf3;
 
+    uint256 public constant DEFAULT_MULTIPLIER = 0.995e8;
+
     Vault public vault = Vault(payable(0x912644cdFadA93469b8aB5b4351bDCFf61691613));
 
     function run() external {

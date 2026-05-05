@@ -9,13 +9,16 @@ import "../scripts/common/interfaces/IAavePoolV3.sol";
 import "../scripts/common/interfaces/IMorpho.sol";
 import "../scripts/common/interfaces/ILidoWithdrawalQueue.sol";
 import "../scripts/common/interfaces/ISUSDe.sol";
+import "../scripts/common/interfaces/INttManagerWithExecutor.sol";
+import "../scripts/common/interfaces/ICCIPRouterClient.sol";
+import "../scripts/common/libraries/CCIPClient.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/IAccessControl.sol";
 import "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 /// @title Production Subvault 3 Integration Tests
 /// @notice Tests actual execution of Aave/Spark operations on prod subvault 3
-/// @dev Requires mainnet fork. SV4 tests are in ProdSv4EMode38Integration.t.sol
+/// @dev Requires mainnet fork. SV4 tests are in ProdSv4Emode44Integration.t.sol
 contract ProdSubvaultIntegrationTest is Test {
     // Addresses
     address constant prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
@@ -34,7 +37,7 @@ contract ProdSubvaultIntegrationTest is Test {
 
     function setUp() public {
         // Fork mainnet
-        vm.createSelectFork("https://rpc.mevblocker.io");
+        vm.createSelectFork("http://108.53.61.201:8550");
 
         // Get subvault address
         Vault vault = Vault(payable(VAULT_PROD));
@@ -299,6 +302,430 @@ contract ProdSubvaultIntegrationTest is Test {
         console.log("Withdraw savETH collateral - SUCCESS");
 
         console.log("\n=== All Prod SV3 Morpho Tests Passed ===");
+    }
+
+    /// @notice Test CCIP bridge wstETH approval and ccipSend on prod subvault 3
+    /// @dev CCIP indices in sv3: 70 (wstETH approve), 71 (ccipSend)
+    function test_ProdSv3_CCIPBridgeOperations() public {
+        console.log("\n=== Testing Prod Subvault 3 - CCIP Bridge wstETH to Monad ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        // Fund subvault with wstETH
+        deal(Constants.WSTETH, subvault3, 10 ether);
+
+        // 1. Approve wstETH for CCIP Router - index 70
+        console.log("\n--- CCIP Test 1: Approve wstETH for CCIP Router ---");
+        {
+            bytes memory verificationData = _getVerificationData(json, 70);
+            bytes32[] memory proof = _getProof(json, 70);
+
+            IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+                verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+                verificationData: verificationData,
+                proof: proof
+            });
+
+            bytes memory callData = abi.encodeCall(IERC20.approve, (Constants.CCIP_ETHEREUM_ROUTER, type(uint256).max));
+
+            vm.prank(prodCurator);
+            ICallModule(subvault3).call(Constants.WSTETH, 0, callData, payload);
+            console.log("wstETH approve for CCIP Router - SUCCESS");
+        }
+        _waitForRPC();
+
+        // 2. CCIP send wstETH to Monad - index 71
+        console.log("\n--- CCIP Test 2: ccipSend wstETH to Monad ---");
+        {
+            bytes memory verificationData = _getVerificationData(json, 71);
+            bytes32[] memory proof = _getProof(json, 71);
+
+            IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+                verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+                verificationData: verificationData,
+                proof: proof
+            });
+
+            address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
+
+            CCIPClient.EVMTokenAmount[] memory tokenAmounts = new CCIPClient.EVMTokenAmount[](1);
+            tokenAmounts[0] = CCIPClient.EVMTokenAmount({token: Constants.WSTETH, amount: 1 ether});
+
+            bytes memory callData = abi.encodeCall(
+                ICCIPRouterClient.ccipSend,
+                (
+                    Constants.CCIP_MONAD_CHAIN_SELECTOR,
+                    CCIPClient.EVM2AnyMessage({
+                        receiver: abi.encode(targetSubvault),
+                        data: new bytes(0),
+                        tokenAmounts: tokenAmounts,
+                        feeToken: address(0), // pay in ETH
+                        extraArgs: CCIPClient._argsToBytes(
+                            CCIPClient.EVMExtraArgsV2({gasLimit: 0, allowOutOfOrderExecution: true})
+                        )
+                    })
+                )
+            );
+
+            // Get fee estimate from CCIP router
+            uint256 ccipFee = 0.001 ether; // generous fee buffer
+            vm.deal(subvault3, ccipFee);
+            vm.prank(prodCurator);
+            try ICallModule(subvault3).call(Constants.CCIP_ETHEREUM_ROUTER, ccipFee, callData, payload) {
+                console.log("CCIP ccipSend wstETH to Monad - SUCCESS");
+            } catch (bytes memory reason) {
+                console.log("CCIP ccipSend reverted, reason length:", reason.length);
+                console.logBytes(reason);
+                revert("CCIP ccipSend should not revert");
+            }
+        }
+
+        console.log("\n=== All Prod SV3 CCIP Bridge Tests Passed ===");
+    }
+
+    /// @notice Test NTT bridge WETH approval and transfer call on prod subvault 3
+    /// @dev NTT indices in sv3: 72 (WETH approve), 73 (transfer)
+    function test_ProdSv3_NTTBridgeOperations() public {
+        console.log("\n=== Testing Prod Subvault 3 - NTT Bridge WETH to Monad ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        // Fund subvault with WETH
+        deal(Constants.WETH, subvault3, 10 ether);
+
+        // 1. Approve WETH for NTT Router - index 72
+        console.log("\n--- NTT Test 1: Approve WETH for NTT Router ---");
+        {
+            bytes memory verificationData = _getVerificationData(json, 72);
+            bytes32[] memory proof = _getProof(json, 72);
+
+            IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+                verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+                verificationData: verificationData,
+                proof: proof
+            });
+
+            bytes memory callData = abi.encodeCall(IERC20.approve, (Constants.NTT_ROUTER, type(uint256).max));
+
+            vm.prank(prodCurator);
+            ICallModule(subvault3).call(Constants.WETH, 0, callData, payload);
+            console.log("WETH approve for NTT Router - SUCCESS");
+        }
+        _waitForRPC();
+
+        // 2. NTT transfer call - index 73
+        // Fetch a fresh signed quote from the Wormhole executor API, then build transfer calldata
+        console.log("\n--- NTT Test 2: NTT Transfer ---");
+        {
+            bytes memory verificationData = _getVerificationData(json, 73);
+            bytes32[] memory proof = _getProof(json, 73);
+
+            IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+                verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+                verificationData: verificationData,
+                proof: proof
+            });
+
+            address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
+
+            // Fetch fresh quote from Wormhole executor API (avoids expired-quote reverts)
+            (uint256 estimatedCost, bytes memory signedQuote) = _fetchFreshNTTQuote();
+
+            bytes memory callData = abi.encodeCall(
+                INttManagerWithExecutor.transfer,
+                (
+                    Constants.NTT_WETH_MANAGER,
+                    Constants.WETH,
+                    1 ether,
+                    Constants.WORMHOLE_MONAD_CHAIN_ID,
+                    bytes32(uint256(uint160(targetSubvault))),
+                    bytes32(uint256(uint160(subvault3))), // refundAddress = source subvault
+                    // 38-byte transceiverInstructions: 2 transceivers (Wormhole 1-byte + Axelar 32-byte)
+                    hex"020001010120000000000000000000000000000000000000000000000000000000000000ffff",
+                    INttManagerWithExecutor.ExecutorArgs({
+                        value: estimatedCost,
+                        refundAddress: prodCurator,
+                        signedQuote: signedQuote,
+                        // Relay instructions: 1 GasInstruction, gasLimit=1000000, msgValue=0
+                        instructions: hex"01000000000000000000000000000f424000000000000000000000000000000000"
+                    }),
+                    INttManagerWithExecutor.FeeArgs({dbps: 0, payee: address(0)})
+                )
+            );
+
+            vm.deal(subvault3, 1 ether); // ETH for wormhole fee
+            vm.prank(prodCurator);
+            ICallModule(subvault3).call(Constants.NTT_ROUTER, 0.1 ether, callData, payload);
+            console.log("NTT transfer call - SUCCESS");
+        }
+
+        console.log("\n=== All Prod SV3 NTT Bridge Tests Passed ===");
+    }
+
+    /// @notice Test that CCIP bridge with wrong receiver is rejected by bitmask
+    function test_RevertWhen_CCIPWrongReceiver() public {
+        console.log("\n=== Testing CCIP Wrong Receiver Enforcement ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        deal(Constants.WSTETH, subvault3, 10 ether);
+
+        bytes memory verificationData = _getVerificationData(json, 71);
+        bytes32[] memory proof = _getProof(json, 71);
+
+        IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+            verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+            verificationData: verificationData,
+            proof: proof
+        });
+
+        address wrongReceiver = address(0xdead);
+
+        CCIPClient.EVMTokenAmount[] memory tokenAmounts = new CCIPClient.EVMTokenAmount[](1);
+        tokenAmounts[0] = CCIPClient.EVMTokenAmount({token: Constants.WSTETH, amount: 1 ether});
+
+        bytes memory callData = abi.encodeCall(
+            ICCIPRouterClient.ccipSend,
+            (
+                Constants.CCIP_MONAD_CHAIN_SELECTOR,
+                CCIPClient.EVM2AnyMessage({
+                    receiver: abi.encode(wrongReceiver), // ← WRONG receiver
+                    data: new bytes(0),
+                    tokenAmounts: tokenAmounts,
+                    feeToken: address(0),
+                    extraArgs: CCIPClient._argsToBytes(
+                        CCIPClient.EVMExtraArgsV2({gasLimit: 0, allowOutOfOrderExecution: true})
+                    )
+                })
+            )
+        );
+
+        vm.prank(prodCurator);
+        vm.expectRevert();
+        ICallModule(subvault3).call(Constants.CCIP_ETHEREUM_ROUTER, 0.001 ether, callData, payload);
+
+        console.log("Wrong CCIP receiver REVERTED as expected - SUCCESS");
+    }
+
+    /// @notice Test that CCIP bridge with wrong chain selector is rejected by bitmask
+    function test_RevertWhen_CCIPWrongChainSelector() public {
+        console.log("\n=== Testing CCIP Wrong Chain Selector Enforcement ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        deal(Constants.WSTETH, subvault3, 10 ether);
+
+        bytes memory verificationData = _getVerificationData(json, 71);
+        bytes32[] memory proof = _getProof(json, 71);
+
+        IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+            verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+            verificationData: verificationData,
+            proof: proof
+        });
+
+        address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
+
+        CCIPClient.EVMTokenAmount[] memory tokenAmounts = new CCIPClient.EVMTokenAmount[](1);
+        tokenAmounts[0] = CCIPClient.EVMTokenAmount({token: Constants.WSTETH, amount: 1 ether});
+
+        bytes memory callData = abi.encodeCall(
+            ICCIPRouterClient.ccipSend,
+            (
+                uint64(999999999), // ← WRONG chain selector
+                CCIPClient.EVM2AnyMessage({
+                    receiver: abi.encode(targetSubvault),
+                    data: new bytes(0),
+                    tokenAmounts: tokenAmounts,
+                    feeToken: address(0),
+                    extraArgs: CCIPClient._argsToBytes(
+                        CCIPClient.EVMExtraArgsV2({gasLimit: 0, allowOutOfOrderExecution: true})
+                    )
+                })
+            )
+        );
+
+        vm.prank(prodCurator);
+        vm.expectRevert();
+        ICallModule(subvault3).call(Constants.CCIP_ETHEREUM_ROUTER, 0.001 ether, callData, payload);
+
+        console.log("Wrong CCIP chain selector REVERTED as expected - SUCCESS");
+    }
+
+    /// @notice Test that NTT transfer with wrong dstEid is rejected by bitmask
+    function test_RevertWhen_NTTWrongDstEid() public {
+        console.log("\n=== Testing NTT Wrong dstEid Enforcement ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        deal(Constants.WETH, subvault3, 10 ether);
+
+        bytes memory verificationData = _getVerificationData(json, 73);
+        bytes32[] memory proof = _getProof(json, 73);
+
+        IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+            verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+            verificationData: verificationData,
+            proof: proof
+        });
+
+        address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
+
+        bytes memory callData = abi.encodeCall(
+            INttManagerWithExecutor.transfer,
+            (
+                Constants.NTT_WETH_MANAGER,
+                Constants.WETH,
+                1 ether,
+                uint16(9999), // ← WRONG chain ID
+                bytes32(uint256(uint160(targetSubvault))),
+                bytes32(uint256(uint160(subvault3))),
+                new bytes(38),
+                INttManagerWithExecutor.ExecutorArgs({
+                    value: 0,
+                    refundAddress: prodCurator,
+                    signedQuote: new bytes(165),
+                    instructions: new bytes(33)
+                }),
+                INttManagerWithExecutor.FeeArgs({dbps: 0, payee: address(0)})
+            )
+        );
+
+        vm.prank(prodCurator);
+        vm.expectRevert();
+        ICallModule(subvault3).call(Constants.NTT_ROUTER, 0, callData, payload);
+
+        console.log("Wrong NTT dstEid REVERTED as expected - SUCCESS");
+    }
+
+    /// @notice Test that NTT transfer with wrong recipient is rejected by bitmask
+    function test_RevertWhen_NTTWrongRecipient() public {
+        console.log("\n=== Testing NTT Wrong Recipient Enforcement ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        deal(Constants.WETH, subvault3, 10 ether);
+
+        bytes memory verificationData = _getVerificationData(json, 73);
+        bytes32[] memory proof = _getProof(json, 73);
+
+        IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+            verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+            verificationData: verificationData,
+            proof: proof
+        });
+
+        // Use WRONG recipient (0xdead instead of the real target subvault)
+        bytes memory callData = abi.encodeCall(
+            INttManagerWithExecutor.transfer,
+            (
+                Constants.NTT_WETH_MANAGER,
+                Constants.WETH,
+                1 ether,
+                Constants.WORMHOLE_MONAD_CHAIN_ID,
+                bytes32(uint256(uint160(address(0xdead)))), // ← WRONG recipient
+                bytes32(uint256(uint160(subvault3))),       // refundAddress = source subvault (correct)
+                new bytes(38),
+                INttManagerWithExecutor.ExecutorArgs({
+                    value: 0,
+                    refundAddress: prodCurator,
+                    signedQuote: new bytes(165),
+                    instructions: new bytes(33)
+                }),
+                INttManagerWithExecutor.FeeArgs({dbps: 0, payee: address(0)})
+            )
+        );
+
+        vm.prank(prodCurator);
+        vm.expectRevert(); // Should revert because bitmask won't match
+        ICallModule(subvault3).call(Constants.NTT_ROUTER, 0, callData, payload);
+
+        console.log("Wrong NTT recipient REVERTED as expected - SUCCESS");
+    }
+
+    /// @notice Test that NTT transfer with wrong refund address is rejected by bitmask
+    function test_RevertWhen_NTTWrongRefundAddress() public {
+        console.log("\n=== Testing NTT Wrong Refund Address Enforcement ===");
+
+        string memory root = vm.projectRoot();
+        string memory path = string.concat(root, "/scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv3:all.json");
+        string memory json = vm.readFile(path);
+
+        deal(Constants.WETH, subvault3, 10 ether);
+
+        bytes memory verificationData = _getVerificationData(json, 73);
+        bytes32[] memory proof = _getProof(json, 73);
+
+        IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
+            verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
+            verificationData: verificationData,
+            proof: proof
+        });
+
+        address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
+
+        // Correct recipient, but WRONG refund address
+        bytes memory callData = abi.encodeCall(
+            INttManagerWithExecutor.transfer,
+            (
+                Constants.NTT_WETH_MANAGER,
+                Constants.WETH,
+                1 ether,
+                Constants.WORMHOLE_MONAD_CHAIN_ID,
+                bytes32(uint256(uint160(targetSubvault))),      // correct recipient
+                bytes32(uint256(uint160(address(0xdead)))),     // ← WRONG refund address
+                new bytes(38),
+                INttManagerWithExecutor.ExecutorArgs({
+                    value: 0,
+                    refundAddress: prodCurator,
+                    signedQuote: new bytes(165),
+                    instructions: new bytes(33)
+                }),
+                INttManagerWithExecutor.FeeArgs({dbps: 0, payee: address(0)})
+            )
+        );
+
+        vm.prank(prodCurator);
+        vm.expectRevert(); // Should revert because bitmask locks refundAddress to source subvault
+        ICallModule(subvault3).call(Constants.NTT_ROUTER, 0, callData, payload);
+
+        console.log("Wrong NTT refund address REVERTED as expected - SUCCESS");
+    }
+
+    /// @notice Fetches a fresh signed quote from the Wormhole NTT executor API
+    /// @dev API endpoint: POST https://executor.labsapis.com/v0/quote
+    ///      Body: {"srcChain":2,"dstChain":48,"relayInstructions":"0x01..."}
+    ///      - srcChain=2 (Ethereum), dstChain=48 (Monad)
+    ///      - relayInstructions: 1 GasInstruction, gasLimit=1000000, msgValue=0
+    ///      Response: {"signedQuote":"0x4551...","estimatedCost":"..."}
+    ///      Requires ffi=true in foundry.toml + curl and jq on PATH
+    function _fetchFreshNTTQuote() internal returns (uint256 estimatedCost, bytes memory signedQuote) {
+        string[] memory cmd = new string[](3);
+        cmd[0] = "bash";
+        cmd[1] = "-c";
+        cmd[2] = string.concat(
+            'RESP=$(curl -s -X POST "https://executor.labsapis.com/v0/quote" ',
+            '-H "Content-Type: application/json" ',
+            "-d '{\"srcChain\":2,\"dstChain\":48,\"relayInstructions\":\"0x01000000000000000000000000000f424000000000000000000000000000000000\"}'); ",
+            'COST=$(echo "$RESP" | jq -r .estimatedCost); ',
+            'QUOTE=$(echo "$RESP" | jq -r .signedQuote); ',
+            'cast abi-encode "f(uint256,bytes)" "$COST" "$QUOTE"'
+        );
+        bytes memory result = vm.ffi(cmd);
+        (estimatedCost, signedQuote) = abi.decode(result, (uint256, bytes));
+        console.log("Fetched fresh NTT quote, estimatedCost:", estimatedCost);
     }
 
     /// @notice Helper to execute a call with Morpho proof verification
