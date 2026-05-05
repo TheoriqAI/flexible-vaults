@@ -31,11 +31,16 @@ import {IWETH} from "./interfaces/IWETH.sol";
 import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ILidoWithdrawalQueue} from "./interfaces/ILidoWithdrawalQueue.sol";
+import {IEVC} from "./interfaces/IEVC.sol";
+import {IEulerVault} from "./interfaces/IEulerVault.sol";
+import {INttManagerWithExecutor} from "./interfaces/INttManagerWithExecutor.sol";
 import {ISUSDe} from "./interfaces/ISUSDe.sol";
+import {ITokenMessengerV2} from "./interfaces/ITokenMessengerV2.sol";
+import {IMessageTransmitterV2} from "./interfaces/IMessageTransmitterV2.sol";
 
 library ABILibrary {
     function getABI(bytes4 selector) internal pure returns (string memory) {
-        function() pure returns (bytes4[] memory, string[] memory)[25] memory functions = [
+        function() pure returns (bytes4[] memory, string[] memory)[29] memory functions = [
             getERC20Interfaces,
             getERC4626Interfaces,
             getAaveInterfaces,
@@ -48,6 +53,7 @@ library ABILibrary {
             getL1GatewayRouter,
             getL2GatewayRouter,
             getCCIPRouter,
+            getNTTInterfaces,
             getCoreVaultInterfaces,
             getCapLenderInterfaces,
             getSymbioticInterfaces,
@@ -60,7 +66,10 @@ library ABILibrary {
             getLidoV3Interfaces,
             getPendleInterfaces,
             getLidoWithdrawalQueueInterfaces,
-            getSUSDeInterfaces
+            getSUSDeInterfaces,
+            getEulerInterfaces,
+            getEVCInterfaces,
+            getCCTPInterfaces
         ];
         for (uint256 i = 0; i < functions.length; i++) {
             (bytes4[] memory selectors, string[] memory abis) = functions[i]();
@@ -135,14 +144,15 @@ library ABILibrary {
     }
 
     function getAaveInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
-        selectors = new bytes4[](5);
-        abis = new string[](5);
+        selectors = new bytes4[](6);
+        abis = new string[](6);
 
         selectors[0] = IAavePoolV3.supply.selector;
         selectors[1] = IAavePoolV3.withdraw.selector;
         selectors[2] = IAavePoolV3.borrow.selector;
         selectors[3] = IAavePoolV3.repay.selector;
         selectors[4] = IAavePoolV3.setUserEMode.selector;
+        selectors[5] = IAavePoolV3.setUserUseReserveAsCollateral.selector;
 
         abis[0] =
             '{"inputs":[{"internalType":"address","name":"asset","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"onBehalfOf","type":"address"},{"internalType":"uint16","name":"referralCode","type":"uint16"}],"name":"supply","outputs":[],"stateMutability":"nonpayable","type":"function"}';
@@ -154,6 +164,8 @@ library ABILibrary {
             '{"inputs":[{"internalType":"address","name":"asset","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"uint256","name":"interestRateMode","type":"uint256"},{"internalType":"address","name":"onBehalfOf","type":"address"}],"name":"repay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"}';
         abis[4] =
             '{"inputs":[{"internalType":"uint8","name":"categoryId","type":"uint8"}],"name":"setUserEMode","outputs":[],"stateMutability":"nonpayable","type":"function"}';
+        abis[5] =
+            '{"inputs":[{"internalType":"address","name":"asset","type":"address"},{"internalType":"bool","name":"useAsCollateral","type":"bool"}],"name":"setUserUseReserveAsCollateral","outputs":[],"stateMutability":"nonpayable","type":"function"}';
     }
 
     function getWETHInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
@@ -465,5 +477,62 @@ library ABILibrary {
             '{"inputs":[{"internalType":"uint256","name":"shares","type":"uint256"}],"name":"cooldownShares","outputs":[{"internalType":"uint256","name":"assets","type":"uint256"}],"stateMutability":"nonpayable","type":"function"}';
         abis[1] =
             '{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"unstake","outputs":[],"stateMutability":"nonpayable","type":"function"}';
+    }
+
+    function getEulerInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
+        selectors = new bytes4[](3);
+        abis = new string[](3);
+
+        selectors[0] = IEulerVault.borrow.selector;
+        selectors[1] = IEulerVault.repay.selector;
+        selectors[2] = IEulerVault.liquidate.selector;
+
+        abis[0] =
+            '{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"name":"borrow","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"}';
+        abis[1] =
+            '{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"address","name":"receiver","type":"address"}],"name":"repay","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"}';
+        abis[2] =
+            '{"inputs":[{"internalType":"address","name":"violator","type":"address"},{"internalType":"address","name":"collateral","type":"address"},{"internalType":"uint256","name":"repayAssets","type":"uint256"},{"internalType":"uint256","name":"minYieldBalance","type":"uint256"}],"name":"liquidate","outputs":[],"stateMutability":"nonpayable","type":"function"}';
+    }
+
+    function getEVCInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
+        selectors = new bytes4[](4);
+        abis = new string[](4);
+
+        selectors[0] = IEVC.enableController.selector;
+        selectors[1] = IEVC.enableCollateral.selector;
+        selectors[2] = IEVC.disableController.selector;
+        selectors[3] = IEVC.disableCollateral.selector;
+
+        abis[0] =
+            '{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"address","name":"vault","type":"address"}],"name":"enableController","outputs":[],"stateMutability":"payable","type":"function"}';
+        abis[1] =
+            '{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"address","name":"vault","type":"address"}],"name":"enableCollateral","outputs":[],"stateMutability":"payable","type":"function"}';
+        abis[2] =
+            '{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"disableController","outputs":[],"stateMutability":"payable","type":"function"}';
+        abis[3] =
+            '{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"address","name":"vault","type":"address"}],"name":"disableCollateral","outputs":[],"stateMutability":"payable","type":"function"}';
+    }
+
+    function getNTTInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
+        selectors = new bytes4[](1);
+        abis = new string[](1);
+
+        selectors[0] = INttManagerWithExecutor.transfer.selector;
+        abis[0] =
+            '{"type":"function","name":"transfer","inputs":[{"name":"nttManager","type":"address","internalType":"address"},{"name":"token","type":"address","internalType":"address"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"recipientChain","type":"uint16","internalType":"uint16"},{"name":"recipientAddress","type":"bytes32","internalType":"bytes32"},{"name":"refundAddress","type":"bytes32","internalType":"bytes32"},{"name":"encodedInstructions","type":"bytes","internalType":"bytes"},{"name":"executorArgs","type":"tuple","internalType":"struct INttManagerWithExecutor.ExecutorArgs","components":[{"name":"value","type":"uint256","internalType":"uint256"},{"name":"refundAddress","type":"address","internalType":"address"},{"name":"signedQuote","type":"bytes","internalType":"bytes"},{"name":"instructions","type":"bytes","internalType":"bytes"}]},{"name":"feeArgs","type":"tuple","internalType":"struct INttManagerWithExecutor.FeeArgs","components":[{"name":"dbps","type":"uint16","internalType":"uint16"},{"name":"payee","type":"address","internalType":"address"}]}],"outputs":[{"name":"msgId","type":"uint64","internalType":"uint64"}],"stateMutability":"payable"}';
+    }
+
+    function getCCTPInterfaces() internal pure returns (bytes4[] memory selectors, string[] memory abis) {
+        selectors = new bytes4[](2);
+        abis = new string[](2);
+
+        selectors[0] = ITokenMessengerV2.depositForBurn.selector;
+        abis[0] =
+            '{"type":"function","name":"depositForBurn","inputs":[{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"destinationDomain","type":"uint32","internalType":"uint32"},{"name":"mintRecipient","type":"bytes32","internalType":"bytes32"},{"name":"burnToken","type":"address","internalType":"address"},{"name":"destinationCaller","type":"bytes32","internalType":"bytes32"},{"name":"maxFee","type":"uint256","internalType":"uint256"},{"name":"minFinalityThreshold","type":"uint32","internalType":"uint32"}],"outputs":[{"name":"nonce","type":"uint64","internalType":"uint64"}],"stateMutability":"nonpayable"}';
+
+        selectors[1] = IMessageTransmitterV2.receiveMessage.selector;
+        abis[1] =
+            '{"type":"function","name":"receiveMessage","inputs":[{"name":"message","type":"bytes","internalType":"bytes"},{"name":"attestation","type":"bytes","internalType":"bytes"}],"outputs":[{"name":"success","type":"bool","internalType":"bool"}],"stateMutability":"nonpayable"}';
     }
 }

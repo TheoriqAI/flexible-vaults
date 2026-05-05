@@ -54,6 +54,7 @@ library monLibrary {
                     aaveInstanceName: $.aaveInstanceName,
                     collaterals: $.collaterals,
                     loans: $.loans,
+                    collateralToggles: new address[](0),
                     categoryId: 1
                 })
             ),
@@ -80,6 +81,7 @@ library monLibrary {
                     aaveInstanceName: $.aaveInstanceName,
                     collaterals: $.collaterals,
                     loans: $.loans,
+                    collateralToggles: new address[](0),
                     categoryId: 1
                 })
             ),
@@ -110,6 +112,7 @@ library monLibrary {
                     aaveInstanceName: $.aaveInstanceName,
                     collaterals: $.collaterals,
                     loans: $.loans,
+                    collateralToggles: new address[](0),
                     categoryId: 1
                 })
             ),

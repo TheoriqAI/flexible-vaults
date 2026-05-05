@@ -1,0 +1,11 @@
+{
+  "subvaultIndex": 4,
+  "outputSuffix": "withdrawals",
+  "enableLidoWithdrawal": true,
+  "enableSusdeWithdrawal": true,
+  "enableSnusdDeposit": true,
+  "enableSrusdeWithdraw": true,
+  "curveSwaps": [],
+  "pushAssets": [],
+  "pullAssets": []
+}

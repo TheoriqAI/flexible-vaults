@@ -14,6 +14,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Vault} from "../../src/vaults/Vault.sol";
 import {ILidoWithdrawalQueue} from "../common/interfaces/ILidoWithdrawalQueue.sol";
 import {ISUSDe} from "../common/interfaces/ISUSDe.sol";
+import {IERC4626} from "@openzeppelin/contracts/interfaces/IERC4626.sol";
 
 interface IERC20Metadata is IERC20 {
     function symbol() external view returns (string memory);
@@ -41,11 +42,17 @@ contract GenerateEnterExitJSON is Script {
     address constant LIDO_WITHDRAWAL_QUEUE = 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1; // Lido Withdrawal Queue
     address constant WSTETH = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0; // wstETH token
     address constant SUSDE = 0x9D39A5DE30e57443BfF2A8307A4256c8797A3497; // sUSDe token
+    address constant NUSD = 0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE; // nUSD token
+    address constant SNUSD = 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313; // sNUSD (staked nUSD) vault
+    address constant SRUSDE = 0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003; // srUSDe vault
+    address constant PROD_CURATOR = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
+    address constant PREPROD_CURATOR = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
 
     struct Config {
         address subvault;
         string subvaultName;
         address multisig;
+        address curator;
         address bitmaskVerifier;
         // Arrays of assets for push/pull operations
         address[] pushAssets; // Assets to move INTO subvault
@@ -58,6 +65,10 @@ contract GenerateEnterExitJSON is Script {
         bool enableLidoWithdrawal;
         // Optional sUSDe withdrawal (cooldown + unstake)
         bool enableSusdeWithdrawal;
+        // Optional sNUSD deposit (approve nUSD + deposit + cooldownShares)
+        bool enableSnusdDeposit;
+        // Optional srUSDe withdraw (withdraw sUSDe from srUSDe vault)
+        bool enableSrusdeWithdraw;
     }
 
     struct CurveSwap {
@@ -104,6 +115,12 @@ contract GenerateEnterExitJSON is Script {
         if (config.enableSusdeWithdrawal) {
             totalOps += 2; // cooldownShares + unstake
         }
+        if (config.enableSnusdDeposit) {
+            totalOps += 3; // approve nUSD + deposit sNUSD + cooldownShares sNUSD
+        }
+        if (config.enableSrusdeWithdraw) {
+            totalOps += 1; // withdraw(sUSDe, amount, receiver, owner)
+        }
 
         console.log("Total operations:");
         console.log("  Push assets: %d", config.pushAssets.length);
@@ -115,6 +132,12 @@ contract GenerateEnterExitJSON is Script {
         }
         if (config.enableSusdeWithdrawal) {
             console.log("  sUSDe withdrawal: 2 (cooldownShares + unstake)");
+        }
+        if (config.enableSnusdDeposit) {
+            console.log("  sNUSD deposit: 3 (approve + deposit + cooldownShares)");
+        }
+        if (config.enableSrusdeWithdraw) {
+            console.log("  srUSDe withdraw: 1 (withdraw sUSDe)");
         }
         console.log("  Total: %d", totalOps);
         console.log("");
@@ -139,10 +162,10 @@ contract GenerateEnterExitJSON is Script {
                 0,
                 abi.encodeCall(IERC20.transfer, (config.subvault, 0)),
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (multisig only)
-                    false, // where: fixed (asset address)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to multisig
+                    true, // where: locked to asset
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeCall(IERC20.transfer, (address(type(uint160).max), 0))
                 )
             );
@@ -172,10 +195,10 @@ contract GenerateEnterExitJSON is Script {
                 0,
                 abi.encodeCall(IERC20.transferFrom, (config.subvault, config.multisig, 0)),
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (multisig only)
-                    false, // where: fixed (asset address)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to multisig
+                    true, // where: locked to asset
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeCall(
                         IERC20.transferFrom,
                         (address(type(uint160).max), address(type(uint160).max), 0)
@@ -207,10 +230,10 @@ contract GenerateEnterExitJSON is Script {
                 0,
                 abi.encodeCall(IERC20.approve, (CURVE_ROUTER, 0)),
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (multisig only)
-                    false, // where: fixed (assetIn)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to multisig
+                    true, // where: locked to assetIn
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
                 )
             );
@@ -238,10 +261,10 @@ contract GenerateEnterExitJSON is Script {
                     config.subvault
                 ),
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (multisig only)
-                    false, // where: fixed (CURVE_ROUTER)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to multisig
+                    true, // where: locked to CURVE_ROUTER
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeWithSignature(
                         "exchange(address,address,address,uint256,uint256,address)",
                         swap.pool, // pool: FIXED (only this specific pool)
@@ -280,10 +303,10 @@ contract GenerateEnterExitJSON is Script {
                 0,
                 abi.encodeCall(IERC20.approve, (UNI_V3_ROUTER, 0)),
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (multisig only)
-                    false, // where: fixed (tokenIn)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to multisig
+                    true, // where: locked to tokenIn
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
                 )
             );
@@ -327,10 +350,10 @@ contract GenerateEnterExitJSON is Script {
                 0,
                 swapCalldata,
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (multisig only)
-                    false, // where: fixed (UNI_V3_ROUTER)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to multisig
+                    true, // where: locked to UNI_V3_ROUTER
+                    true, // value: locked to 0
+                    true, // selector: locked
                     swapCalldata // Full bitmask with flexible amounts but fixed recipient
                 )
             );
@@ -357,15 +380,15 @@ contract GenerateEnterExitJSON is Script {
             // 1. Approve wstETH to withdrawal queue
             leaves[index] = ProofLibrary.makeVerificationPayload(
                 bitmaskVerifier,
-                config.subvault, // Called FROM subvault
+                config.curator, // Called by curator
                 WSTETH,
                 0,
                 abi.encodeCall(IERC20.approve, (LIDO_WITHDRAWAL_QUEUE, 0)),
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (subvault only)
-                    false, // where: fixed (wstETH)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to curator
+                    true, // where: locked to wstETH
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
                 )
             );
@@ -376,7 +399,7 @@ contract GenerateEnterExitJSON is Script {
                 descriptions[index] = JsonLibrary.toJson(
                     "IERC20(wstETH).approve(LidoWithdrawalQueue, anyAmount)",
                     ABILibrary.getABI(IERC20.approve.selector),
-                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(WSTETH), "0"),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(WSTETH), "0"),
                     innerParams
                 );
             }
@@ -395,15 +418,15 @@ contract GenerateEnterExitJSON is Script {
 
             leaves[index] = ProofLibrary.makeVerificationPayload(
                 bitmaskVerifier,
-                config.subvault, // Called FROM subvault
+                config.curator, // Called by curator
                 LIDO_WITHDRAWAL_QUEUE,
                 0,
                 requestCalldata,
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (subvault only)
-                    false, // where: fixed (withdrawal queue)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to curator
+                    true, // where: locked to withdrawal queue
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeWithSignature(
                         "requestWithdrawalsWstETH(uint256[],address)",
                         singleAmount, // amounts: 1-element array (any value)
@@ -418,7 +441,7 @@ contract GenerateEnterExitJSON is Script {
                 descriptions[index] = JsonLibrary.toJson(
                     string.concat("LidoWithdrawalQueue.requestWithdrawalsWstETH([anyAmount], ", config.subvaultName, ")"),
                     ABILibrary.getABI(ILidoWithdrawalQueue.requestWithdrawalsWstETH.selector),
-                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
                     innerParams
                 );
             }
@@ -432,15 +455,15 @@ contract GenerateEnterExitJSON is Script {
 
             leaves[index] = ProofLibrary.makeVerificationPayload(
                 bitmaskVerifier,
-                config.subvault, // Called FROM subvault
+                config.curator, // Called by curator
                 LIDO_WITHDRAWAL_QUEUE,
                 0,
                 claimCalldata,
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (subvault only)
-                    false, // where: fixed (withdrawal queue)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to curator
+                    true, // where: locked to withdrawal queue
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeWithSignature(
                         "claimWithdrawal(uint256)",
                         uint256(0) // _requestId: any
@@ -454,7 +477,7 @@ contract GenerateEnterExitJSON is Script {
                 descriptions[index] = JsonLibrary.toJson(
                     "LidoWithdrawalQueue.claimWithdrawal(anyRequestId)",
                     ABILibrary.getABI(ILidoWithdrawalQueue.claimWithdrawal.selector),
-                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(LIDO_WITHDRAWAL_QUEUE), "0"),
                     innerParams
                 );
             }
@@ -473,15 +496,15 @@ contract GenerateEnterExitJSON is Script {
 
             leaves[index] = ProofLibrary.makeVerificationPayload(
                 bitmaskVerifier,
-                config.subvault, // Called FROM subvault
+                config.curator, // Called by curator
                 SUSDE,
                 0,
                 cooldownCalldata,
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (subvault only)
-                    false, // where: fixed (sUSDe)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to curator
+                    true, // where: locked to sUSDe
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeWithSignature(
                         "cooldownShares(uint256)",
                         uint256(0) // shares: any
@@ -495,7 +518,7 @@ contract GenerateEnterExitJSON is Script {
                 descriptions[index] = JsonLibrary.toJson(
                     "sUSDe.cooldownShares(anyShares)",
                     ABILibrary.getABI(ISUSDe.cooldownShares.selector),
-                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(SUSDE), "0"),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SUSDE), "0"),
                     innerParams
                 );
             }
@@ -509,15 +532,15 @@ contract GenerateEnterExitJSON is Script {
 
             leaves[index] = ProofLibrary.makeVerificationPayload(
                 bitmaskVerifier,
-                config.subvault, // Called FROM subvault
+                config.curator, // Called by curator
                 SUSDE,
                 0,
                 unstakeCalldata,
                 ProofLibrary.makeBitmask(
-                    false, // who: fixed (subvault only)
-                    false, // where: fixed (sUSDe)
-                    true, // value: any
-                    false, // selector: fixed
+                    true, // who: locked to curator
+                    true, // where: locked to sUSDe
+                    true, // value: locked to 0
+                    true, // selector: locked
                     abi.encodeWithSignature(
                         "unstake(address)",
                         config.subvault // receiver: FIXED to subvault
@@ -531,7 +554,156 @@ contract GenerateEnterExitJSON is Script {
                 descriptions[index] = JsonLibrary.toJson(
                     string.concat("sUSDe.unstake(", config.subvaultName, ")"),
                     ABILibrary.getABI(ISUSDe.unstake.selector),
-                    ParameterLibrary.build(Strings.toHexString(config.subvault), Strings.toHexString(SUSDE), "0"),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SUSDE), "0"),
+                    innerParams
+                );
+            }
+            index++;
+        }
+
+        // Generate sNUSD deposit operations (approve nUSD + deposit + cooldownShares)
+        if (config.enableSnusdDeposit) {
+            console.log("Generating sNUSD deposit operations...");
+
+            // 1. Approve nUSD to sNUSD
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.curator, // Called by curator
+                NUSD,
+                0,
+                abi.encodeCall(IERC20.approve, (SNUSD, 0)),
+                ProofLibrary.makeBitmask(
+                    true, // who: locked to curator
+                    true, // where: locked to nUSD
+                    true, // value: locked to 0
+                    true, // selector: locked
+                    abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.add("to", Strings.toHexString(SNUSD)).addAny("amount");
+                descriptions[index] = JsonLibrary.toJson(
+                    "IERC20(nUSD).approve(sNUSD, anyAmount)",
+                    ABILibrary.getABI(IERC20.approve.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(NUSD), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 2. Deposit into sNUSD (receiver locked to subvault)
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.curator, // Called by curator
+                SNUSD,
+                0,
+                abi.encodeCall(IERC4626.deposit, (0, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, // who: locked to curator
+                    true, // where: locked to sNUSD
+                    true, // value: locked to 0
+                    true, // selector: locked
+                    abi.encodeCall(IERC4626.deposit, (0, address(type(uint160).max)))
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("assets").add("receiver", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("sNUSD.deposit(anyAssets, ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.deposit.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SNUSD), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 3. cooldownShares(uint256 shares) on sNUSD
+            bytes memory cooldownSnusdCalldata = abi.encodeWithSignature(
+                "cooldownShares(uint256)",
+                uint256(0)
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.curator, // Called by curator
+                SNUSD,
+                0,
+                cooldownSnusdCalldata,
+                ProofLibrary.makeBitmask(
+                    true, // who: locked to curator
+                    true, // where: locked to sNUSD
+                    true, // value: locked to 0
+                    true, // selector: locked
+                    abi.encodeWithSignature(
+                        "cooldownShares(uint256)",
+                        uint256(0) // shares: any
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("shares");
+                descriptions[index] = JsonLibrary.toJson(
+                    "sNUSD.cooldownShares(anyShares)",
+                    ABILibrary.getABI(ISUSDe.cooldownShares.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SNUSD), "0"),
+                    innerParams
+                );
+            }
+            index++;
+        }
+
+        // Generate srUSDe withdraw operations (withdraw sUSDe from srUSDe vault)
+        if (config.enableSrusdeWithdraw) {
+            console.log("Generating srUSDe withdraw operations...");
+
+            // withdraw(address token, uint256 tokenAmount, address receiver, address owner)
+            // token=sUSDe LOCKED, tokenAmount=any, receiver=subvault LOCKED, owner=subvault LOCKED
+            bytes memory srusdeWithdrawCalldata = abi.encodeWithSignature(
+                "withdraw(address,uint256,address,address)",
+                SUSDE,           // token: sUSDe (LOCKED)
+                uint256(0),      // tokenAmount: any
+                config.subvault, // receiver: subvault (LOCKED)
+                config.subvault  // owner: subvault (LOCKED)
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.curator, // Called by curator
+                SRUSDE,
+                0,
+                srusdeWithdrawCalldata,
+                ProofLibrary.makeBitmask(
+                    true, // who: locked to curator
+                    true, // where: locked to srUSDe
+                    true, // value: locked to 0
+                    true, // selector: locked
+                    abi.encodeWithSignature(
+                        "withdraw(address,uint256,address,address)",
+                        address(type(uint160).max),  // token: LOCKED to sUSDe
+                        uint256(0),                  // tokenAmount: any
+                        address(type(uint160).max),  // receiver: LOCKED to subvault
+                        address(type(uint160).max)   // owner: LOCKED to subvault
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams
+                    .add("token", Strings.toHexString(SUSDE))
+                    .addAny("tokenAmount")
+                    .add("receiver", Strings.toHexString(config.subvault))
+                    .add("owner", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("srUSDe.withdraw(sUSDe, anyAmount, ", config.subvaultName, ", ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.withdraw.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SRUSDE), "0"),
                     innerParams
                 );
             }
@@ -632,6 +804,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec; // tqETH subvault
         config.subvaultName = "tqETH";
         config.multisig = MULTISIG;
+        config.curator = PREPROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A; // From Constants.sol line 164
 
         // Push assets (into vault)
@@ -670,6 +843,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = subvault;
         config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
         config.multisig = MULTISIG;
+        config.curator = PREPROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
 
         // No push/pull assets
@@ -710,6 +884,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = subvault;
         config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
         config.multisig = MULTISIG;
+        config.curator = PROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
 
         // No push/pull assets
@@ -796,6 +971,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = subvault;
         config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
         config.multisig = MULTISIG;
+        config.curator = PREPROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
         config.pushAssets = pushAssets;
         config.pullAssets = pullAssets;
@@ -824,6 +1000,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = subvault;
         config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
         config.multisig = MULTISIG;
+        config.curator = PREPROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
         config.pushAssets = new address[](0);
         config.pullAssets = new address[](0);
@@ -852,6 +1029,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = subvault;
         config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
         config.multisig = MULTISIG;
+        config.curator = PROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
         config.pushAssets = new address[](0);
         config.pullAssets = new address[](0);
@@ -900,6 +1078,7 @@ contract GenerateEnterExitJSON is Script {
         config.subvault = subvault;
         config.subvaultName = string.concat("subvault", vm.toString(subvaultIndex));
         config.multisig = MULTISIG;
+        config.curator = isProd ? PROD_CURATOR : PREPROD_CURATOR;
         config.bitmaskVerifier = 0x0000000263Fb29C3D6B0C5837883519eF05ea20A;
 
         // Try to parse optional fields
@@ -913,6 +1092,18 @@ contract GenerateEnterExitJSON is Script {
             config.enableSusdeWithdrawal = enabled;
         } catch {
             config.enableSusdeWithdrawal = false;
+        }
+
+        try vm.parseJsonBool(json, ".enableSnusdDeposit") returns (bool enabled) {
+            config.enableSnusdDeposit = enabled;
+        } catch {
+            config.enableSnusdDeposit = false;
+        }
+
+        try vm.parseJsonBool(json, ".enableSrusdeWithdraw") returns (bool enabled) {
+            config.enableSrusdeWithdraw = enabled;
+        } catch {
+            config.enableSrusdeWithdraw = false;
         }
 
         // Parse optional arrays

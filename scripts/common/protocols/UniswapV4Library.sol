@@ -122,10 +122,10 @@ library UniswapV4Library {
             0,
             abi.encodeCall(IERC20.approve, (spender, 0)),
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (token address)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to token
+                true,  // value: locked to 0
+                true, // selector: locked
                 abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
             )
         );
@@ -166,10 +166,10 @@ library UniswapV4Library {
             0,
             mintCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 mintCalldata // Use same calldata for bitmask (currency0, currency1, fee, recipient are fixed)
             )
         );
@@ -197,10 +197,10 @@ library UniswapV4Library {
             0,
             increaseCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 abi.encodeWithSignature(
                     "increaseLiquidity(uint256,uint256,uint256,uint256,bytes)",
                     type(uint256).max,
@@ -235,10 +235,10 @@ library UniswapV4Library {
             0,
             decreaseCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 abi.encodeWithSignature(
                     "decreaseLiquidity(uint256,uint256,uint256,uint256,bytes)",
                     type(uint256).max,
@@ -274,10 +274,10 @@ library UniswapV4Library {
             0,
             collectCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 collectCalldata // Use same calldata for bitmask (recipient is fixed)
             )
         );
@@ -302,10 +302,10 @@ library UniswapV4Library {
             0,
             burnCalldata,
             ProofLibrary.makeBitmask(
-                false, // who: fixed (caller only)
-                false, // where: fixed (position manager)
-                true,  // value: any
-                false, // selector: fixed
+                true, // who: locked to caller
+                true, // where: locked to position manager
+                true,  // value: locked to 0
+                true, // selector: locked
                 abi.encodeWithSignature(
                     "burn(uint256,bytes)",
                     type(uint256).max,

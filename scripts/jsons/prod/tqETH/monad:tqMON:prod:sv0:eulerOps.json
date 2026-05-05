@@ -1,0 +1,1192 @@
+{
+  "title": "monad:tqMON:prod:sv0:eulerOps",
+  "merkle_root": "0x751600f4b142c6d96e68504270da2caf33070e459409fddd4d3d8460a1bde993",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(EulerVault(eUSDC-5), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fbdb895066351719b059287bcdd03810b8aa667b2d5d2337b7d43591bd498f3c3000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xadd78c47a1d745101ff8139f0f646eb050f6fa62d8f460388014177397f30e5c",
+        "0x08a0cfc4983c4679ec55d3c9e4fdd459c1d04b3cc264629006f3902204297dca",
+        "0xceabb528e6b419ce1a9400793886f28da2722adc452f91ce0953741571abd4ff",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eUSDC-5).deposit(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "deposit",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "value": "0"
+        },
+        "innerParameters": {
+          "assets": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fd24e91cce4a80b112b4d81d33f1412f01c1380d9bbaaa8b936c9d59b2d0bc734000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xf0d23370716d9c789eacacdd8a8d20ca3d06e2104d78750354009ba6ba223005",
+        "0x6c4f9722d358b4c57b0e3daa1a024403b77658a4546f3801a9b6f3a17730ea3a",
+        "0x9b0ff526ba706517feebb925ed7b8b769cf75b19ba69a84576ba8947c7ff7d6c",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eUSDC-5).withdraw(anyInt, subvault, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "value": "0"
+        },
+        "innerParameters": {
+          "assets": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "owner": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fd066a69e8aea75c63f7ed866b4b77f51b5c565f51fd61852d0ab9acdc0099eaa000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xec99d4b708004d0b974999b9180ef4add756bb260d582fbfb1500233d66120c3",
+        "0xb5ed0821de867f2c744d32a464976848d6796959ca491c6dd03d22a1cd2ea0fa",
+        "0x9b0ff526ba706517feebb925ed7b8b769cf75b19ba69a84576ba8947c7ff7d6c",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(WETH).approve(EulerVault(eWETH-3), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xee8c0e9f1bffb4eb878d8f15f368a02a35481242",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f8eca5ab9e9d15a4cc6b6ea509593b06b192ab33e386902aeddefc5c4f717b87e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2bae23156682893f61847e853113db9d99f00b796448c1a13ba0ef4bc1b0ea07",
+        "0xc027875417ad6f95abac2ac89787ca88cf8a393bd887538b6d24dbc6d3871a06",
+        "0x2fcdc2a6455e0632e28f34596b4236025960b9a2c5c12413eb2267d56024392b",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eWETH-3).deposit(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "deposit",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "value": "0"
+        },
+        "innerParameters": {
+          "assets": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f48f8039909f673163181603989d909df97dedc1ec07194d3790760bebacf8802000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xce4163d2ed3ad744f8d48657a0fb6205a2abc3493e433abea97df1e5ccd6fc3c",
+        "0x572b4a3d62ac026a45c1160e74d49a1b2bbba3fe5b8b6e2209f0b7d273104563",
+        "0x0b1bdef2ce65a2ca6637c13d6079bb1e3f8dcdddbcb783d3637d77fd91e99747",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eWETH-3).withdraw(anyInt, subvault, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "value": "0"
+        },
+        "innerParameters": {
+          "assets": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "owner": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f8d71ece92be2f4150ac1272942fb01393b49b76d0565c81c92f89b2aa7f56670000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xce55ae15b577b81ace0338a1d45361d5f5cbf50848694b98b61f1c8be23c395f",
+        "0x572b4a3d62ac026a45c1160e74d49a1b2bbba3fe5b8b6e2209f0b7d273104563",
+        "0x0b1bdef2ce65a2ca6637c13d6079bb1e3f8dcdddbcb783d3637d77fd91e99747",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(wstETH).approve(EulerVault(ewstETH-2), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x10aeaf63194db8d453d4d85a06e5efe1dd0b5417",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x61788859b923989dfeb995b8de5cbbcd719475e9",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f60f4fa6f10545cdd3198635ca6c2ac22ff1daa54bb079f6bd550513f39480d68000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x21d7eb0842cd8878701d60445dd206f019d01d9f92216a749918b43b7b7856e0",
+        "0x6aec77270e759bd6a1ce0ff2e753b90855f310e58a2501ce0d4ed83cc5b25149",
+        "0x2fcdc2a6455e0632e28f34596b4236025960b9a2c5c12413eb2267d56024392b",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(ewstETH-2).deposit(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "deposit",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x61788859b923989dfeb995b8de5cbbcd719475e9",
+          "value": "0"
+        },
+        "innerParameters": {
+          "assets": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f1ef6c88fa23274d44aedf34a544d3e45622e0e1399401e8863c7e9c6c7b5af6b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x769531ed31a545f1942ae6bf0ae362bb156e10f0788aa41b5381414bb3379015",
+        "0x36dc98c13069fa0e89c42dfa580944fca4cf1b45b8d3fbf84f2aed5c5c728362",
+        "0x3265c870a0afa48b2011fcf6d26e04ac738c22b7c6d347e5ca92f03cac35f9f7",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(ewstETH-2).withdraw(anyInt, subvault, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x61788859b923989dfeb995b8de5cbbcd719475e9",
+          "value": "0"
+        },
+        "innerParameters": {
+          "assets": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "owner": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fa99462c4df0f9013ad94a2ac7a8a1fb0a85f7319ee10ec4dba48f182896572ee000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xb52c5558ebdf86612ad27be43eaeacca346b4b2c57ba36f7c028a00318d0f3f0",
+        "0x770067748ef971082b07060286df2cd613d53a8c6241adb2b6f2ed9ae04b669b",
+        "0x50ab41df80090d760239e063e238cae4916a76dd488561b55de71f5b6feb4d96",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(WETH).approve(EulerVault(eWETH-3), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xee8c0e9f1bffb4eb878d8f15f368a02a35481242",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f8eca5ab9e9d15a4cc6b6ea509593b06b192ab33e386902aeddefc5c4f717b87e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2bae23156682893f61847e853113db9d99f00b796448c1a13ba0ef4bc1b0ea07",
+        "0xc027875417ad6f95abac2ac89787ca88cf8a393bd887538b6d24dbc6d3871a06",
+        "0x2fcdc2a6455e0632e28f34596b4236025960b9a2c5c12413eb2267d56024392b",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eWETH-3).borrow(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "borrow",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "value": "0"
+        },
+        "innerParameters": {
+          "amount": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fe510b8cddc7b6a21c0e199054fbd2841cafce2015f691410a35c59fac454847d000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xe3758894c3952ede061a5a0b0ad57f69a4be5a8aaa3b54fd50898f9de4699166",
+        "0xb5ed0821de867f2c744d32a464976848d6796959ca491c6dd03d22a1cd2ea0fa",
+        "0x9b0ff526ba706517feebb925ed7b8b769cf75b19ba69a84576ba8947c7ff7d6c",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eWETH-3).repay(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "repay",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "value": "0"
+        },
+        "innerParameters": {
+          "amount": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fef868cde388c3322e513a3df609b9e275c69fac30a8ac6ff31f6a0b43c5e922b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xb52c5558ebdf86612ad27be43eaeacca346b4b2c57ba36f7c028a00318d0f3f0",
+        "0x08a0cfc4983c4679ec55d3c9e4fdd459c1d04b3cc264629006f3902204297dca",
+        "0xceabb528e6b419ce1a9400793886f28da2722adc452f91ce0953741571abd4ff",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eWETH-3).liquidate(any, any, anyInt, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "violator",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "collateral",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "repayAssets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minYieldBalance",
+              "type": "uint256"
+            }
+          ],
+          "name": "liquidate",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x502e4a0b61deba3015eb9e51116b832003b22c2c",
+          "value": "0"
+        },
+        "innerParameters": {
+          "violator": "any",
+          "collateral": "any",
+          "repayAssets": "any",
+          "minYieldBalance": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f2ab9689dc42b727dec80ce40118a80373b254144f641955887e8ada5ad0f8599000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xfcccc059315ff4a4bacd205917b81ccaeacb44cbe00f38c40c56d9cfb3492ca0",
+        "0xb094ed70fea68e0c12e6a0bae95f3b90597f7caa499da6a5a11f5a702bde9bf5",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(EulerVault(eUSDC-5), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fbdb895066351719b059287bcdd03810b8aa667b2d5d2337b7d43591bd498f3c3000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xadd78c47a1d745101ff8139f0f646eb050f6fa62d8f460388014177397f30e5c",
+        "0x08a0cfc4983c4679ec55d3c9e4fdd459c1d04b3cc264629006f3902204297dca",
+        "0xceabb528e6b419ce1a9400793886f28da2722adc452f91ce0953741571abd4ff",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eUSDC-5).borrow(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "borrow",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "value": "0"
+        },
+        "innerParameters": {
+          "amount": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f3ba7475702112481d5b86c09ef692c84e32db0c6f0d2a09bcf2fd60fc6462604000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xd094e29b502b684f20b7173ec009155858b5e0900fec1c138c45d2ff282ea447",
+        "0xb475eb95b8d39ac8dce9c8ce0d9a22ff3af61b580f24f205173c0bb6176ed720",
+        "0x0b1bdef2ce65a2ca6637c13d6079bb1e3f8dcdddbcb783d3637d77fd91e99747",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eUSDC-5).repay(anyInt, subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "repay",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "value": "0"
+        },
+        "innerParameters": {
+          "amount": "any",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f3bc78af8bcad4ba9544465b31fe669a71e3c61181fa0627f9c3358170810dc73000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xf847e203bce544865cf92c4000cfe4f0c5265dcde81f9df9ab07ab641242044b",
+        "0xb094ed70fea68e0c12e6a0bae95f3b90597f7caa499da6a5a11f5a702bde9bf5",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EulerVault(eUSDC-5).liquidate(any, any, anyInt, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "violator",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "collateral",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "repayAssets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minYieldBalance",
+              "type": "uint256"
+            }
+          ],
+          "name": "liquidate",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949",
+          "value": "0"
+        },
+        "innerParameters": {
+          "violator": "any",
+          "collateral": "any",
+          "repayAssets": "any",
+          "minYieldBalance": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fc71313b68427c36b9401f456b76d0b6a16339e356e32131b3ffb4aa9a7fbc70e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x428540e1dd8ac6889e676c1726732fa2594254272c39b1182464ab64b39b9aba",
+        "0xf7b6d8b1a340a70f8f225bd0f0ddfea94964335340a9b8171fccf577442d8c34",
+        "0x3265c870a0afa48b2011fcf6d26e04ac738c22b7c6d347e5ca92f03cac35f9f7",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.enableCollateral(subvault, eUSDC-5)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "enableCollateral",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f50401d2873683cd47b695cb5ded505dcd60b8ade4da335216d674fc57ebd8540000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x9ed51b31a692978509214860b6385ac53ddc1c7ff63702bf8a1fe1045e040861",
+        "0x9d064b23c4dd369e36d029e78aaf3ef2b009f7d730cb08dde980e046a0bcddbe",
+        "0xceabb528e6b419ce1a9400793886f28da2722adc452f91ce0953741571abd4ff",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.disableCollateral(subvault, eUSDC-5)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "disableCollateral",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f2a90e985392fe96bf9547cdab29ba627beb7a4dede29ed074d8367ff3a221c2c000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xc47ee7e5f745b96e09d70d2e3d4c253d44139829db2a9cf819c2d08e31836892",
+        "0x1663419091906a9ac07152ffd2791f4fe417d0c8181880c0c04167d1b3e4eb7b",
+        "0x50ab41df80090d760239e063e238cae4916a76dd488561b55de71f5b6feb4d96",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.enableCollateral(subvault, eWETH-3)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "enableCollateral",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x502e4a0b61deba3015eb9e51116b832003b22c2c"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f8401eeca34edb82f5973d37375d7ab128e3d4901a3158b451e62d87e215ca952000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xc32cddd6d55bcade458ec0296bcff4a5705c0a41d9f2d9129843b2b9335ef867",
+        "0x1663419091906a9ac07152ffd2791f4fe417d0c8181880c0c04167d1b3e4eb7b",
+        "0x50ab41df80090d760239e063e238cae4916a76dd488561b55de71f5b6feb4d96",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.disableCollateral(subvault, eWETH-3)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "disableCollateral",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x502e4a0b61deba3015eb9e51116b832003b22c2c"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f03c2cefa1c0b48f1afd7b350f55b3b16fb45e462a2150811f8bd60646dd428dd000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xdb71a243fff15d995f72a0732146e5df40a285d00927ac2283130bfece896cd0",
+        "0xb475eb95b8d39ac8dce9c8ce0d9a22ff3af61b580f24f205173c0bb6176ed720",
+        "0x0b1bdef2ce65a2ca6637c13d6079bb1e3f8dcdddbcb783d3637d77fd91e99747",
+        "0xc846710c1b50ba74231bd7e8aef1c339b9a57f2edad3c385a22e2395aa187c35",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.enableCollateral(subvault, ewstETH-2)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "enableCollateral",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x61788859b923989dfeb995b8de5cbbcd719475e9"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fb7f1b59467fa209a88cf8888f6c2dd2a436794d78b7682d3644dcf9df7fbaf3f000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xf014931566a28c5ddae24d59f69466c353a552504c61812ee30139281e33b130",
+        "0x6c4f9722d358b4c57b0e3daa1a024403b77658a4546f3801a9b6f3a17730ea3a",
+        "0x9b0ff526ba706517feebb925ed7b8b769cf75b19ba69a84576ba8947c7ff7d6c",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.disableCollateral(subvault, ewstETH-2)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "disableCollateral",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x61788859b923989dfeb995b8de5cbbcd719475e9"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fb30296ba0315de415d1c89ecabbb0f3dffd14cbe6d21beaadb14ec72b6da399f000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x0c1012360ce1c2b009b889d6e396c9f4a9be1aa889dcd6487f6abf4e6bd66908",
+        "0x6aec77270e759bd6a1ce0ff2e753b90855f310e58a2501ce0d4ed83cc5b25149",
+        "0x2fcdc2a6455e0632e28f34596b4236025960b9a2c5c12413eb2267d56024392b",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.enableController(subvault, eWETH-3)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "enableController",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x502e4a0b61deba3015eb9e51116b832003b22c2c"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f6071f0536c7ad521b0b0a87cea230e44e45b2cf41a161378218c055f6c83feac000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x81773f99b0be229999646047cebab54cee45e555cc0dfc0ed448baa44dc699c1",
+        "0x9d064b23c4dd369e36d029e78aaf3ef2b009f7d730cb08dde980e046a0bcddbe",
+        "0xceabb528e6b419ce1a9400793886f28da2722adc452f91ce0953741571abd4ff",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.enableController(subvault, eUSDC-5)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "vault",
+              "type": "address"
+            }
+          ],
+          "name": "enableController",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "vault": "0x1e4d67c666c2ccf27a0af980fe6c8e0f05ac8949"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f025700718d03b98272050e87a2e9c860cbf7918ec0794cd5f27e5e5c259a7b6e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x428540e1dd8ac6889e676c1726732fa2594254272c39b1182464ab64b39b9aba",
+        "0xc027875417ad6f95abac2ac89787ca88cf8a393bd887538b6d24dbc6d3871a06",
+        "0x2fcdc2a6455e0632e28f34596b4236025960b9a2c5c12413eb2267d56024392b",
+        "0x8288b251a44465a55b5c86c431acd8f9b20018274a15abbb42ca9148ddaabe2b",
+        "0x7cd8db85ce28a95a00e8c0ed6a28f94c85ca78d6f4d4e434a51c0dd5fb42b311"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "EVC.disableController(subvault)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "disableController",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7a9324e8f270413fa2e458f5831226d99c7477cd",
+          "value": "0"
+        },
+        "innerParameters": {
+          "account": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fd98c3affc44f8ffba36993a0c7a98fb012774aa8d7bed6ed4f126e573dd3f65f00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000084ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x483fd308939c9f5798c621b1c03b8dde3cd443b695e0095ddac67cfee0b291fa",
+        "0x36dc98c13069fa0e89c42dfa580944fca4cf1b45b8d3fbf84f2aed5c5c728362",
+        "0x3265c870a0afa48b2011fcf6d26e04ac738c22b7c6d347e5ca92f03cac35f9f7",
+        "0x14526c6ff667e713f0409da22f887f422ff9c9f1970bcb015ab0e77b7061fac0",
+        "0x240242db8a03287b9a9f2d4fdbde9cfae043976f0741456e42d7a3218fc10022"
+      ]
+    }
+  ]
+}

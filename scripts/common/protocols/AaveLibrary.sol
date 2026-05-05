@@ -21,6 +21,7 @@ library AaveLibrary {
         string aaveInstanceName;
         address[] collaterals;
         address[] loans;
+        address[] collateralToggles; // assets needing setUserUseReserveAsCollateral (e.g. isolation mode)
         uint8 categoryId;
     }
 
@@ -29,7 +30,7 @@ library AaveLibrary {
         pure
         returns (IVerifier.VerificationPayload[] memory leaves)
     {
-        uint256 length = ($.collaterals.length + $.loans.length) * 3 + 1;
+        uint256 length = ($.collaterals.length + $.loans.length) * 3 + $.collateralToggles.length + 1;
         leaves = new IVerifier.VerificationPayload[](length);
         uint256 index = 0;
         leaves[index++] = ProofLibrary.makeVerificationPayload(
@@ -80,6 +81,25 @@ library AaveLibrary {
                     true,
                     true,
                     abi.encodeCall(IAavePoolV3.withdraw, (address(type(uint160).max), 0, address(type(uint160).max)))
+                )
+            );
+        }
+        for (uint256 i = 0; i < $.collateralToggles.length; i++) {
+            address asset = $.collateralToggles[i];
+            leaves[index++] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                $.curator,
+                $.aaveInstance,
+                0,
+                abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (asset, false)),
+                ProofLibrary.makeBitmask(
+                    true,
+                    true,
+                    true,
+                    true,
+                    abi.encodeCall(
+                        IAavePoolV3.setUserUseReserveAsCollateral, (address(type(uint160).max), false)
+                    )
                 )
             );
         }
@@ -135,7 +155,7 @@ library AaveLibrary {
 
     // God, please, fix stack-too-deep 🙏
     function getAaveDescriptions(Info memory $) internal view returns (string[] memory descriptions) {
-        uint256 length = ($.collaterals.length + $.loans.length) * 3 + 1;
+        uint256 length = ($.collaterals.length + $.loans.length) * 3 + $.collateralToggles.length + 1;
         descriptions = new string[](length);
         uint256 index = 0;
 
@@ -200,6 +220,27 @@ library AaveLibrary {
                 innerParameters
             );
         }
+        for (uint256 i = 0; i < $.collateralToggles.length; i++) {
+            string memory asset = IERC20Metadata($.collateralToggles[i]).symbol();
+
+            innerParameters = ParameterLibrary.build("asset", Strings.toHexString($.collateralToggles[i])).addAny(
+                "useAsCollateral"
+            );
+            descriptions[index++] = JsonLibrary.toJson(
+                string(
+                    abi.encodePacked(
+                        "AaveInstance(",
+                        $.aaveInstanceName,
+                        ").setUserUseReserveAsCollateral(",
+                        asset,
+                        ", any)"
+                    )
+                ),
+                ABILibrary.getABI(IAavePoolV3.setUserUseReserveAsCollateral.selector),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+                innerParameters
+            );
+        }
         for (uint256 i = 0; i < $.loans.length; i++) {
             string memory asset = IERC20Metadata($.loans[i]).symbol();
 
@@ -248,7 +289,7 @@ library AaveLibrary {
 
     // God, please, fix stack-too-deep 🙏
     function getAaveDescriptionsLean(Info memory $) internal view returns (string[] memory descriptions) {
-        uint256 length = ($.collaterals.length + $.loans.length) * 3 + 1;
+        uint256 length = ($.collaterals.length + $.loans.length) * 3 + $.collateralToggles.length + 1;
         descriptions = new string[](length);
         uint256 index = 0;
 
@@ -309,6 +350,26 @@ library AaveLibrary {
                 innerParameters
             );
         }
+        for (uint256 i = 0; i < $.collateralToggles.length; i++) {
+            string memory asset = IERC20Metadata($.collateralToggles[i]).symbol();
+
+            innerParameters = ParameterLibrary.build("asset", Strings.toHexString($.collateralToggles[i])).addAny(
+                "useAsCollateral"
+            );
+            descriptions[index++] = JsonLibrary.toJsonLean(
+                string(
+                    abi.encodePacked(
+                        "AaveInstance(",
+                        $.aaveInstanceName,
+                        ").setUserUseReserveAsCollateral(",
+                        asset,
+                        ", any)"
+                    )
+                ),
+                ParameterLibrary.build(Strings.toHexString($.curator), Strings.toHexString($.aaveInstance), "0"),
+                innerParameters
+            );
+        }
         for (uint256 i = 0; i < $.loans.length; i++) {
             string memory asset = IERC20Metadata($.loans[i]).symbol();
 
@@ -354,7 +415,7 @@ library AaveLibrary {
 
     function getAaveCalls(Info memory $) internal pure returns (Call[][] memory calls) {
         uint256 index = 0;
-        calls = new Call[][](($.collaterals.length + $.loans.length) * 3 + 1);
+        calls = new Call[][](($.collaterals.length + $.loans.length) * 3 + $.collateralToggles.length + 1);
 
         // setUserEMode
         {
@@ -505,6 +566,60 @@ library AaveLibrary {
                     mstore(tmp, i)
                 }
 
+                calls[index++] = tmp;
+            }
+        }
+
+        for (uint256 j = 0; j < $.collateralToggles.length; j++) {
+            address asset = $.collateralToggles[j];
+            {
+                Call[] memory tmp = new Call[](16);
+                uint256 i = 0;
+                tmp[i++] = Call(
+                    $.curator,
+                    $.aaveInstance,
+                    0,
+                    abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (asset, true)),
+                    true
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    $.aaveInstance,
+                    0,
+                    abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (asset, false)),
+                    true
+                );
+                tmp[i++] = Call(
+                    address(0xdead),
+                    $.aaveInstance,
+                    0,
+                    abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (asset, true)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    address(0xdead),
+                    0,
+                    abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (asset, true)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    $.aaveInstance,
+                    0,
+                    abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (address(0xdead), true)),
+                    false
+                );
+                tmp[i++] = Call(
+                    $.curator,
+                    $.aaveInstance,
+                    1 wei,
+                    abi.encodeCall(IAavePoolV3.setUserUseReserveAsCollateral, (asset, true)),
+                    false
+                );
+                assembly {
+                    mstore(tmp, i)
+                }
                 calls[index++] = tmp;
             }
         }

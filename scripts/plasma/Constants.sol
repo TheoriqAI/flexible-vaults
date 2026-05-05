@@ -17,6 +17,8 @@ library Constants {
     address public constant WSTUSR = 0x2a52B289bA68bBd02676640aA9F605700c9e5699;
     address public constant USDT0 = 0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb;
     address public constant WETH = 0x9895D81bB462A195b4922ED7De0e3ACD007c32CB;
+    address public constant USDE = 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34;
+    address public constant SUSDE = 0x211Cc4DD073734dA055fbF44a2b4667d5E5fE5d2;
     address public constant WSTETH = 0xe48D935e6C9e735463ccCf29a7F11e32bC09136E;
 
     address public constant WSTETH_ETHEREUM = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
