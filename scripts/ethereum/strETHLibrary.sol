@@ -346,6 +346,7 @@ library strETHLibrary {
             aaveInstanceName: "Prime",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.WSTETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WETH)),
+            collateralToggles: new address[](0),
             categoryId: 1
         });
     }
@@ -363,6 +364,7 @@ library strETHLibrary {
             aaveInstanceName: "Core",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.WSTETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WETH)),
+            collateralToggles: new address[](0),
             categoryId: 1
         });
     }
@@ -456,6 +458,7 @@ library strETHLibrary {
             loans: ArraysLibrary.makeAddressArray(
                 abi.encode(Constants.USDC, Constants.USDT, Constants.USDS, Constants.USDE)
             ),
+            collateralToggles: new address[](0),
             categoryId: 0
         });
     }
@@ -497,6 +500,7 @@ library strETHLibrary {
             aaveInstanceName: "Core",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.USDE, Constants.SUSDE)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.USDC, Constants.USDT, Constants.USDS)),
+            collateralToggles: new address[](0),
             categoryId: 2
         });
     }
@@ -596,6 +600,7 @@ library strETHLibrary {
             aaveInstanceName: "SparkLend",
             collaterals: ArraysLibrary.makeAddressArray(abi.encode(Constants.WSTETH)),
             loans: ArraysLibrary.makeAddressArray(abi.encode(Constants.WETH)),
+            collateralToggles: new address[](0),
             categoryId: 1
         });
     }

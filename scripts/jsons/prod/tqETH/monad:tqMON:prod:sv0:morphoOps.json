@@ -1,0 +1,2068 @@
+{
+  "title": "monad:tqMON:prod:sv0:morphoOps",
+  "merkle_root": "0x01019b749155eef0497b7ff88cb1ddf581e3aa34998ed07c4d5d9cc2ba396da5",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(aHYPER).approve(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x7cd231120a60f500887444a9baf5e1bd753a5e59",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f98f1e2d9e2ee87991695e5e0721938b42d18f93bb84f7169c37916fb9bbb5edc000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xe9a20a9760f3aae0b5f5c921e3f7185b788765a06f16d1c2821ce4187c9796d4",
+        "0x94ceff0d022922a119b8f395d2338a04a43da8c99f5ace56bc8fa122ba2b1a03",
+        "0x6a5145946c35b4163e133aced53e619f7d43d5576b6b8c8a952ce100671f3ee6",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fdf6ef57361b7117288765112f3f70301abc5f62f4527a3024be9bdda3f8ef5e1000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xcc4461fbe49a3a9aa1ff59ab0c9fe75afccca7fdecf08de3a50004deeddf5711",
+        "0x5da422a9b455fb46f98e9908bfcb03d062a9fc090d5eaa5f9b05d56c9ed52427",
+        "0xfaa05ce97812eebab1800a4cf5c4514af70fc3dbb02e086378c164a81a3d9473",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).supply(USDC/aHYPER/0x9e8441e7af65860feac831ebc117473e3033321abf528ebc8fbde1eeaaa3a626)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "supply",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x7Cd231120a60F500887444a9bAF5e1BD753A5e59",
+            "oracle": "0x4af4f38164cD7F28653A66aa2255B249a23cFBec",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fd4c84dccd010c7105312c99766a9c52f12ffeee17130d3b95bd9b300101c7eaf000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xcc4461fbe49a3a9aa1ff59ab0c9fe75afccca7fdecf08de3a50004deeddf5711",
+        "0xb3db41ecc40fc1d622ebea82c70e46351cef7ef9a941fc3981c7fec6a32f3f91",
+        "0xfaa05ce97812eebab1800a4cf5c4514af70fc3dbb02e086378c164a81a3d9473",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).supplyCollateral(USDC/aHYPER/0x9e8441e7af65860feac831ebc117473e3033321abf528ebc8fbde1eeaaa3a626)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "supplyCollateral",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x7Cd231120a60F500887444a9bAF5e1BD753A5e59",
+            "oracle": "0x4af4f38164cD7F28653A66aa2255B249a23cFBec",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f5d33c867bc8c7fdaa4342e28835c6cda0674803f694115d0d2b482ff07addd5100000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x5f296adf852549874e2f26dac4e2949e18f77f917a95ba15047026fee616e881",
+        "0x75b6699ba4e716ba3dbfa52c92bcf29dd1361d484ecca7dd57fcc6ec654f8ca8",
+        "0x9449ab6d2dba5b351303294156e46d11e4c9546e5cb34d6afdec863d31ad1039",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).repay(USDC/aHYPER/0x9e8441e7af65860feac831ebc117473e3033321abf528ebc8fbde1eeaaa3a626)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "repay",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x7Cd231120a60F500887444a9bAF5e1BD753A5e59",
+            "oracle": "0x4af4f38164cD7F28653A66aa2255B249a23cFBec",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f294be64a5b44c1b0b77ae1dc7304df74b69d9230443353473157781a62660724000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xc1b0d4adf84eb15590c277365953895c01c5cb67b5804b4ec7a38217be0fc768",
+        "0xf15f625e3b6e0321d790185b4667b4506e531bbdaf930cc4bcdbca528fc7bded",
+        "0xba4bcac2dadcef9cfd6cc3b71d2dfbefdb6ace91e0ea116430dc6e0269231822",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).borrow(USDC/aHYPER/0x9e8441e7af65860feac831ebc117473e3033321abf528ebc8fbde1eeaaa3a626)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "borrow",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x7Cd231120a60F500887444a9bAF5e1BD753A5e59",
+            "oracle": "0x4af4f38164cD7F28653A66aa2255B249a23cFBec",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f5b906815c9c0f41adf5adddc0dae888707ea127faae72bdf12b9a99bd5fc0f2800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xcac9bc9405818636ab8e4e6ad924dad5136f8defba9b54a432b0aa76f3c44d9c",
+        "0x3ffed29b39e06551d3209675e1d56ff92b4a102aed62f3548064c6901ea29b66",
+        "0xba4bcac2dadcef9cfd6cc3b71d2dfbefdb6ace91e0ea116430dc6e0269231822",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).withdraw(USDC/aHYPER/0x9e8441e7af65860feac831ebc117473e3033321abf528ebc8fbde1eeaaa3a626)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x7Cd231120a60F500887444a9bAF5e1BD753A5e59",
+            "oracle": "0x4af4f38164cD7F28653A66aa2255B249a23cFBec",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f51ec19db3824e62b60b013ad1cba8787dde24f9deb0d61ca3658fb20fbaeca7600000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x919883be158c9b436d2d86251fc43dd1092a0a8c79e461c7286b23c45d5c2505",
+        "0x0758e06e379ddac71415a49ce9a54b3d754952c816c1aa8071eef6c058718cb6",
+        "0x24ad45a4c0cc0660906e80c2e55d586077d11df51980b07834117731bac7b2a7",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).withdrawCollateral(USDC/aHYPER/0x9e8441e7af65860feac831ebc117473e3033321abf528ebc8fbde1eeaaa3a626)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "withdrawCollateral",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x7Cd231120a60F500887444a9bAF5e1BD753A5e59",
+            "oracle": "0x4af4f38164cD7F28653A66aa2255B249a23cFBec",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f5f7d70c3773923dd18c4bb7c947e57da840d2991dbe3f3c4fd39c2612e44a1bb00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000164ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x091dbb152fa854d57e0723a97f20b8810fc532598eec147e9f9ec36be950ee9a",
+        "0x0d35e98f9d8282575bd13ec4c9bebf0d48d1fd7175b0af52c04424f9857a30ba",
+        "0x422db2854f6b909b1de7397f2c9cedce1e5ee331c0c9bffe26fbd213502c88c5",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(syzUSD).approve(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x484be0540ad49f351eaa04eeb35df0f937d4e73f",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fa8b3ab266f133554a5a24102bc649c56108b76a0bf35c87067bb9eda39462cfe000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x809cf58c2bf717fea4d6b8797515ed98271a6c7670c9c2fff2b91c05dd85fae5",
+        "0xc0222bec837e114fa804ec466fccc40ff90422447f12361a00c27ca5b3b0ac80",
+        "0x24ad45a4c0cc0660906e80c2e55d586077d11df51980b07834117731bac7b2a7",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fdf6ef57361b7117288765112f3f70301abc5f62f4527a3024be9bdda3f8ef5e1000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xcc4461fbe49a3a9aa1ff59ab0c9fe75afccca7fdecf08de3a50004deeddf5711",
+        "0x5da422a9b455fb46f98e9908bfcb03d062a9fc090d5eaa5f9b05d56c9ed52427",
+        "0xfaa05ce97812eebab1800a4cf5c4514af70fc3dbb02e086378c164a81a3d9473",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).supply(USDC/syzUSD/0x647f2acdadd47ed0fad3ef826e3513fd7fdf9328b0c1f24b8c762c6d79511bf6)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "supply",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x484be0540aD49f351eaa04eeB35dF0f937D4E73f",
+            "oracle": "0x3908Acdc6DBb105E1F7CAF91574D622fE9b14F98",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "915000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fa9a58972b6100201e05c3362209a875a2e05aaf2ffd7f8886b02f5a1909ded25000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xdf29d56553ed04ed12f1a94b23219ead90b234d991632c0fb6fc780d3c49d302",
+        "0x94ceff0d022922a119b8f395d2338a04a43da8c99f5ace56bc8fa122ba2b1a03",
+        "0x6a5145946c35b4163e133aced53e619f7d43d5576b6b8c8a952ce100671f3ee6",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).supplyCollateral(USDC/syzUSD/0x647f2acdadd47ed0fad3ef826e3513fd7fdf9328b0c1f24b8c762c6d79511bf6)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "supplyCollateral",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x484be0540aD49f351eaa04eeB35dF0f937D4E73f",
+            "oracle": "0x3908Acdc6DBb105E1F7CAF91574D622fE9b14F98",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "915000000000000000"
+          },
+          "assets": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f739b6b4312228469ac42a82f8fe1a3d03d7586ba629cacd5cb96b2d4e22c106c00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x69ebf465d7cd8c4bc53be5434975374361a5d2dca31dd8b2d93305af2e50b527",
+        "0xc0222bec837e114fa804ec466fccc40ff90422447f12361a00c27ca5b3b0ac80",
+        "0x24ad45a4c0cc0660906e80c2e55d586077d11df51980b07834117731bac7b2a7",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).repay(USDC/syzUSD/0x647f2acdadd47ed0fad3ef826e3513fd7fdf9328b0c1f24b8c762c6d79511bf6)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "repay",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x484be0540aD49f351eaa04eeB35dF0f937D4E73f",
+            "oracle": "0x3908Acdc6DBb105E1F7CAF91574D622fE9b14F98",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "915000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f5f6609f3af364b3a49f972cac9702cc3b7d3698b9337e5780754ea0d24a76ab9000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x100490b58d91b0d44497b6bbd5fd787dae2cdbd161073e0256279c2ec2e19630",
+        "0xdf540bb662e025c93b9e5cecb73d0aca1018d2e84ee844ff3345664ca1f71bcf",
+        "0x422db2854f6b909b1de7397f2c9cedce1e5ee331c0c9bffe26fbd213502c88c5",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).borrow(USDC/syzUSD/0x647f2acdadd47ed0fad3ef826e3513fd7fdf9328b0c1f24b8c762c6d79511bf6)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "borrow",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x484be0540aD49f351eaa04eeB35dF0f937D4E73f",
+            "oracle": "0x3908Acdc6DBb105E1F7CAF91574D622fE9b14F98",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "915000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f4c172aa2d7e4e34f85a094eabaf5e4b0bc82d8dfa41277a7332bb3bbb1fa596200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x0157bfef9bb99a3bb6d7f4d47b96081b3e293b6c0c941e39b92700803ad77428",
+        "0x0d35e98f9d8282575bd13ec4c9bebf0d48d1fd7175b0af52c04424f9857a30ba",
+        "0x422db2854f6b909b1de7397f2c9cedce1e5ee331c0c9bffe26fbd213502c88c5",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).withdraw(USDC/syzUSD/0x647f2acdadd47ed0fad3ef826e3513fd7fdf9328b0c1f24b8c762c6d79511bf6)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x484be0540aD49f351eaa04eeB35dF0f937D4E73f",
+            "oracle": "0x3908Acdc6DBb105E1F7CAF91574D622fE9b14F98",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "915000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f3553fd8d876afd31f3a4585d223cecdadd8b36278b3471a80baa14225d9f2a3300000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xf820bd0488fe6a227107f92d3790dcdb0928a3f36d27206cd69401584ec1a0a0",
+        "0xb652761ae0923eccf811308b2616de4bf7741ed50f4bed631df7c5a5df23232d",
+        "0x6a5145946c35b4163e133aced53e619f7d43d5576b6b8c8a952ce100671f3ee6",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).withdrawCollateral(USDC/syzUSD/0x647f2acdadd47ed0fad3ef826e3513fd7fdf9328b0c1f24b8c762c6d79511bf6)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "withdrawCollateral",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0x484be0540aD49f351eaa04eeB35dF0f937D4E73f",
+            "oracle": "0x3908Acdc6DBb105E1F7CAF91574D622fE9b14F98",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "915000000000000000"
+          },
+          "assets": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fbec63b44a20cee6a1975814f67bfb46238cf339de20dc5ef436e97856ffbdd6000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000164ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xb7c6455a7f40a0bbba16a3a33bba3ff3a4c8eba941e0889b82c33d25a8a48546",
+        "0xf15f625e3b6e0321d790185b4667b4506e531bbdaf930cc4bcdbca528fc7bded",
+        "0xba4bcac2dadcef9cfd6cc3b71d2dfbefdb6ace91e0ea116430dc6e0269231822",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(mHYPER).approve(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd90f6bfed23ffde40106fc4498dd2e9edb95e4e7",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f4a0db9e0b1be766f5cefdf45965a5aaa36b14fb7aa954e4da077c4a945f09259000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x0fd0a559c7c9ec53ee2f357b955f8b9286264494b16882da3bff51d2298a6d9e",
+        "0xdf540bb662e025c93b9e5cecb73d0aca1018d2e84ee844ff3345664ca1f71bcf",
+        "0x422db2854f6b909b1de7397f2c9cedce1e5ee331c0c9bffe26fbd213502c88c5",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fdf6ef57361b7117288765112f3f70301abc5f62f4527a3024be9bdda3f8ef5e1000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xcc4461fbe49a3a9aa1ff59ab0c9fe75afccca7fdecf08de3a50004deeddf5711",
+        "0x5da422a9b455fb46f98e9908bfcb03d062a9fc090d5eaa5f9b05d56c9ed52427",
+        "0xfaa05ce97812eebab1800a4cf5c4514af70fc3dbb02e086378c164a81a3d9473",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).supply(USDC/mHYPER/0x2761e7fe2dc3b712a7cf6d46286abc26864a65767d823c32ca554fa4ba309c6b)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "supply",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0xd90F6bFEd23fFDE40106FC4498DD2e9EDB95E4e7",
+            "oracle": "0x3A898579ce3407219475678aea3E45E6bf1b1E9C",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f3a33d1329b1b48b262e4bbe9384dd1a7ff7d0cc5db23767dd71dcbdc8d027587000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xfd278b7abdbce5754664d571d0b55c0ecbb1081ffdaff92a175d2527eeb32900",
+        "0xb652761ae0923eccf811308b2616de4bf7741ed50f4bed631df7c5a5df23232d",
+        "0x6a5145946c35b4163e133aced53e619f7d43d5576b6b8c8a952ce100671f3ee6",
+        "0x4ce51f4e052f91641ae97daa3904c766a627e5a32ee2a0745b03dd5e6e4e3710"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).supplyCollateral(USDC/mHYPER/0x2761e7fe2dc3b712a7cf6d46286abc26864a65767d823c32ca554fa4ba309c6b)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "supplyCollateral",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0xd90F6bFEd23fFDE40106FC4498DD2e9EDB95E4e7",
+            "oracle": "0x3A898579ce3407219475678aea3E45E6bf1b1E9C",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f1174ce1ee819007a34a271cd7714168941069f4187fc5dc9e02d99635006a8d000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2893feaee5618d38267d0e178639912c16b5507185990a05a30e7fb3b6e0c840",
+        "0xdc4041d8016122a6cd3a31d317d2ec789589f7fd0159c4959c22e79e134f05b2",
+        "0x9449ab6d2dba5b351303294156e46d11e4c9546e5cb34d6afdec863d31ad1039",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).repay(USDC/mHYPER/0x2761e7fe2dc3b712a7cf6d46286abc26864a65767d823c32ca554fa4ba309c6b)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "repay",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0xd90F6bFEd23fFDE40106FC4498DD2e9EDB95E4e7",
+            "oracle": "0x3A898579ce3407219475678aea3E45E6bf1b1E9C",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "data": ""
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0fe1687f3e95c64007266431efd15093472084b2bb2b1af7b792c5dbaf966ced6d000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x4e63b5ac41dc6c11cde984ef68b5dd4134cdfa8d52aab25efb7785b9349467b2",
+        "0x75b6699ba4e716ba3dbfa52c92bcf29dd1361d484ecca7dd57fcc6ec654f8ca8",
+        "0x9449ab6d2dba5b351303294156e46d11e4c9546e5cb34d6afdec863d31ad1039",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).borrow(USDC/mHYPER/0x2761e7fe2dc3b712a7cf6d46286abc26864a65767d823c32ca554fa4ba309c6b)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "borrow",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0xd90F6bFEd23fFDE40106FC4498DD2e9EDB95E4e7",
+            "oracle": "0x3A898579ce3407219475678aea3E45E6bf1b1E9C",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0ffbff6515fba1d3b4a4d661cf733a3baef15933a038dd759c8b7314b4715e746800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xca7219e28db0abc4347079680743d4267dc38616b8d2fa5e53fc2a04847e9359",
+        "0x3ffed29b39e06551d3209675e1d56ff92b4a102aed62f3548064c6901ea29b66",
+        "0xba4bcac2dadcef9cfd6cc3b71d2dfbefdb6ace91e0ea116430dc6e0269231822",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).withdraw(USDC/mHYPER/0x2761e7fe2dc3b712a7cf6d46286abc26864a65767d823c32ca554fa4ba309c6b)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "shares",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0xd90F6bFEd23fFDE40106FC4498DD2e9EDB95E4e7",
+            "oracle": "0x3A898579ce3407219475678aea3E45E6bf1b1E9C",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "shares": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0f401122f5a49ebbbc5e964bdcadc4bbcb01adb3d0cd6f11190b9365f0f148abaf00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000184ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2515c7a3ad52607ba5eb661db7a1a206df372ce7cad1dfa3a6b2a6de1514e996",
+        "0xdc4041d8016122a6cd3a31d317d2ec789589f7fd0159c4959c22e79e134f05b2",
+        "0x9449ab6d2dba5b351303294156e46d11e4c9546e5cb34d6afdec863d31ad1039",
+        "0x900accd00676561ee640dc152abc1892707e22b186bf70b77d52b453629e9768",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IMorpho(0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee).withdrawCollateral(USDC/mHYPER/0x2761e7fe2dc3b712a7cf6d46286abc26864a65767d823c32ca554fa4ba309c6b)",
+        "abi": {
+          "constant": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "loanToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "collateralToken",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "oracle",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "irm",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lltv",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MarketParams",
+              "name": "marketParams",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "assets",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalf",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            }
+          ],
+          "name": "withdrawCollateral",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x5ffa51f64bc40c5af3a435a95e9616cc2df9f01b",
+          "target": "0xd5d960e8c380b724a48ac59e2dff1b2cb4a1eaee",
+          "value": "0"
+        },
+        "innerParameters": {
+          "marketParams": {
+            "loanToken": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+            "collateralToken": "0xd90F6bFEd23fFDE40106FC4498DD2e9EDB95E4e7",
+            "oracle": "0x3A898579ce3407219475678aea3E45E6bf1b1E9C",
+            "irm": "0x09475a3D6eA8c314c592b1a3799bDE044E2F400F",
+            "lltv": "770000000000000000"
+          },
+          "assets": "any",
+          "onBehalf": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20",
+          "receiver": "0x0c7cb4e1241f4b7fd65de59fde5a6dbff190fb20"
+        }
+      },
+      "verificationData": "0x000000000000000000000000000000019a3e622ee54b1f6e155fb740d1fd9f0ffc7dc67fbe48538f28547efe8dc67674c24a7fde8a1f455a80253a9a66b6931000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000164ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xa02219fbbe4cf17b104b0816afbefc738f33acf8e10a4a50a6556018239caa25",
+        "0x0758e06e379ddac71415a49ce9a54b3d754952c816c1aa8071eef6c058718cb6",
+        "0x24ad45a4c0cc0660906e80c2e55d586077d11df51980b07834117731bac7b2a7",
+        "0xf5deff25eed98cb8e6a98e3eb802b63408f9020fa8e295bef2f183583ae03102",
+        "0x809075e6cf4b610755d765a5860e8f516fe2a458f097c3b7b5dd5c8aba92770c"
+      ]
+    }
+  ]
+}

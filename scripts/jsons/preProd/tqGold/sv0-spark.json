@@ -1,0 +1,982 @@
+{
+  "title": "preProd/tqGold/sv0-spark",
+  "merkle_root": "0xb46ddc384eb0cf4d8e1c7790e10a4263996493d26544c175b3eee7a38644a180",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).setUserEMode(categoryId=0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "categoryId",
+              "type": "uint8"
+            }
+          ],
+          "name": "setUserEMode",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "categoryId": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a8b7c2621637fe76056a783644e14fbb25bb38e6c239da2bd4086629f609518b600000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000084ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000ff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xaff4196893f1b2f5aaaa56ec7c98add99f3c020229d13b5901ac69e7e7f3225b",
+        "0xd93c7025fc64ad7a1974977645161ec8c9696d8157da4cd33f8594707e401758",
+        "0xb56b1e49f1e055570c0897d6c18105596031fdddc7cfaf5f74cf25a390bd81d9",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(AaveInstance(spark), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a57dd6b7f645e617a9e5bec84ef75183a23bd76c0a2fe3f6f8ded98aaa2ea9d45000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xd3d7e5a80074d38baa2cbe975b72f7cf4a60d0aa1b85b7feb283920dd83e1d52",
+        "0x3a7bffe487caeb19d65d3fc0d601e28ef912c87bbcf16ba0bba663ed361575b6",
+        "0x0f7c54db8148fcaaee987fd93464bd90732caf2327698a01f5826e404f65a0a1",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).supply(USDC, anyInt, subvault0, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalfOf",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "referralCode",
+              "type": "uint16"
+            }
+          ],
+          "name": "supply",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "amount": "any",
+          "onBehalfOf": "0x7585770a2d08a276af5f5980f54eca8c25e33987",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a4ae842e4843bb4317dabb8c461982464702c5acbc827471bbfb5949b9e14b00f000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x0cf98093976098865bce9242bdaed559079e42cb582636346cc7cd6052f06fed",
+        "0x135c45e131363af40b97b568773079f5bf86831c411f7c70bc60b6eb11bf1dab",
+        "0xa349ef4e883385fab642f7c5a7a91b0c25db02c69e08ec8a9f9fd982635d0a80",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).withdraw(USDC, anyInt, subvault0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "amount": "any",
+          "to": "0x7585770a2d08a276af5f5980f54eca8c25e33987"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ab696f3e01c0d50966313827363ef577b64943ce6da420ece25f15a8f1a6a9dfd000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2e130a150a9509015bb162325490cdce7ab3a78d4f3cbd3eb5da688d07c0d32a",
+        "0x9831e3c4933690c538213a5f6f07f713942386c41b9f4c0ae448d817b3310635",
+        "0x5809fb9897a7866da49c0fd3b8430d9768aa6b94a98eade3ac54da8877011667",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDT).approve(AaveInstance(spark), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a0f450af47717a916d005d6754d0f675b55d453c7ccb12b79180ef3c3ceb33d4a000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2603a73d6125e23dbee417eca72b111acf34423784f589eec0856ceed82bfe01",
+        "0x29473eeb7065bcf6d7d3b59fdbe9611988f21ee13945b90171c9c6f7d8bf012b",
+        "0xa349ef4e883385fab642f7c5a7a91b0c25db02c69e08ec8a9f9fd982635d0a80",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).supply(USDT, anyInt, subvault0, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalfOf",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "referralCode",
+              "type": "uint16"
+            }
+          ],
+          "name": "supply",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "amount": "any",
+          "onBehalfOf": "0x7585770a2d08a276af5f5980f54eca8c25e33987",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a21266edfc2cad5ef641620341119332ce341891d239ddbe22c8df1a9377968ee000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x1d64c657d3cdc20295450d1a3e931aed67c76bedeb954c4f0188fa97174394c1",
+        "0x135c45e131363af40b97b568773079f5bf86831c411f7c70bc60b6eb11bf1dab",
+        "0xa349ef4e883385fab642f7c5a7a91b0c25db02c69e08ec8a9f9fd982635d0a80",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).withdraw(USDT, anyInt, subvault0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "amount": "any",
+          "to": "0x7585770a2d08a276af5f5980f54eca8c25e33987"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20aebc4305f4decfbfbd13cc0bb1daa97da9a24231852dd75ea2b97c7094e0b2c87000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xd7ff3b3e1e3f4a1c235fe4f5920de6179a046804e3eb55519a05213f81d511b3",
+        "0x3a7bffe487caeb19d65d3fc0d601e28ef912c87bbcf16ba0bba663ed361575b6",
+        "0x0f7c54db8148fcaaee987fd93464bd90732caf2327698a01f5826e404f65a0a1",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDe).approve(AaveInstance(spark), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a04e584a970ddcb4e7753d4603f6ef50ee2540630092bf089f18c4d9d8410d595000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xf860c85f403e3d7304b1df06659fda9397b69a6a1d7d9d32c602e83c89f4bc18",
+        "0xdf6f418f711657e8c1a91eebdaeba26d852785f1e0b66a11a420c24e5ae7e483",
+        "0xc6571561d44b457ec79ee440325567dfe36f708d564e322735d4b30bf753026a",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).supply(USDe, anyInt, subvault0, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalfOf",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "referralCode",
+              "type": "uint16"
+            }
+          ],
+          "name": "supply",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "amount": "any",
+          "onBehalfOf": "0x7585770a2d08a276af5f5980f54eca8c25e33987",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a6992ae42f661d5ea72339690959fdc20af52674a954d476c24f2c6ed07a3a04e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xdfdc97c3c39964b6f79e8715133b3deeb71bc10f97e22271e0d8a5c11046c1fb",
+        "0xdf6f418f711657e8c1a91eebdaeba26d852785f1e0b66a11a420c24e5ae7e483",
+        "0xc6571561d44b457ec79ee440325567dfe36f708d564e322735d4b30bf753026a",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).withdraw(USDe, anyInt, subvault0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0x55666095cd083a92e368c0cbaa18d8a10d3b65ec",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "amount": "any",
+          "to": "0x7585770a2d08a276af5f5980f54eca8c25e33987"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a0eba056f3dfbb781de85811937dea7c458fbaa20f4776e1737f45f30c1274965000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x26682799f1bc73180b0732df893515a95a051c43f8c2d8291610c42439047698",
+        "0x29473eeb7065bcf6d7d3b59fdbe9611988f21ee13945b90171c9c6f7d8bf012b",
+        "0xa349ef4e883385fab642f7c5a7a91b0c25db02c69e08ec8a9f9fd982635d0a80",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).setUserEMode(categoryId=0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "categoryId",
+              "type": "uint8"
+            }
+          ],
+          "name": "setUserEMode",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "categoryId": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a8b710547b2ba8a6ab208bf910b82200c2e6278bc3dd2cf832a034b26d3626f6900000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000084ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000ff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2db1627f3d3609f72693a30f5c0cf6be2f773b53aad656597d801cbf6b708924",
+        "0x9831e3c4933690c538213a5f6f07f713942386c41b9f4c0ae448d817b3310635",
+        "0x5809fb9897a7866da49c0fd3b8430d9768aa6b94a98eade3ac54da8877011667",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(AaveInstance(spark), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20adf0532f2a4e9b1819e438e5729a5d00188fc841266da4e295c7fd84ff5cd4178000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xb3e84a13932f6c6d23a780ddfc8bc571dc15e82b957474a9ba5156eb5acdc01c",
+        "0xd93c7025fc64ad7a1974977645161ec8c9696d8157da4cd33f8594707e401758",
+        "0xb56b1e49f1e055570c0897d6c18105596031fdddc7cfaf5f74cf25a390bd81d9",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).supply(USDC, anyInt, subvault0, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalfOf",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "referralCode",
+              "type": "uint16"
+            }
+          ],
+          "name": "supply",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "amount": "any",
+          "onBehalfOf": "0x7585770a2d08a276af5f5980f54eca8c25e33987",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a475c81fc157747dbbf42900708ac5010df742513071a009dfbf5118c15154d60000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x9bf1ff6826648871e84574883d44eb79f9022de3bbba2af26a29a261c6f4a22e",
+        "0x80ad9fcbd4f4b0e9a83c00f588e7fc3085db6aff5515a99bfbbac750aa133f12",
+        "0xb56b1e49f1e055570c0897d6c18105596031fdddc7cfaf5f74cf25a390bd81d9",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).withdraw(USDC, anyInt, subvault0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "amount": "any",
+          "to": "0x7585770a2d08a276af5f5980f54eca8c25e33987"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a9df736a66d717021518d27f04dabd5c0480010bbaa07d9b0516f355e56cec82f000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x7cf5100f6d6f651605292f88b55cbfb37b2a4037afa0210be3b4497e97daf4d5",
+        "0xce21b282cd46665837aaeff8ad879a3ba3628b38f5198ef0b306e94f5a58fd7f",
+        "0x5809fb9897a7866da49c0fd3b8430d9768aa6b94a98eade3ac54da8877011667",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDT).approve(AaveInstance(spark), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20aa3ba37244a9220cc8f2af08c2648ae62b3b698b724ed0b45582b781046325945000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xb9512fdd0f6d89078ac50064d68b18c171b027cd90c3a08e3ac44d6eabda6105",
+        "0xe61fa2c8ed91651e48f62c39cdd277afae96722bd44b737117cd12029a5642b7",
+        "0x0f7c54db8148fcaaee987fd93464bd90732caf2327698a01f5826e404f65a0a1",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).supply(USDT, anyInt, subvault0, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalfOf",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "referralCode",
+              "type": "uint16"
+            }
+          ],
+          "name": "supply",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "amount": "any",
+          "onBehalfOf": "0x7585770a2d08a276af5f5980f54eca8c25e33987",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a2dec5ffd1cd2d5068e4625ed7131ff35380d821a64fedc44494f023fc944cb9a000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xc313e9da3310f01ea942ff7f07f28fcaa92eb7eb56344d337253dc74aacbf1f6",
+        "0xe61fa2c8ed91651e48f62c39cdd277afae96722bd44b737117cd12029a5642b7",
+        "0x0f7c54db8148fcaaee987fd93464bd90732caf2327698a01f5826e404f65a0a1",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).withdraw(USDT, anyInt, subvault0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "amount": "any",
+          "to": "0x7585770a2d08a276af5f5980f54eca8c25e33987"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20aa430be9635367a88bbf0f1fc4f5b36dd33168285894dc283762c7a0887751f52000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x9e9946344594b1b9094fdbd9ffc1473f281e303e6db1f3a8d2543d52831e5cdc",
+        "0x80ad9fcbd4f4b0e9a83c00f588e7fc3085db6aff5515a99bfbbac750aa133f12",
+        "0xb56b1e49f1e055570c0897d6c18105596031fdddc7cfaf5f74cf25a390bd81d9",
+        "0x1cecc7901cf71a835a86af819a2f2c6d2bfd78fdef65f96c335ab83f62601560"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDe).approve(AaveInstance(spark), anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a2b873d40dc29e383b940fc83ec98612b2cb47ecf0545955b69c074445ce649fd000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xde511d3f6d757cf1727f0d5b3346fef91e4fa57a0d502a8073296137d82ca534",
+        "0x541303bb7b9313745f7590f00caff725e9334d154bee520b4bf32c122ffa5cd7",
+        "0xc6571561d44b457ec79ee440325567dfe36f708d564e322735d4b30bf753026a",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).supply(USDe, anyInt, subvault0, anyInt)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "onBehalfOf",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "referralCode",
+              "type": "uint16"
+            }
+          ],
+          "name": "supply",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "amount": "any",
+          "onBehalfOf": "0x7585770a2d08a276af5f5980f54eca8c25e33987",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a4ee07a19cca537ffb33cabe1fbb8057452f1576ee5251aebc123de76bffba058000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x8abb96680b62d39c6a2a27f23d9be989c072f09668c21d631a63d17175c6fa6f",
+        "0xce21b282cd46665837aaeff8ad879a3ba3628b38f5198ef0b306e94f5a58fd7f",
+        "0x5809fb9897a7866da49c0fd3b8430d9768aa6b94a98eade3ac54da8877011667",
+        "0x1a009c1edc1bffd1d36ba779692eeb3d4661ba4787a0a974c56f73039b130233",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(spark).withdraw(USDe, anyInt, subvault0)",
+        "abi": {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            }
+          ],
+          "name": "withdraw",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        "parameters": {
+          "caller": "0xfc5c96303f353c314e468681899c35f424246ebe",
+          "target": "0xc13e21b648a5ee794902342038ff3adab66be987",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "amount": "any",
+          "to": "0x7585770a2d08a276af5f5980f54eca8c25e33987"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20af3829c863b0f49df249158c00080c9b9aa9b2503735a1651c54b87070c35222e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xdc23c630955f56fbba7394bbc883f72673ddb319e1e5c75e48cd7d1021dac15b",
+        "0x541303bb7b9313745f7590f00caff725e9334d154bee520b4bf32c122ffa5cd7",
+        "0xc6571561d44b457ec79ee440325567dfe36f708d564e322735d4b30bf753026a",
+        "0x18e5e713db884282cc116cca71646adb699373813d7d477b1f7fd879b90e5393"
+      ]
+    }
+  ]
+}

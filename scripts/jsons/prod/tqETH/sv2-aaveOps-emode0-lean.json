@@ -1,0 +1,609 @@
+{
+  "title": "prod/tqETH/sv2-aaveOps-emode0-lean",
+  "merkle_root": "0xa4c80556605389323b505024e55f6da73e9f6dbd054c221618c03d26e6d52bae",
+  "merkle_proofs": [
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).setUserEMode(categoryId=0)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "categoryId": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a45c2a311adbecd2cb01002622255a2bd4089cdca28aa19ffd591c23676818fd800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000084ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000000000ff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x20e57ba146e18fb6038d8a045f5355d19c27d7ce87ebf63b90b29489bb237b0b",
+        "0x0bf2b00764b8a9b5ab7ba2b0d44bf74744cc2b9cca84d840ed23f0b7b919577f",
+        "0xd77cd6b146a0fa0c4ed6c1008b1da8a175d2401e407398bb19a667ab9a6ccb71",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(WETH).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a5f4492a50723b904a5cf8fcea9507d75086352c54d98052060f46eafeda61a2e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x1672df4f1f05e2ecfedf7060b6aca2e47ccae6b1adab525cae2ac3be865ca5e0",
+        "0xecdc5ed66092c97aed09306b8298ee7763394823261ea42a142869e0646a76c4",
+        "0x2f0859a85c469219d9d2aa22d9e57f8dabcdc70ba5ffd820440a7369a1094975",
+        "0x2a9b4204edb612a5868f1f3b769bad5f280014d551311f6a6fe80f73f91f5b88",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).supply(WETH, anyInt, subvault2_aave, anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "amount": "any",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a23024065edead3e8561de3dc00d2917bd5c7ca65e78cc91d22a2125cebddfd09000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x47c6f4a382a3ce634721f1cceaf8ee48d9984f844d761bae368b7f7065840c9c",
+        "0x1d2f4de4a75851b01e27c4cb044a25e16122a125f220ad87b01179676598585e",
+        "0xa393a76f3ee883f91ed309d212dee05da7d9680ad457166527eb16af0560bdbc",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).withdraw(WETH, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "amount": "any",
+          "to": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a9990993155c70a7dad27350d2a3cc41ba0d5970c3a51e8a9d02dcf930b03c9fc000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xc282ab3872e3eeaa100768c3b3e2ffb3a01021443f7d904d59692c14611959f0",
+        "0xe35960c81400f92e541f50b69974673f25adee57e3ba1f6bade4e1506f8c7873",
+        "0xd9668116b27fec5f4ab7c5d5c1bb00805e47c9dbdfa3fd4736138fff4eb2c95f",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(wstETH).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ac65ac4cad44b7bb6ccc71074a16158a580c6c4d00459b8a27d69c587d4c8f7f0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x427ddff33bf7351438764033afdbf41182cc618206b77715eef1c1db3712bf89",
+        "0x1d2f4de4a75851b01e27c4cb044a25e16122a125f220ad87b01179676598585e",
+        "0xa393a76f3ee883f91ed309d212dee05da7d9680ad457166527eb16af0560bdbc",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).supply(wstETH, anyInt, subvault2_aave, anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "amount": "any",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77",
+          "referralCode": "0"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20aed34ff0483d87ff5ebb854e171d313117a5176091b207bd82a45baf757412862000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x9416ea3207ae255fb9718757bfe19c7a3253970b87ded0415f3d94f883b9705e",
+        "0x077c0614f4cba1e2b04d98630e8e4d5b3d7f2b3cb7f57949cb34bf2254c4b4d7",
+        "0xd9668116b27fec5f4ab7c5d5c1bb00805e47c9dbdfa3fd4736138fff4eb2c95f",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).withdraw(wstETH, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "amount": "any",
+          "to": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20af8b1909a8324f49f28f54a89c8bc44b42f8547fddb9e17d3e0a4068fe9b6b02c000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x5a03e2fa8864779bc2d7b38b883e801d71024f0ff79e085995fd5ed0a8a8bbe7",
+        "0x4aae8ba2a570ad0215106ce56f74544806114b2eed52e57aaa41ea287e432b36",
+        "0x66f58ca4ae06f40df6e9ea75a68122e06c279075f5708e37aaa7ce0f782cd26d",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(WETH).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a5f4492a50723b904a5cf8fcea9507d75086352c54d98052060f46eafeda61a2e000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x1672df4f1f05e2ecfedf7060b6aca2e47ccae6b1adab525cae2ac3be865ca5e0",
+        "0xecdc5ed66092c97aed09306b8298ee7763394823261ea42a142869e0646a76c4",
+        "0x2f0859a85c469219d9d2aa22d9e57f8dabcdc70ba5ffd820440a7369a1094975",
+        "0x2a9b4204edb612a5868f1f3b769bad5f280014d551311f6a6fe80f73f91f5b88",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).borrow(WETH, anyInt, interestRateMode=2, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "amount": "any",
+          "interestRateMode": "2",
+          "referralCode": "0",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a3ca733aedf63a01115508cf85b753ede1c83341d7e9b59355a5de50dfe3857e000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000104ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xcc5e656d81b265ca7fbf104d32e3c771e3e6905f8ad46e22e439139119505f08",
+        "0x00de0886206ece418e8a07248ae6150e135cce3cf8ca95da8476a48b9949d9bd",
+        "0x1f14f801585a9ba9e1c7a2d904b3c0ed57240d617918277c1dfc8620e76a2904",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).repay(WETH, anyInt, 2, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "amount": "any",
+          "interestRateMode": "2",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20af05d74fe4282a99074e8a627e87077df356b92b31cf62074f5a48a2837bf0166000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xd3633643adb67719d3b4bc5b0b700e1e8537f31fbc357c0f6019d87267398cfa",
+        "0xc9520814ebb6bf04ad8ed4ad32c87ecb972f8e47a129eb7fc894a2241b577897",
+        "0x1f14f801585a9ba9e1c7a2d904b3c0ed57240d617918277c1dfc8620e76a2904",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(wstETH).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ac65ac4cad44b7bb6ccc71074a16158a580c6c4d00459b8a27d69c587d4c8f7f0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x427ddff33bf7351438764033afdbf41182cc618206b77715eef1c1db3712bf89",
+        "0x1d2f4de4a75851b01e27c4cb044a25e16122a125f220ad87b01179676598585e",
+        "0xa393a76f3ee883f91ed309d212dee05da7d9680ad457166527eb16af0560bdbc",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).borrow(wstETH, anyInt, interestRateMode=2, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "amount": "any",
+          "interestRateMode": "2",
+          "referralCode": "0",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ac9c1a8b7003d1cfd48fdd87021bf94ed78c3a6236f3d61236daef962b50080a600000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000104ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2313a832b00432c9ee00bf01dda1816a43b1ea7452c4e5086a6620e9a8f8b648",
+        "0x0bf2b00764b8a9b5ab7ba2b0d44bf74744cc2b9cca84d840ed23f0b7b919577f",
+        "0xd77cd6b146a0fa0c4ed6c1008b1da8a175d2401e407398bb19a667ab9a6ccb71",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).repay(wstETH, anyInt, 2, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+          "amount": "any",
+          "interestRateMode": "2",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a7f7cba840fda2617858992a9eb8b79049b867bd8295444ba9e2c9669247d0017000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x0595a7823341d0ce73c0dd83bb6f7326e1592aff66ff728087510071c1f007ab",
+        "0x2f0859a85c469219d9d2aa22d9e57f8dabcdc70ba5ffd820440a7369a1094975",
+        "0x2a9b4204edb612a5868f1f3b769bad5f280014d551311f6a6fe80f73f91f5b88",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDC).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a0942c9fc95a8f3c8d403de3395fed5eb56eddcc9607bf212d30b31e425e54ea1000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xe8ef870915d6188181726f33a635f21431c3e9ac202aa74bd5c0a82f3baa9739",
+        "0x08aa460fbd7eb9b36b998e0918fb1038625ba880ee02b33c10b189eed68bea67",
+        "0x2a9b4204edb612a5868f1f3b769bad5f280014d551311f6a6fe80f73f91f5b88",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).borrow(USDC, anyInt, interestRateMode=2, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "amount": "any",
+          "interestRateMode": "2",
+          "referralCode": "0",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ac601d5cfd634c6fdd228481f478a42d2cad2b3d693a5d2e396a20e7187faf04b00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000104ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x63a9cbcd541117df5514003dce77af3fa2ad17648c383d6df64efbc168a75038",
+        "0x4aae8ba2a570ad0215106ce56f74544806114b2eed52e57aaa41ea287e432b36",
+        "0x66f58ca4ae06f40df6e9ea75a68122e06c279075f5708e37aaa7ce0f782cd26d",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).repay(USDC, anyInt, 2, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "amount": "any",
+          "interestRateMode": "2",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a8ce4191ad919d8ed2045f44bb1a05846ce92f59f31af61d6395765ba060cc3e2000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x47c6f4a382a3ce634721f1cceaf8ee48d9984f844d761bae368b7f7065840c9c",
+        "0x4d443ee415802e9599b4524c20f7b115baedaa8ec9dd2ea671a492aa22fa50e1",
+        "0xa393a76f3ee883f91ed309d212dee05da7d9680ad457166527eb16af0560bdbc",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDT).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20abf4d480163dc656583e8382af6fd202378ee8fe1fa72d5ea4146f6c1219b9408000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xadae543ed51442e8c7e05c59fd1e4d9515c19233950e29c47eb0d2920aabc352",
+        "0xe35960c81400f92e541f50b69974673f25adee57e3ba1f6bade4e1506f8c7873",
+        "0xd9668116b27fec5f4ab7c5d5c1bb00805e47c9dbdfa3fd4736138fff4eb2c95f",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).borrow(USDT, anyInt, interestRateMode=2, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "amount": "any",
+          "interestRateMode": "2",
+          "referralCode": "0",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ae74aa43f9ef56f24324094a93a42c6f3bc0fc7ba36f3bd6b1b8247c91bd1e57800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000104ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xe01d0fc966f6f3127c63e1049245eb87b72f1be3125d6efa5e2842044be00624",
+        "0xc9520814ebb6bf04ad8ed4ad32c87ecb972f8e47a129eb7fc894a2241b577897",
+        "0x1f14f801585a9ba9e1c7a2d904b3c0ed57240d617918277c1dfc8620e76a2904",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).repay(USDT, anyInt, 2, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "amount": "any",
+          "interestRateMode": "2",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a1c0cccb05e54474633bc297f9bb51828b010de4f7079adba18c167cda0dd7668000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x916e210275ae863058bb86fac1ac7b216aa2001fadf2ee9bbdca67f33b4aa9f8",
+        "0x0a1c573a1ef270ee261afbe7bca90b3f58ff138d361e950c3854a92cd7dc20bb",
+        "0x66f58ca4ae06f40df6e9ea75a68122e06c279075f5708e37aaa7ce0f782cd26d",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(USDe).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a76ff6d21681bbd34572fbd74f0c1e5b4873ffe1e42abca9157beded9e7785e99000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xeafa66c2d7abba126ee2f54e6af5fe7cfce0366bc09a3ff058072a7597762cbd",
+        "0x08aa460fbd7eb9b36b998e0918fb1038625ba880ee02b33c10b189eed68bea67",
+        "0x2a9b4204edb612a5868f1f3b769bad5f280014d551311f6a6fe80f73f91f5b88",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).borrow(USDe, anyInt, interestRateMode=2, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "amount": "any",
+          "interestRateMode": "2",
+          "referralCode": "0",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ae44385b0c5d447cd7341b6e04f3c48e8b7b8ee37d919da077ef706e6bb788dc400000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000104ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x6f5b67215d5a86fdc8a673120cc4e0942e7673cc972b8f48a3195f30c0bd76e7",
+        "0x0a1c573a1ef270ee261afbe7bca90b3f58ff138d361e950c3854a92cd7dc20bb",
+        "0x66f58ca4ae06f40df6e9ea75a68122e06c279075f5708e37aaa7ce0f782cd26d",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).repay(USDe, anyInt, 2, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+          "amount": "any",
+          "interestRateMode": "2",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a105ffda9d7bc3da831f7fcc4122fd145ca798962f5fecc151a3123b613766fdb000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x2bcb356ca967fb722b901df7844afea1ad48f55cdab1cb6122061ba803757883",
+        "0x2866f79eb7e0bcb6c72378298c84d8b1cc42dfe8c3df459a26988711ebe3bd13",
+        "0xd77cd6b146a0fa0c4ed6c1008b1da8a175d2401e407398bb19a667ab9a6ccb71",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "IERC20(EURC).approve(AaveInstance(aave), anyInt)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x1abaea1f7c830bd89acc67ec4af516284b1bc33c",
+          "value": "0"
+        },
+        "innerParameters": {
+          "to": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "amount": "any"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a660284484dac2f2ea96b3a6ca663c0918566757a782ee06d8e7477d666087afb000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xac9736b5c5542511f8afea610810d6e591915fe81055bc08e7d018f0de96cc82",
+        "0x077c0614f4cba1e2b04d98630e8e4d5b3d7f2b3cb7f57949cb34bf2254c4b4d7",
+        "0xd9668116b27fec5f4ab7c5d5c1bb00805e47c9dbdfa3fd4736138fff4eb2c95f",
+        "0xf898a83a29a5a2f942a236f0e62b1eb9ef4da5c1f56b41d9260948b10fca596a",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).borrow(EURC, anyInt, interestRateMode=2, anyInt, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x1abaea1f7c830bd89acc67ec4af516284b1bc33c",
+          "amount": "any",
+          "interestRateMode": "2",
+          "referralCode": "0",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20ab2c1cd3271d87b18d620277eafcc9ee058d595a32856d5c2db3917b8b126015200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000104ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0x332d88ff622ffa29007f59b8c41067fa5527b81e71c2c0abef7dd51aa20e0c39",
+        "0x2866f79eb7e0bcb6c72378298c84d8b1cc42dfe8c3df459a26988711ebe3bd13",
+        "0xd77cd6b146a0fa0c4ed6c1008b1da8a175d2401e407398bb19a667ab9a6ccb71",
+        "0xe2edd0cbe5a2959c7a2110d70d4ec98f40277f11fb0c9a6fa00c5e1fa98c8a44",
+        "0x1015e752a4a36eba812503a903e609b0ad7bbef522e39e5880a3c415c7c4b109"
+      ]
+    },
+    {
+      "verificationType": 3,
+      "description": {
+        "description": "AaveInstance(aave).repay(EURC, anyInt, 2, subvault2_aave)",
+        "parameters": {
+          "caller": "0xcca5bafea783b0ed8d11fd6d9f97c155332a16b8",
+          "target": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+          "value": "0"
+        },
+        "innerParameters": {
+          "asset": "0x1abaea1f7c830bd89acc67ec4af516284b1bc33c",
+          "amount": "any",
+          "interestRateMode": "2",
+          "onBehalfOf": "0x78b1fde522103116891c71977ab8f8344b327c77"
+        }
+      },
+      "verificationData": "0x0000000000000000000000000000000263fb29c3d6b0c5837883519ef05ea20a48527ea170dd0d1e01f47226ca018f835a52d2330189bbba20df1a1f30743bbc000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e4ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000ffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000",
+      "proof": [
+        "0xc475a29ce2394b48beef8ac6f8bb936fc927d0404c8ec28ef674669585cdb3a9",
+        "0x00de0886206ece418e8a07248ae6150e135cce3cf8ca95da8476a48b9949d9bd",
+        "0x1f14f801585a9ba9e1c7a2d904b3c0ed57240d617918277c1dfc8620e76a2904",
+        "0x26305fc9ee6fa1f18750cd677bb814bf1b64b9e228136c009538aaeee986b89f"
+      ]
+    }
+  ]
+}
