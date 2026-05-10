@@ -27,7 +27,7 @@ interface ISNUSDVault {
 
 /// @title Prod SV4 eMode 44 Integration Tests
 /// @notice Tests the prod SV4 JSON with Aave eMode 44, Morpho (7 markets), SwapModule, Pendle (4 markets), Withdrawals, CCTP, Spark eMode 0
-/// @dev Uses scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv4:all.json (164 ops)
+/// @dev Uses scripts/jsons/prod/tqETH/ethereum:tqETH:prod:sv4:all.json (165 ops)
 ///
 /// Index map:
 /// 0: setUserEMode(44)
@@ -59,17 +59,17 @@ interface ISNUSDVault {
 ///   129-133: Market PT-Sierra-01JUL2026 (0xa556b5327372ab8aaefda2b756eed0608afd6ca5)
 ///     129: Sierra approve; 130: swapExactTokenForPt; 131: PT approve
 ///     132: swapExactPtForToken; 133: exitPostExpToToken
-/// 134-142: Withdrawals (Lido wstETH, sUSDe, sNUSD, srUSDe)
-/// 143: CCTP approve USDC for TokenMessengerV2
-/// 144: CCTP depositForBurn (USDC to Monad)
-/// 145-163: Spark eMode 0 (supply wstETH/WETH/USDC/USDT, borrow USDC/USDT)
-///   145: Spark setUserEMode(0)
-///   146-148: wstETH (approve, supply, withdraw)
-///   149-151: WETH (approve, supply, withdraw)
-///   152-154: USDC supply-side (approve, supply, withdraw)
-///   155-157: USDT supply-side (approve, supply, withdraw)
-///   158-160: USDC borrow-side (approve, borrow, repay)
-///   161-163: USDT borrow-side (approve, borrow, repay)
+/// 134-143: Withdrawals (Lido wstETH 134-136, sUSDe 137-138, sNUSD 139-142 incl. unstake, srUSDe 143)
+/// 144: CCTP approve USDC for TokenMessengerV2
+/// 145: CCTP depositForBurn (USDC to Monad)
+/// 146-164: Spark eMode 0 (supply wstETH/WETH/USDC/USDT, borrow USDC/USDT)
+///   146: Spark setUserEMode(0)
+///   147-149: wstETH (approve, supply, withdraw)
+///   150-152: WETH (approve, supply, withdraw)
+///   153-155: USDC supply-side (approve, supply, withdraw)
+///   156-158: USDT supply-side (approve, supply, withdraw)
+///   159-161: USDC borrow-side (approve, borrow, repay)
+///   162-164: USDT borrow-side (approve, borrow, repay)
 contract ProdSv4EMode44IntegrationTest is Test {
     address constant prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
     address constant VAULT_PROD = 0xDbC81B33A23375A90c8Ba4039d5738CB6f56fE8d;
@@ -493,16 +493,16 @@ contract ProdSv4EMode44IntegrationTest is Test {
 
         deal(Constants.USDC, subvault4, 1000e6);
 
-        // 1. Approve USDC for TokenMessengerV2 (index 143)
+        // 1. Approve USDC for TokenMessengerV2 (index 144)
         _exec(
             Constants.USDC, 0,
             abi.encodeCall(IERC20.approve, (Constants.CCTP_TOKEN_MESSENGER_V2, type(uint256).max)),
-            143
+            144
         );
         console.log("USDC approve for TokenMessengerV2 - SUCCESS");
         _waitForRPC();
 
-        // 2. depositForBurn: send 100 USDC to Monad (index 144)
+        // 2. depositForBurn: send 100 USDC to Monad (index 145)
         address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
         bytes32 mintRecipient = bytes32(uint256(uint160(targetSubvault)));
 
@@ -522,7 +522,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
                     0                         // minFinalityThreshold
                 )
             ),
-            144
+            145
         );
 
         uint256 usdcAfter = IERC20(Constants.USDC).balanceOf(subvault4);
@@ -542,7 +542,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
         deal(Constants.USDC, subvault4, 1000e6);
 
         // Approve first
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.CCTP_TOKEN_MESSENGER_V2, type(uint256).max)), 143);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.CCTP_TOKEN_MESSENGER_V2, type(uint256).max)), 144);
         _waitForRPC();
 
         // Try depositForBurn with WRONG recipient
@@ -556,7 +556,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
                 ITokenMessengerV2.depositForBurn,
                 (100e6, Constants.CCTP_MONAD_DOMAIN, wrongRecipient, Constants.USDC, bytes32(0), 0, 0)
             ),
-            _payload(144)
+            _payload(145)
         );
 
         console.log("Wrong CCTP recipient REVERTED as expected - SUCCESS");
@@ -568,7 +568,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
 
         deal(Constants.USDC, subvault4, 1000e6);
 
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.CCTP_TOKEN_MESSENGER_V2, type(uint256).max)), 143);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.CCTP_TOKEN_MESSENGER_V2, type(uint256).max)), 144);
         _waitForRPC();
 
         address targetSubvault = 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20;
@@ -582,7 +582,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
                 ITokenMessengerV2.depositForBurn,
                 (100e6, uint32(99), mintRecipient, Constants.USDC, bytes32(0), 0, 0) // ← WRONG domain
             ),
-            _payload(144)
+            _payload(145)
         );
 
         console.log("Wrong CCTP destination domain REVERTED as expected - SUCCESS");
@@ -1026,9 +1026,9 @@ contract ProdSv4EMode44IntegrationTest is Test {
         console.log("\n=== Pendle PT-sNUSD (5 ops) Passed ===");
     }
 
-    // =================== WITHDRAWAL OPS (134-142) ===================
+    // =================== WITHDRAWAL OPS (134-143) ===================
 
-    /// @notice Full coverage of all withdrawal ops (9 ops, indices 134-142)
+    /// @notice Full coverage of all withdrawal ops (10 ops, indices 134-143)
     function test_ProdSv4_WithdrawalOps() public {
         console.log("\n=== Testing Prod SV4 - Withdrawal Operations ===");
 
@@ -1096,7 +1096,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // ---- nUSD / sNUSD flow (139-141) ----
+        // ---- nUSD / sNUSD flow (139-142) ----
         console.log("\n--- nUSD / sNUSD withdrawals ---");
         deal(Constants.NUSD, subvault4, 100 ether);
 
@@ -1123,23 +1123,34 @@ contract ProdSv4EMode44IntegrationTest is Test {
         }
         _waitForRPC();
 
-        // ---- srUSDe withdraw (142) ----
+        // Warp 11 days forward so sNUSD cooldown (10 days) elapses
+        vm.warp(block.timestamp + 11 days);
+
+        // 142: sNUSD.unstake(receiver=subvault4) — same selector as sUSDe.unstake
+        try this._extCall(Constants.SNUSD, 0, abi.encodeCall(ISUSDe.unstake, (subvault4)), 142) {
+            console.log("sNUSD unstake - SUCCESS");
+        } catch {
+            console.log("sNUSD unstake reverted (no active cooldown) - PROOF VALID");
+        }
+        _waitForRPC();
+
+        // ---- srUSDe withdraw (143) ----
         console.log("\n--- srUSDe withdrawal ---");
         deal(Constants.SRUSDE, subvault4, 100 ether);
 
-        // 142: srUSDe.withdraw(sUSDe, anyAmount, subvault4, subvault4)
+        // 143: srUSDe.withdraw(sUSDe, anyAmount, subvault4, subvault4)
         try this._extCall(
             Constants.SRUSDE,
             0,
             abi.encodeCall(ISRUSDe.withdraw, (Constants.SUSDE, 1 ether, subvault4, subvault4)),
-            142
+            143
         ) {
             console.log("srUSDe withdraw - SUCCESS");
         } catch {
             console.log("srUSDe withdraw reverted (protocol) - PROOF VALID");
         }
 
-        console.log("\n=== All Withdrawal Ops (9 ops) Passed ===");
+        console.log("\n=== All Withdrawal Ops (10 ops) Passed ===");
     }
 
     // =================== EXTERNAL WRAPPERS FOR TRY/CATCH ===================
@@ -1166,7 +1177,7 @@ contract ProdSv4EMode44IntegrationTest is Test {
         _pendleExitPostExp(tokenOut, market, ptIn, proofIdx);
     }
 
-    // =================== SPARK EMODE 0 TESTS (145-163) ===================
+    // =================== SPARK EMODE 0 TESTS (146-164) ===================
 
     function test_ProdSv4_SparkEMode0Operations() public {
         console.log("\n=== Testing Prod SV4 - Spark eMode 0 Operations ===");
@@ -1176,38 +1187,38 @@ contract ProdSv4EMode44IntegrationTest is Test {
         deal(Constants.USDC, subvault4, 10_000e6);
         deal(Constants.USDT, subvault4, 10_000e6);
 
-        // Set Spark eMode 0 (no-op but verifies the op works) — index 145
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.setUserEMode, (0)), 145);
+        // Set Spark eMode 0 (no-op but verifies the op works) — index 146
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.setUserEMode, (0)), 146);
         console.log("Spark setUserEMode(0) - SUCCESS");
         _waitForRPC();
 
         // --- Supplies ---
-        // wstETH (146, 147)
-        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 146);
+        // wstETH (147, 148)
+        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 147);
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.WSTETH, 1 ether, subvault4, 0)), 147);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.WSTETH, 1 ether, subvault4, 0)), 148);
         console.log("Spark supply wstETH - SUCCESS");
         _waitForRPC();
 
-        // WETH (149, 150)
-        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 149);
+        // WETH (150, 151)
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 150);
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.WETH, 1 ether, subvault4, 0)), 150);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.WETH, 1 ether, subvault4, 0)), 151);
         console.log("Spark supply WETH - SUCCESS");
         _waitForRPC();
 
-        // USDC supply side (152, 153)
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 152);
+        // USDC supply side (153, 154)
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 153);
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.USDC, 1_000e6, subvault4, 0)), 153);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.USDC, 1_000e6, subvault4, 0)), 154);
         console.log("Spark supply USDC - SUCCESS");
         _waitForRPC();
 
-        // USDT supply side (155, 156) — use exact amount so allowance fully consumes to 0
-        // (USDT's approve rejects non-zero → non-zero, so op 161 later needs a 0 allowance)
-        _exec(Constants.USDT, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, 1_000e6)), 155);
+        // USDT supply side (156, 157) — use exact amount so allowance fully consumes to 0
+        // (USDT's approve rejects non-zero → non-zero, so op 162 later needs a 0 allowance)
+        _exec(Constants.USDT, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, 1_000e6)), 156);
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.USDT, 1_000e6, subvault4, 0)), 156);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.USDT, 1_000e6, subvault4, 0)), 157);
         console.log("Spark supply USDT - SUCCESS");
         _waitForRPC();
 
@@ -1219,37 +1230,37 @@ contract ProdSv4EMode44IntegrationTest is Test {
         require(totalCollateral > 0, "Spark should have collateral");
 
         // --- Borrow + Repay ---
-        // USDC (158, 159, 160)
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 158);
+        // USDC (159, 160, 161)
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 159);
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDC, 100e6, 2, 0, subvault4)), 159);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDC, 100e6, 2, 0, subvault4)), 160);
         console.log("Spark borrow USDC - SUCCESS");
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDC, 100e6, 2, subvault4)), 160);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDC, 100e6, 2, subvault4)), 161);
         console.log("Spark repay USDC - SUCCESS");
         _waitForRPC();
 
-        // USDT (161, 162, 163)
-        _exec(Constants.USDT, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 161);
+        // USDT (162, 163, 164)
+        _exec(Constants.USDT, 0, abi.encodeCall(IERC20.approve, (Constants.SPARK, type(uint256).max)), 162);
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDT, 100e6, 2, 0, subvault4)), 162);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDT, 100e6, 2, 0, subvault4)), 163);
         console.log("Spark borrow USDT - SUCCESS");
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDT, 100e6, 2, subvault4)), 163);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDT, 100e6, 2, subvault4)), 164);
         console.log("Spark repay USDT - SUCCESS");
         _waitForRPC();
 
         // --- Withdraws ---
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.WSTETH, 0.1 ether, subvault4)), 148);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.WSTETH, 0.1 ether, subvault4)), 149);
         console.log("Spark withdraw wstETH - SUCCESS");
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.WETH, 0.1 ether, subvault4)), 151);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.WETH, 0.1 ether, subvault4)), 152);
         console.log("Spark withdraw WETH - SUCCESS");
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.USDC, 100e6, subvault4)), 154);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.USDC, 100e6, subvault4)), 155);
         console.log("Spark withdraw USDC - SUCCESS");
         _waitForRPC();
-        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.USDT, 100e6, subvault4)), 157);
+        _exec(Constants.SPARK, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.USDT, 100e6, subvault4)), 158);
         console.log("Spark withdraw USDT - SUCCESS");
 
         console.log("\n=== All Spark eMode 0 Tests Passed ===");

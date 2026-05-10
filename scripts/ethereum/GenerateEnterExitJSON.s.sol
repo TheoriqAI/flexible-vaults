@@ -116,7 +116,7 @@ contract GenerateEnterExitJSON is Script {
             totalOps += 2; // cooldownShares + unstake
         }
         if (config.enableSnusdDeposit) {
-            totalOps += 3; // approve nUSD + deposit sNUSD + cooldownShares sNUSD
+            totalOps += 4; // approve nUSD + deposit sNUSD + cooldownShares sNUSD + unstake sNUSD
         }
         if (config.enableSrusdeWithdraw) {
             totalOps += 1; // withdraw(sUSDe, amount, receiver, owner)
@@ -134,7 +134,7 @@ contract GenerateEnterExitJSON is Script {
             console.log("  sUSDe withdrawal: 2 (cooldownShares + unstake)");
         }
         if (config.enableSnusdDeposit) {
-            console.log("  sNUSD deposit: 3 (approve + deposit + cooldownShares)");
+            console.log("  sNUSD deposit: 4 (approve + deposit + cooldownShares + unstake)");
         }
         if (config.enableSrusdeWithdraw) {
             console.log("  srUSDe withdraw: 1 (withdraw sUSDe)");
@@ -651,6 +651,42 @@ contract GenerateEnterExitJSON is Script {
                 descriptions[index] = JsonLibrary.toJson(
                     "sNUSD.cooldownShares(anyShares)",
                     ABILibrary.getABI(ISUSDe.cooldownShares.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SNUSD), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 4. unstake(address receiver) on sNUSD - receiver locked to subvault
+            bytes memory snusdUnstakeCalldata = abi.encodeWithSignature(
+                "unstake(address)",
+                config.subvault
+            );
+
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier,
+                config.curator, // Called by curator
+                SNUSD,
+                0,
+                snusdUnstakeCalldata,
+                ProofLibrary.makeBitmask(
+                    true, // who: locked to curator
+                    true, // where: locked to sNUSD
+                    true, // value: locked to 0
+                    true, // selector: locked
+                    abi.encodeWithSignature(
+                        "unstake(address)",
+                        config.subvault // receiver: FIXED to subvault
+                    )
+                )
+            );
+
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.add("receiver", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("sNUSD.unstake(", config.subvaultName, ")"),
+                    ABILibrary.getABI(ISUSDe.unstake.selector),
                     ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SNUSD), "0"),
                     innerParams
                 );
