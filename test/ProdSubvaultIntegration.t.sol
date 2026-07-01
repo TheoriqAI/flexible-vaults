@@ -35,9 +35,39 @@ contract ProdSubvaultIntegrationTest is Test {
     IVerifier verifier3;
     bytes32 merkleRootSv3;
 
+    // ---- Group-offset index map (group order == merge_metadata.sources order in sv3 all.json) ----
+    // Proof indices are addressed as _g(FILE, offsetWithinGroup). Group START indices are read from
+    // the merged JSON's merge_metadata at setUp — never hardcoded — so appending/inserting an op in
+    // one per-protocol file and re-merging only shifts downstream group starts automatically.
+    // See CLAUDE.md §"Group-offset test indices".
+    string constant F_AAVE3 = "sv3-aaveOps-emode1.json";
+    string constant F_SPARK3 = "sv3-sparkOps-emode1.json";
+    string constant F_MORPHO3 = "sv3-morphoOps.json";
+    string constant F_CCIP3 = "sv3-ccipBridge-wstETH-monad.json";
+    string constant F_NTT3 = "sv3-nttBridge-WETH-monad.json";
+
+    mapping(bytes32 => uint256) internal _groupStart;
+
+    /// @dev Builds groupStart[file] from the merged JSON's merge_metadata.sources (in merge order).
+    function _loadGroupOffsets(string memory json) internal {
+        uint256 acc = 0;
+        uint256 n = vm.parseJsonUint(json, ".merge_metadata.source_count");
+        for (uint256 i = 0; i < n; i++) {
+            string memory b = string.concat(".merge_metadata.sources[", vm.toString(i), "]");
+            string memory fn = vm.parseJsonString(json, string.concat(b, ".filename"));
+            _groupStart[keccak256(bytes(fn))] = acc;
+            acc += vm.parseJsonUint(json, string.concat(b, ".op_count"));
+        }
+    }
+
+    /// @dev Absolute proof index for op `off` within per-protocol group `file`.
+    function _g(string memory file, uint256 off) internal view returns (uint256) {
+        return _groupStart[keccak256(bytes(file))] + off;
+    }
+
     function setUp() public {
-        // Fork mainnet
-        vm.createSelectFork("http://108.53.61.201:8550");
+        // Fork mainnet (default: local IAP tunnel to eth-reth; override with ETH_RPC_URL)
+        vm.createSelectFork(vm.envOr("ETH_RPC_URL", string("http://localhost:8545")));
 
         // Get subvault address
         Vault vault = Vault(payable(VAULT_PROD));
@@ -68,6 +98,8 @@ contract ProdSubvaultIntegrationTest is Test {
         bytes32 actualRoot3 = verifier3.merkleRoot();
         console.log("Verifier 3 merkle root after set:", vm.toString(actualRoot3));
         require(actualRoot3 == merkleRootSv3, "SV3 merkle root mismatch");
+
+        _loadGroupOffsets(jsonSv3);
     }
 
     /// @notice Helper to add delay between operations to prevent RPC rate limiting
@@ -99,7 +131,7 @@ contract ProdSubvaultIntegrationTest is Test {
 
         // Test 1: Set eMode to 1 (confirm it works)
         console.log("\n--- Test 1: Set eMode 1 ---");
-        _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, 0);
+        _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, _g(F_AAVE3, 0));
         _waitForRPC();
 
         // Test 2: Approve WETH for Aave
@@ -256,49 +288,49 @@ contract ProdSubvaultIntegrationTest is Test {
 
         // 1. Approve savETH (collateral) for Morpho - index 44
         console.log("\n--- Morpho Test 1: Approve savETH (collateral) ---");
-        _execMorphoCall(SAVETH, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), json, 44);
+        _execMorphoCall(SAVETH, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), json, _g(F_MORPHO3, 0));
         console.log("savETH approve - SUCCESS");
         _waitForRPC();
 
         // 2. Approve WETH (loan) for Morpho - index 45
         console.log("\n--- Morpho Test 2: Approve WETH (loan) ---");
-        _execMorphoCall(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), json, 45);
+        _execMorphoCall(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (Constants.MORPHO, type(uint256).max)), json, _g(F_MORPHO3, 1));
         console.log("WETH approve - SUCCESS");
         _waitForRPC();
 
         // 3. Supply WETH (loan token) - index 46
         console.log("\n--- Morpho Test 3: Supply WETH ---");
-        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supply, (params, 1 ether, 0, subvault3, "")), json, 46);
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supply, (params, 1 ether, 0, subvault3, "")), json, _g(F_MORPHO3, 2));
         console.log("Supply WETH - SUCCESS");
         _waitForRPC();
 
         // 4. Supply savETH as collateral - index 47
         console.log("\n--- Morpho Test 4: Supply savETH collateral ---");
-        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supplyCollateral, (params, 2 ether, subvault3, "")), json, 47);
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.supplyCollateral, (params, 2 ether, subvault3, "")), json, _g(F_MORPHO3, 3));
         console.log("Supply savETH collateral - SUCCESS");
         _waitForRPC();
 
         // 5. Borrow WETH - index 49
         console.log("\n--- Morpho Test 5: Borrow WETH ---");
-        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.borrow, (params, 0.1 ether, 0, subvault3, subvault3)), json, 49);
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.borrow, (params, 0.1 ether, 0, subvault3, subvault3)), json, _g(F_MORPHO3, 5));
         console.log("Borrow WETH - SUCCESS");
         _waitForRPC();
 
         // 6. Repay WETH - index 48
         console.log("\n--- Morpho Test 6: Repay WETH ---");
-        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.repay, (params, 0.1 ether, 0, subvault3, "")), json, 48);
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.repay, (params, 0.1 ether, 0, subvault3, "")), json, _g(F_MORPHO3, 4));
         console.log("Repay WETH - SUCCESS");
         _waitForRPC();
 
         // 7. Withdraw WETH (loan) - index 50
         console.log("\n--- Morpho Test 7: Withdraw WETH ---");
-        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdraw, (params, 0.5 ether, 0, subvault3, subvault3)), json, 50);
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdraw, (params, 0.5 ether, 0, subvault3, subvault3)), json, _g(F_MORPHO3, 6));
         console.log("Withdraw WETH - SUCCESS");
         _waitForRPC();
 
         // 8. Withdraw savETH collateral - index 51
         console.log("\n--- Morpho Test 8: Withdraw savETH collateral ---");
-        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdrawCollateral, (params, 1 ether, subvault3, subvault3)), json, 51);
+        _execMorphoCall(Constants.MORPHO, 0, abi.encodeCall(IMorpho.withdrawCollateral, (params, 1 ether, subvault3, subvault3)), json, _g(F_MORPHO3, 7));
         console.log("Withdraw savETH collateral - SUCCESS");
 
         console.log("\n=== All Prod SV3 Morpho Tests Passed ===");
@@ -319,8 +351,8 @@ contract ProdSubvaultIntegrationTest is Test {
         // 1. Approve wstETH for CCIP Router - index 70
         console.log("\n--- CCIP Test 1: Approve wstETH for CCIP Router ---");
         {
-            bytes memory verificationData = _getVerificationData(json, 70);
-            bytes32[] memory proof = _getProof(json, 70);
+            bytes memory verificationData = _getVerificationData(json, _g(F_CCIP3, 0));
+            bytes32[] memory proof = _getProof(json, _g(F_CCIP3, 0));
 
             IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
                 verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -339,8 +371,8 @@ contract ProdSubvaultIntegrationTest is Test {
         // 2. CCIP send wstETH to Monad - index 71
         console.log("\n--- CCIP Test 2: ccipSend wstETH to Monad ---");
         {
-            bytes memory verificationData = _getVerificationData(json, 71);
-            bytes32[] memory proof = _getProof(json, 71);
+            bytes memory verificationData = _getVerificationData(json, _g(F_CCIP3, 1));
+            bytes32[] memory proof = _getProof(json, _g(F_CCIP3, 1));
 
             IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
                 verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -400,8 +432,8 @@ contract ProdSubvaultIntegrationTest is Test {
         // 1. Approve WETH for NTT Router - index 72
         console.log("\n--- NTT Test 1: Approve WETH for NTT Router ---");
         {
-            bytes memory verificationData = _getVerificationData(json, 72);
-            bytes32[] memory proof = _getProof(json, 72);
+            bytes memory verificationData = _getVerificationData(json, _g(F_NTT3, 0));
+            bytes32[] memory proof = _getProof(json, _g(F_NTT3, 0));
 
             IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
                 verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -421,8 +453,8 @@ contract ProdSubvaultIntegrationTest is Test {
         // Fetch a fresh signed quote from the Wormhole executor API, then build transfer calldata
         console.log("\n--- NTT Test 2: NTT Transfer ---");
         {
-            bytes memory verificationData = _getVerificationData(json, 73);
-            bytes32[] memory proof = _getProof(json, 73);
+            bytes memory verificationData = _getVerificationData(json, _g(F_NTT3, 1));
+            bytes32[] memory proof = _getProof(json, _g(F_NTT3, 1));
 
             IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
                 verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -476,8 +508,8 @@ contract ProdSubvaultIntegrationTest is Test {
 
         deal(Constants.WSTETH, subvault3, 10 ether);
 
-        bytes memory verificationData = _getVerificationData(json, 71);
-        bytes32[] memory proof = _getProof(json, 71);
+        bytes memory verificationData = _getVerificationData(json, _g(F_CCIP3, 1));
+        bytes32[] memory proof = _getProof(json, _g(F_CCIP3, 1));
 
         IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
             verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -523,8 +555,8 @@ contract ProdSubvaultIntegrationTest is Test {
 
         deal(Constants.WSTETH, subvault3, 10 ether);
 
-        bytes memory verificationData = _getVerificationData(json, 71);
-        bytes32[] memory proof = _getProof(json, 71);
+        bytes memory verificationData = _getVerificationData(json, _g(F_CCIP3, 1));
+        bytes32[] memory proof = _getProof(json, _g(F_CCIP3, 1));
 
         IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
             verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -570,8 +602,8 @@ contract ProdSubvaultIntegrationTest is Test {
 
         deal(Constants.WETH, subvault3, 10 ether);
 
-        bytes memory verificationData = _getVerificationData(json, 73);
-        bytes32[] memory proof = _getProof(json, 73);
+        bytes memory verificationData = _getVerificationData(json, _g(F_NTT3, 1));
+        bytes32[] memory proof = _getProof(json, _g(F_NTT3, 1));
 
         IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
             verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -618,8 +650,8 @@ contract ProdSubvaultIntegrationTest is Test {
 
         deal(Constants.WETH, subvault3, 10 ether);
 
-        bytes memory verificationData = _getVerificationData(json, 73);
-        bytes32[] memory proof = _getProof(json, 73);
+        bytes memory verificationData = _getVerificationData(json, _g(F_NTT3, 1));
+        bytes32[] memory proof = _getProof(json, _g(F_NTT3, 1));
 
         IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
             verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -665,8 +697,8 @@ contract ProdSubvaultIntegrationTest is Test {
 
         deal(Constants.WETH, subvault3, 10 ether);
 
-        bytes memory verificationData = _getVerificationData(json, 73);
-        bytes32[] memory proof = _getProof(json, 73);
+        bytes memory verificationData = _getVerificationData(json, _g(F_NTT3, 1));
+        bytes32[] memory proof = _getProof(json, _g(F_NTT3, 1));
 
         IVerifier.VerificationPayload memory payload = IVerifier.VerificationPayload({
             verificationType: IVerifier.VerificationType.CUSTOM_VERIFIER,
@@ -880,7 +912,7 @@ contract ProdSubvaultIntegrationTest is Test {
         string memory json = vm.readFile(path);
 
         // Set eMode, approve and supply WETH first
-        _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, 0);
+        _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, _g(F_AAVE3, 0));
         _testApprove(subvault3, Constants.WETH, Constants.AAVE_CORE, json);
         _testSupply(subvault3, Constants.AAVE_CORE, Constants.WETH, 2 ether, json);
 
@@ -924,7 +956,7 @@ contract ProdSubvaultIntegrationTest is Test {
         string memory json = vm.readFile(path);
 
         // Set eMode, approve, supply and borrow WETH (ETH-correlated, works in eMode 1)
-        _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, 0);
+        _testSetEMode(subvault3, Constants.AAVE_CORE, 1, json, _g(F_AAVE3, 0));
         _testApprove(subvault3, Constants.WETH, Constants.AAVE_CORE, json);
         _testSupply(subvault3, Constants.AAVE_CORE, Constants.WETH, 2 ether, json);
         _testBorrow(subvault3, Constants.AAVE_CORE, Constants.WETH, 0.1 ether, 2, json);
@@ -1137,27 +1169,27 @@ contract ProdSubvaultIntegrationTest is Test {
         // 19: USDe approve, 20: USDe borrow, 21: USDe repay
 
         // Use first approve for supply operations
-        if (token == Constants.WETH) return 1;
-        if (token == Constants.WSTETH) return 4;
-        if (token == Constants.USDC) return 13;
-        if (token == Constants.USDT) return 16;
-        if (token == Constants.USDE) return 19;
+        if (token == Constants.WETH) return _g(F_AAVE3, 1);
+        if (token == Constants.WSTETH) return _g(F_AAVE3, 4);
+        if (token == Constants.USDC) return _g(F_AAVE3, 13);
+        if (token == Constants.USDT) return _g(F_AAVE3, 16);
+        if (token == Constants.USDE) return _g(F_AAVE3, 19);
 
         revert("Proof not found for approve");
     }
 
     function _findProofForSupply(string memory json, address asset) internal view returns (uint256) {
         // 2: WETH supply, 5: wstETH supply
-        if (asset == Constants.WETH) return 2;
-        if (asset == Constants.WSTETH) return 5;
+        if (asset == Constants.WETH) return _g(F_AAVE3, 2);
+        if (asset == Constants.WSTETH) return _g(F_AAVE3, 5);
 
         revert("Proof not found for supply");
     }
 
     function _findProofForWithdraw(string memory json, address asset) internal view returns (uint256) {
         // 3: WETH withdraw, 6: wstETH withdraw
-        if (asset == Constants.WETH) return 3;
-        if (asset == Constants.WSTETH) return 6;
+        if (asset == Constants.WETH) return _g(F_AAVE3, 3);
+        if (asset == Constants.WSTETH) return _g(F_AAVE3, 6);
 
         revert("Proof not found for withdraw");
     }
@@ -1165,11 +1197,11 @@ contract ProdSubvaultIntegrationTest is Test {
     function _findProofForBorrow(string memory json, address asset) internal view returns (uint256) {
         // 8: WETH borrow, 11: wstETH borrow
         // 14: USDC borrow, 17: USDT borrow, 20: USDe borrow
-        if (asset == Constants.WETH) return 8;
-        if (asset == Constants.WSTETH) return 11;
-        if (asset == Constants.USDC) return 14;
-        if (asset == Constants.USDT) return 17;
-        if (asset == Constants.USDE) return 20;
+        if (asset == Constants.WETH) return _g(F_AAVE3, 8);
+        if (asset == Constants.WSTETH) return _g(F_AAVE3, 11);
+        if (asset == Constants.USDC) return _g(F_AAVE3, 14);
+        if (asset == Constants.USDT) return _g(F_AAVE3, 17);
+        if (asset == Constants.USDE) return _g(F_AAVE3, 20);
 
         revert("Proof not found for borrow");
     }
@@ -1177,11 +1209,11 @@ contract ProdSubvaultIntegrationTest is Test {
     function _findProofForRepay(string memory json, address asset) internal view returns (uint256) {
         // 9: WETH repay, 12: wstETH repay
         // 15: USDC repay, 18: USDT repay, 21: USDe repay
-        if (asset == Constants.WETH) return 9;
-        if (asset == Constants.WSTETH) return 12;
-        if (asset == Constants.USDC) return 15;
-        if (asset == Constants.USDT) return 18;
-        if (asset == Constants.USDE) return 21;
+        if (asset == Constants.WETH) return _g(F_AAVE3, 9);
+        if (asset == Constants.WSTETH) return _g(F_AAVE3, 12);
+        if (asset == Constants.USDC) return _g(F_AAVE3, 15);
+        if (asset == Constants.USDT) return _g(F_AAVE3, 18);
+        if (asset == Constants.USDE) return _g(F_AAVE3, 21);
 
         revert("Proof not found for repay");
     }
@@ -1345,48 +1377,48 @@ contract ProdSubvaultIntegrationTest is Test {
     }
 
     // Spark proof index finders
-    function _findProofForApproveSpark(address token) internal pure returns (uint256) {
-        if (token == Constants.WETH) return 23;
-        if (token == Constants.WSTETH) return 26;
-        if (token == Constants.USDC) return 35;
-        if (token == Constants.USDT) return 38;
-        if (token == Constants.USDE) return 41;
+    function _findProofForApproveSpark(address token) internal view returns (uint256) {
+        if (token == Constants.WETH) return _g(F_SPARK3, 1);
+        if (token == Constants.WSTETH) return _g(F_SPARK3, 4);
+        if (token == Constants.USDC) return _g(F_SPARK3, 13);
+        if (token == Constants.USDT) return _g(F_SPARK3, 16);
+        if (token == Constants.USDE) return _g(F_SPARK3, 19);
         revert("Spark: Proof not found for approve");
     }
 
-    function _findProofForApproveSparkBorrow(address token) internal pure returns (uint256) {
-        if (token == Constants.WETH) return 29;
-        if (token == Constants.WSTETH) return 32;
+    function _findProofForApproveSparkBorrow(address token) internal view returns (uint256) {
+        if (token == Constants.WETH) return _g(F_SPARK3, 7);
+        if (token == Constants.WSTETH) return _g(F_SPARK3, 10);
         revert("Spark: Proof not found for approve borrow");
     }
 
-    function _findProofForSupplySpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 24;
-        if (asset == Constants.WSTETH) return 27;
+    function _findProofForSupplySpark(address asset) internal view returns (uint256) {
+        if (asset == Constants.WETH) return _g(F_SPARK3, 2);
+        if (asset == Constants.WSTETH) return _g(F_SPARK3, 5);
         revert("Spark: Proof not found for supply");
     }
 
-    function _findProofForWithdrawSpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 25;
-        if (asset == Constants.WSTETH) return 28;
+    function _findProofForWithdrawSpark(address asset) internal view returns (uint256) {
+        if (asset == Constants.WETH) return _g(F_SPARK3, 3);
+        if (asset == Constants.WSTETH) return _g(F_SPARK3, 6);
         revert("Spark: Proof not found for withdraw");
     }
 
-    function _findProofForBorrowSpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 30;
-        if (asset == Constants.WSTETH) return 33;
-        if (asset == Constants.USDC) return 36;
-        if (asset == Constants.USDT) return 39;
-        if (asset == Constants.USDE) return 42;
+    function _findProofForBorrowSpark(address asset) internal view returns (uint256) {
+        if (asset == Constants.WETH) return _g(F_SPARK3, 8);
+        if (asset == Constants.WSTETH) return _g(F_SPARK3, 11);
+        if (asset == Constants.USDC) return _g(F_SPARK3, 14);
+        if (asset == Constants.USDT) return _g(F_SPARK3, 17);
+        if (asset == Constants.USDE) return _g(F_SPARK3, 20);
         revert("Spark: Proof not found for borrow");
     }
 
-    function _findProofForRepaySpark(address asset) internal pure returns (uint256) {
-        if (asset == Constants.WETH) return 31;
-        if (asset == Constants.WSTETH) return 34;
-        if (asset == Constants.USDC) return 37;
-        if (asset == Constants.USDT) return 40;
-        if (asset == Constants.USDE) return 43;
+    function _findProofForRepaySpark(address asset) internal view returns (uint256) {
+        if (asset == Constants.WETH) return _g(F_SPARK3, 9);
+        if (asset == Constants.WSTETH) return _g(F_SPARK3, 12);
+        if (asset == Constants.USDC) return _g(F_SPARK3, 15);
+        if (asset == Constants.USDT) return _g(F_SPARK3, 18);
+        if (asset == Constants.USDE) return _g(F_SPARK3, 21);
         revert("Spark: Proof not found for repay");
     }
 }

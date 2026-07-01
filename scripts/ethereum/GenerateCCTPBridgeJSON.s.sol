@@ -10,7 +10,7 @@ import "../common/protocols/CCTPLibrary.sol";
 import "../common/ArraysLibrary.sol";
 
 /// @notice Script to generate CCTP V2 bridge operations JSON files
-/// @dev Run with: forge script scripts/ethereum/GenerateCCTPBridgeJSON.s.sol --sig "generateProdSv4USDCToMonad(address)" --via-ir --rpc-url http://108.53.61.201:8550 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20
+/// @dev Run with: forge script scripts/ethereum/GenerateCCTPBridgeJSON.s.sol --sig "generateProdSv4USDCToMonad(address)" --via-ir --rpc-url http://localhost:8545 0x0C7cb4e1241F4B7Fd65DE59FDE5a6dBFf190fB20
 contract GenerateCCTPBridgeJSON is Script, Test {
     address public prodCurator = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
     address public preProdCurator = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;

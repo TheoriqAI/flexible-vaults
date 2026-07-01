@@ -45,6 +45,9 @@ contract GenerateEnterExitJSON is Script {
     address constant NUSD = 0xE556ABa6fe6036275Ec1f87eda296BE72C811BCE; // nUSD token
     address constant SNUSD = 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313; // sNUSD (staked nUSD) vault
     address constant SRUSDE = 0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003; // srUSDe vault
+    address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48; // USDC (USD3 underlying)
+    address constant USD3 = 0x056B269Eb1f75477a8666ae8C7fE01b64dD55eCc; // 3Jane USD3 (ERC4626, asset=USDC), immediate redeem
+    address constant SUSD3 = 0xf689555121e529Ff0463e191F9Bd9d1E496164a7; // 3Jane sUSD3 (ERC4626, asset=USD3), 30d cooldown
     address constant PROD_CURATOR = 0xcca5BafEa783B0Ed8D11FD6D9F97c155332A16b8;
     address constant PREPROD_CURATOR = 0x55666095cD083a92E368c0CBAA18d8a10D3b65Ec;
 
@@ -69,6 +72,10 @@ contract GenerateEnterExitJSON is Script {
         bool enableSnusdDeposit;
         // Optional srUSDe withdraw (withdraw sUSDe from srUSDe vault)
         bool enableSrusdeWithdraw;
+        // Optional 3Jane USD3 enter/exit (approve USDC + deposit + redeem + withdraw) — immediate, liquidity-bounded
+        bool enableUsd3;
+        // Optional 3Jane sUSD3 enter/exit (approve USD3 + deposit + startCooldown + redeem + withdraw) — 30d cooldown
+        bool enableSusd3;
     }
 
     struct CurveSwap {
@@ -121,6 +128,12 @@ contract GenerateEnterExitJSON is Script {
         if (config.enableSrusdeWithdraw) {
             totalOps += 1; // withdraw(sUSDe, amount, receiver, owner)
         }
+        if (config.enableUsd3) {
+            totalOps += 4; // approve USDC + deposit + redeem + withdraw
+        }
+        if (config.enableSusd3) {
+            totalOps += 5; // approve USD3 + deposit + startCooldown + redeem + withdraw
+        }
 
         console.log("Total operations:");
         console.log("  Push assets: %d", config.pushAssets.length);
@@ -138,6 +151,12 @@ contract GenerateEnterExitJSON is Script {
         }
         if (config.enableSrusdeWithdraw) {
             console.log("  srUSDe withdraw: 1 (withdraw sUSDe)");
+        }
+        if (config.enableUsd3) {
+            console.log("  USD3: 4 (approve + deposit + redeem + withdraw)");
+        }
+        if (config.enableSusd3) {
+            console.log("  sUSD3: 5 (approve + deposit + startCooldown + redeem + withdraw)");
         }
         console.log("  Total: %d", totalOps);
         console.log("");
@@ -746,6 +765,209 @@ contract GenerateEnterExitJSON is Script {
             index++;
         }
 
+        // Generate 3Jane USD3 enter/exit (approve USDC + deposit + redeem + withdraw) — immediate, liquidity-bounded
+        if (config.enableUsd3) {
+            console.log("Generating USD3 operations...");
+
+            // 1. Approve USDC to USD3
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, USDC, 0,
+                abi.encodeCall(IERC20.approve, (USD3, 0)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.add("to", Strings.toHexString(USD3)).addAny("amount");
+                descriptions[index] = JsonLibrary.toJson(
+                    "IERC20(USDC).approve(USD3, anyAmount)",
+                    ABILibrary.getABI(IERC20.approve.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(USDC), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 2. USD3.deposit(assets, subvault) — receiver locked to subvault
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, USD3, 0,
+                abi.encodeCall(IERC4626.deposit, (0, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC4626.deposit, (0, address(type(uint160).max)))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("assets").add("receiver", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("USD3.deposit(anyAssets, ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.deposit.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(USD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 3. USD3.redeem(shares, subvault, subvault) — receiver+owner locked to subvault
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, USD3, 0,
+                abi.encodeCall(IERC4626.redeem, (0, config.subvault, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true,
+                    abi.encodeCall(IERC4626.redeem, (0, address(type(uint160).max), address(type(uint160).max)))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("shares").add("receiver", Strings.toHexString(config.subvault)).add(
+                    "owner", Strings.toHexString(config.subvault)
+                );
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("USD3.redeem(anyShares, ", config.subvaultName, ", ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.redeem.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(USD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 4. USD3.withdraw(assets, subvault, subvault) — receiver+owner locked to subvault
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, USD3, 0,
+                abi.encodeCall(IERC4626.withdraw, (0, config.subvault, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true,
+                    abi.encodeCall(IERC4626.withdraw, (0, address(type(uint160).max), address(type(uint160).max)))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("assets").add("receiver", Strings.toHexString(config.subvault)).add(
+                    "owner", Strings.toHexString(config.subvault)
+                );
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("USD3.withdraw(anyAssets, ", config.subvaultName, ", ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.withdraw.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(USD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+        }
+
+        // Generate 3Jane sUSD3 enter/exit (approve USD3 + deposit + startCooldown + redeem + withdraw) — 30d cooldown
+        if (config.enableSusd3) {
+            console.log("Generating sUSD3 operations...");
+
+            // 1. Approve USD3 to sUSD3
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, USD3, 0,
+                abi.encodeCall(IERC20.approve, (SUSD3, 0)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC20.approve, (address(type(uint160).max), 0))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.add("to", Strings.toHexString(SUSD3)).addAny("amount");
+                descriptions[index] = JsonLibrary.toJson(
+                    "IERC20(USD3).approve(sUSD3, anyAmount)",
+                    ABILibrary.getABI(IERC20.approve.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(USD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 2. sUSD3.deposit(assets, subvault) — receiver locked to subvault
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, SUSD3, 0,
+                abi.encodeCall(IERC4626.deposit, (0, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeCall(IERC4626.deposit, (0, address(type(uint160).max)))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("assets").add("receiver", Strings.toHexString(config.subvault));
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("sUSD3.deposit(anyAssets, ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.deposit.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SUSD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 3. sUSD3.startCooldown(shares) — starts the 30-day cooldown (shares: any)
+            bytes memory startCooldownCalldata = abi.encodeWithSignature("startCooldown(uint256)", uint256(0));
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, SUSD3, 0,
+                startCooldownCalldata,
+                ProofLibrary.makeBitmask(
+                    true, true, true, true, abi.encodeWithSignature("startCooldown(uint256)", uint256(0))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("shares");
+                descriptions[index] = JsonLibrary.toJson(
+                    "sUSD3.startCooldown(anyShares)",
+                    "{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"shares\",\"type\":\"uint256\"}],\"name\":\"startCooldown\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}",
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SUSD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 4. sUSD3.redeem(shares, subvault, subvault) — receiver+owner locked to subvault
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, SUSD3, 0,
+                abi.encodeCall(IERC4626.redeem, (0, config.subvault, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true,
+                    abi.encodeCall(IERC4626.redeem, (0, address(type(uint160).max), address(type(uint160).max)))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("shares").add("receiver", Strings.toHexString(config.subvault)).add(
+                    "owner", Strings.toHexString(config.subvault)
+                );
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("sUSD3.redeem(anyShares, ", config.subvaultName, ", ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.redeem.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SUSD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+
+            // 5. sUSD3.withdraw(assets, subvault, subvault) — receiver+owner locked to subvault
+            leaves[index] = ProofLibrary.makeVerificationPayload(
+                bitmaskVerifier, config.curator, SUSD3, 0,
+                abi.encodeCall(IERC4626.withdraw, (0, config.subvault, config.subvault)),
+                ProofLibrary.makeBitmask(
+                    true, true, true, true,
+                    abi.encodeCall(IERC4626.withdraw, (0, address(type(uint160).max), address(type(uint160).max)))
+                )
+            );
+            {
+                ParameterLibrary.Parameter[] memory innerParams = new ParameterLibrary.Parameter[](0);
+                innerParams = innerParams.addAny("assets").add("receiver", Strings.toHexString(config.subvault)).add(
+                    "owner", Strings.toHexString(config.subvault)
+                );
+                descriptions[index] = JsonLibrary.toJson(
+                    string.concat("sUSD3.withdraw(anyAssets, ", config.subvaultName, ", ", config.subvaultName, ")"),
+                    ABILibrary.getABI(IERC4626.withdraw.selector),
+                    ParameterLibrary.build(Strings.toHexString(config.curator), Strings.toHexString(SUSD3), "0"),
+                    innerParams
+                );
+            }
+            index++;
+        }
+
         console.log("Generating merkle proofs...");
 
         // Generate merkle root and proofs
@@ -1140,6 +1362,18 @@ contract GenerateEnterExitJSON is Script {
             config.enableSrusdeWithdraw = enabled;
         } catch {
             config.enableSrusdeWithdraw = false;
+        }
+
+        try vm.parseJsonBool(json, ".enableUsd3") returns (bool enabled) {
+            config.enableUsd3 = enabled;
+        } catch {
+            config.enableUsd3 = false;
+        }
+
+        try vm.parseJsonBool(json, ".enableSusd3") returns (bool enabled) {
+            config.enableSusd3 = enabled;
+        } catch {
+            config.enableSusd3 = false;
         }
 
         // Parse optional arrays

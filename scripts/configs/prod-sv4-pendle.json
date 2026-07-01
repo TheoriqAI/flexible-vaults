@@ -5,23 +5,23 @@
     {
       "ptToken": "0x3de0ff76E8b528C092d47b9DaC775931cef80F49",
       "market": "0x8dAe8ECe668cf80d348873F23D456448E8694883",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3","0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"],
+      "inputTokens": [],
       "outputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3","0x9D39A5DE30e57443BfF2A8307A4256c8797A3497"],
-      "description": "PT-sUSDe-06MAY2026"
+      "description": "PT-sUSDe-07MAY2026 (exit-only, expired)"
     },
     {
       "ptToken": "0x619D75E3b790eBC21c289f2805Bb7177A7D732E2",
       "market": "0xfc82267a9e065Aaf407f64dAdD49BfbDC9511FB1",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3", "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497", "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003"],
+      "inputTokens": [],
       "outputTokens": ["0x9D39A5DE30e57443BfF2A8307A4256c8797A3497", "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003"],
-      "description": "PT-srUSDe-24JUN2026"
+      "description": "PT-srUSDe-24JUN2026 (exit-only, expired)"
     },
     {
       "ptToken": "0x6c65db1d88c8eda1e3debf2b2ef3d0ece8600466",
       "market": "0x4bba42da555f3d8c2b441ca6d8ef9bd1ebf3bff8",
-      "inputTokens": ["0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313"],
+      "inputTokens": [],
       "outputTokens": ["0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313"],
-      "description": "PT-sNUSD-03JUN2026"
+      "description": "PT-sNUSD-03JUN2026 (exit-only, expired)"
     },
     {
       "ptToken": "0x1a69154f6f6247e4457332860fb173251a36e03f",
@@ -33,16 +33,58 @@
     {
       "ptToken": "0x9Bf45ab47747F4B4dD09B3C2c73953484b4eB375",
       "market": "0xAFB7d6d1e9BcA5B675aDC9b4f52F0CDfDdec9654",
-      "inputTokens": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3", "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497", "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003"],
+      "inputTokens": [],
       "outputTokens": ["0x9D39A5DE30e57443BfF2A8307A4256c8797A3497", "0x3d7d6fdf07EE548B939A80edbc9B2256d0cdc003"],
-      "description": "PT-srUSDe-01APR2026"
+      "description": "PT-srUSDe-01APR2026 (exit-only, expired)"
     },
     {
-      "ptToken": "0x92a6A01B07984de46c24E8EBa248449beB8B1dCB",
-      "market": "0x50DCE085af29CABa28f7308beA57C4043757b491",
-      "inputTokens": ["0x98A878b1Cd98131B271883B390f68D2c90674665"],
-      "outputTokens": ["0x98A878b1Cd98131B271883B390f68D2c90674665"],
-      "description": "PT-apxUSD-17JUN2026"
+      "ptToken": "0xc1906aeCf868749a2DeE203F59b904c0cf212140",
+      "market": "0xF80b67a32DF07960C731794769309E3D30E9717F",
+      "inputTokens": ["0xe343167631d89B6Ffc58B88d6b7fB0228795491D"],
+      "outputTokens": ["0xe343167631d89B6Ffc58B88d6b7fB0228795491D"],
+      "description": "PT-USDG-23SEP2026"
+    },
+    {
+      "ptToken": "0x5E1ff5c857f1D2251600507F2031d2AA2A5fC468",
+      "market": "0x4Af2E5411636b5bc460ebf44b83fd1f4E8c7B783",
+      "inputTokens": ["0x119Dd7dAFf816f29D7eE47596ae5E4bdC4299165"],
+      "outputTokens": ["0x119Dd7dAFf816f29D7eE47596ae5E4bdC4299165"],
+      "description": "PT-nOPAL-16SEP2026"
+    },
+    {
+      "ptToken": "0x2aE4f59E500b6ddEB88c480edf277eDA54A00205",
+      "market": "0x90B70c407f1077F8eb92Bf423b44CD92329b737a",
+      "inputTokens": ["0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a"],
+      "outputTokens": ["0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a"],
+      "description": "PT-reUSDe-09DEC2026"
+    },
+    {
+      "ptToken": "0x7f47c3e6b2c00fC4eB4d5Ae50d0Ab0Ab6888Eb4D",
+      "market": "0x4A5067C3fF1abb7449244025B0e37fEAF77D8E3e",
+      "inputTokens": ["0x056B269Eb1f75477a8666ae8C7fE01b64dD55eCc"],
+      "outputTokens": ["0x056B269Eb1f75477a8666ae8C7fE01b64dD55eCc"],
+      "description": "PT-USD3-16DEC2026"
+    },
+    {
+      "ptToken": "0x41f45d21502bde8211E94D94ef2eeEBcFC48a6aC",
+      "market": "0x7972DE1c2f9F11f622a188FBae8c0a943880424F",
+      "inputTokens": ["0xf689555121e529Ff0463e191F9Bd9d1E496164a7"],
+      "outputTokens": ["0xf689555121e529Ff0463e191F9Bd9d1E496164a7"],
+      "description": "PT-sUSD3-16DEC2026"
+    },
+    {
+      "ptToken": "0x0ee083964C815bAED1A2d7F5E3Cec851eC394E7d",
+      "market": "0x1F40b9A1D21AfeDBE3c49776e7790Ed2139ec075",
+      "inputTokens": ["0x6bf7788EAA948d9fFBA7E9bb386E2D3c9810e0fc"],
+      "outputTokens": ["0x6bf7788EAA948d9fFBA7E9bb386E2D3c9810e0fc"],
+      "description": "PT-Sierra-06AUG2026"
+    },
+    {
+      "ptToken": "0xeCfaFdC7741323a945A163ed068B5a3C43483957",
+      "market": "0x13285bCbc27F92b47B4EDB99D744C07B48C977c0",
+      "inputTokens": ["0x5086bf358635B81D8C47C66d1C8b9E567Db70c72"],
+      "outputTokens": ["0x5086bf358635B81D8C47C66d1C8b9E567Db70c72"],
+      "description": "PT-reUSD-10DEC2026"
     }
   ]
 }

@@ -416,7 +416,11 @@ contract GenerateSwapModuleJSON is Script, Test {
                     Constants.SUSDE,
                     Constants.NUSD,
                     Constants.SIERRA,
-                    Constants.APXUSD
+                    Constants.APXUSD,
+                    Constants.SNUSD,
+                    Constants.USD3,
+                    Constants.REUSDE,
+                    Constants.SUSD3
                 )
             )
         });

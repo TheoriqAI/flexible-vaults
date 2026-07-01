@@ -58,10 +58,49 @@ library Constants {
     address public constant PT_SIERRA_01JUL2026 = 0x1A69154f6f6247E4457332860Fb173251A36E03F;
     address public constant PENDLE_MARKET_PT_SIERRA_01JUL2026 = 0xa556B5327372aB8AAeFdA2b756Eed0608afD6cA5;
 
+    // Sierra 06AUG2026 (expiry 1785974400 = 2026-08-06, verified on-chain). Not on Pendle UI/API yet;
+    // market = the LP token (Pendle market is the LP).
+    address public constant PT_SIERRA_06AUG2026 = 0x0ee083964C815bAED1A2d7F5E3Cec851eC394E7d;
+    address public constant PENDLE_MARKET_PT_SIERRA_06AUG2026 = 0x1F40b9A1D21AfeDBE3c49776e7790Ed2139ec075;
+
     address public constant APXUSD = 0x98A878b1Cd98131B271883B390f68D2c90674665;
 
     address public constant PT_APXUSD_17JUN2026 = 0x92a6A01B07984de46c24E8EBa248449beB8B1dCB;
     address public constant PENDLE_MARKET_PT_APXUSD_17JUN2026 = 0x50DCE085af29CABa28f7308beA57C4043757b491;
+
+    // New SV4 PT markets (live, enter+exit). Underlying = Pendle SY underlyingAsset (from Pendle API).
+    address public constant USDG = 0xe343167631d89B6Ffc58B88d6b7fB0228795491D;
+    address public constant PT_USDG_23SEP2026 = 0xc1906aeCf868749a2DeE203F59b904c0cf212140;
+    address public constant PENDLE_MARKET_PT_USDG_23SEP2026 = 0xF80b67a32DF07960C731794769309E3D30E9717F;
+
+    address public constant NOPAL = 0x119Dd7dAFf816f29D7eE47596ae5E4bdC4299165;
+    address public constant PT_NOPAL_16SEP2026 = 0x5E1ff5c857f1D2251600507F2031d2AA2A5fC468;
+    address public constant PENDLE_MARKET_PT_NOPAL_16SEP2026 = 0x4Af2E5411636b5bc460ebf44b83fd1f4E8c7B783;
+
+    // Nest nOPAL deposit (Veda BoringVault + Predicate). Deposit goes through the predicate proxy with
+    // an API-signed PredicateMessage; _vault arg is the deposit entrypoint (NOT the NOPAL share token).
+    address public constant NEST_PREDICATE_PROXY = 0xfC0c4222B3A0c9B060C0B959DEc62442036b9035;
+    // NestVaults (deposit entrypoint + requestRedeem/redeem). One per redemption asset; both share the
+    // same accountant 0x2afa49257C960dB6d9D7114EEb085c2db1CCD98e (same nOPAL valuation).
+    address public constant NEST_OPAL_VAULT = 0xD258029cF5a177e3306E09Fbea63424543a505c0; // asset = USDC
+    address public constant NEST_OPAL_VAULT_USDT = 0x5E949FA6401D7c49CDCb48E3A8BdC28F60657A2C; // asset = USDT
+
+    address public constant REUSDE = 0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a;
+    address public constant PT_REUSDE_09DEC2026 = 0x2aE4f59E500b6ddEB88c480edf277eDA54A00205;
+    address public constant PENDLE_MARKET_PT_REUSDE_09DEC2026 = 0x90B70c407f1077F8eb92Bf423b44CD92329b737a;
+
+    address public constant USD3 = 0x056B269Eb1f75477a8666ae8C7fE01b64dD55eCc;
+    address public constant PT_USD3_16DEC2026 = 0x7f47c3e6b2c00fC4eB4d5Ae50d0Ab0Ab6888Eb4D;
+    address public constant PENDLE_MARKET_PT_USD3_16DEC2026 = 0x4A5067C3fF1abb7449244025B0e37fEAF77D8E3e;
+
+    address public constant SUSD3 = 0xf689555121e529Ff0463e191F9Bd9d1E496164a7;
+    address public constant PT_SUSD3_16DEC2026 = 0x41f45d21502bde8211E94D94ef2eeEBcFC48a6aC;
+    address public constant PENDLE_MARKET_PT_SUSD3_16DEC2026 = 0x7972DE1c2f9F11f622a188FBae8c0a943880424F;
+
+    // reUSD = senior tranche of reUSDe (distinct from REUSDE). PT used as Morpho collateral + Pendle market.
+    address public constant REUSD = 0x5086bf358635B81D8C47C66d1C8b9E567Db70c72;
+    address public constant PT_REUSD_10DEC2026 = 0xeCfaFdC7741323a945A163ed068B5a3C43483957;
+    address public constant PENDLE_MARKET_PT_REUSD_10DEC2026 = 0x13285bCbc27F92b47B4EDB99D744C07B48C977c0;
 
     address public constant MUSD = 0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186;
 

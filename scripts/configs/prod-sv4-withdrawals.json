@@ -5,6 +5,8 @@
   "enableSusdeWithdrawal": true,
   "enableSnusdDeposit": true,
   "enableSrusdeWithdraw": true,
+  "enableUsd3": true,
+  "enableSusd3": true,
   "curveSwaps": [],
   "pushAssets": [],
   "pullAssets": []
