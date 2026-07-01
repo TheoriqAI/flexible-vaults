@@ -637,6 +637,34 @@ contract GenerateAaveOpsJSON is Script, Test {
         );
     }
 
+    /// @notice Helper: Generate Aave ops for Prod subvault 4 — sUSDe collateral, borrow USDe/USDC/USDT (eMode 24)
+    /// @dev Replaces eMode 44 (whose only eMode collateral, PT-srUSDe-25JUN2026, has expired). sUSDe is
+    ///      non-expiring and is collateral in eMode 24 (PT-sUSDe Stablecoins) at 90% LTV / 92% liq threshold,
+    ///      with USDe + USDC + USDT all borrowable — verified on-chain via the eMode collateral/borrow bitmaps.
+    /// @param categoryId eMode category ID (use 24)
+    function generateProdSv4AaveEMode24(uint8 categoryId) public {
+        // Collateral: sUSDe
+        address[] memory collaterals = new address[](1);
+        collaterals[0] = Constants.SUSDE;
+
+        // Borrows: USDe, USDC, USDT
+        address[] memory borrows = new address[](3);
+        borrows[0] = Constants.USDE;
+        borrows[1] = Constants.USDC;
+        borrows[2] = Constants.USDT;
+
+        string memory suffix = string(abi.encodePacked("aaveOps-emode", vm.toString(uint256(categoryId))));
+        generateWithCustomAssets(
+            4, // subvault 4
+            true, // PROD
+            Constants.AAVE_CORE, // Aave pool
+            collaterals,
+            borrows,
+            suffix,
+            categoryId
+        );
+    }
+
     /// @notice Helper: Generate Aave ops for PROD subvault 2 with wstETH+sUSDe collateral
     /// @param categoryId eMode category ID (sUSDe against stablecoins)
     function generateProdSv2Aave(uint8 categoryId) public {

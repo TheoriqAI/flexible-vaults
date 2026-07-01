@@ -119,4 +119,26 @@ interface IPendleRouter {
         uint256 minTokenOut,
         TokenOutput calldata output
     ) external returns (uint256 netTokenOut, uint256 netSyInterm);
+
+    /// @notice Add liquidity to a Pendle market from a single token (zap-in)
+    /// @dev Lock receiver=vault, input.tokenIn/tokenMintSy, and the no-aggregator path (pendleSwap=0,
+    ///      swapType=NONE, extRouter=0, limitRouter=0). Wildcard amounts + approx.
+    function addLiquiditySingleToken(
+        address receiver,
+        address market,
+        uint256 minLpOut,
+        ApproxParams calldata guessPtReceivedFromSy,
+        TokenInput calldata input,
+        LimitOrderData calldata limit
+    ) external payable returns (uint256 netLpOut, uint256 netSyFee, uint256 netSyInterm);
+
+    /// @notice Remove liquidity from a Pendle market to a single token (zap-out)
+    /// @dev Lock receiver=vault, output.tokenOut/tokenRedeemSy, and the no-aggregator path. Wildcard amounts.
+    function removeLiquiditySingleToken(
+        address receiver,
+        address market,
+        uint256 netLpToRemove,
+        TokenOutput calldata output,
+        LimitOrderData calldata limit
+    ) external returns (uint256 netTokenOut, uint256 netSyFee, uint256 netSyInterm);
 }

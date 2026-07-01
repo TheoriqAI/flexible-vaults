@@ -1,6 +1,56 @@
 {
-  "title": "prod/tqETH/ethereum:tqETH:prod:sv3:all",
+  "title": "ethereum:tqETH:prod:sv3:all",
   "merkle_root": "0xdfcf365d967ea0221e7ef44b56fba8aab6ccb84774c1145e605bb2f54141cbe4",
+  "merge_metadata": {
+    "merged_at_utc": "2026-06-29T15:01:50+00:00",
+    "merged_at_unix": 1782745310,
+    "total_ops": 74,
+    "source_count": 6,
+    "sources": [
+      {
+        "path": "scripts/jsons/prod/tqETH/sv3-aaveOps-emode1.json",
+        "filename": "sv3-aaveOps-emode1.json",
+        "title": "ethereum:tqETH:prod:sv3:aaveOps-emode1",
+        "merkle_root": "0x88e5b1409d1a3dfb42c52012ccf121fbe54c1fc2ba619af94fda1b0ce2e43e31",
+        "op_count": 22
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/sv3-sparkOps-emode1.json",
+        "filename": "sv3-sparkOps-emode1.json",
+        "title": "ethereum:tqETH:prod:sv3:sparkOps-emode1",
+        "merkle_root": "0x67bec20fa5d0a53425e3e869be750b39c9ca7342014de867b5b1951ead762450",
+        "op_count": 22
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/sv3-morphoOps.json",
+        "filename": "sv3-morphoOps.json",
+        "title": "prod/tqETH/sv3-morphoOps",
+        "merkle_root": "0xa0ac52e0782bf12d2d461f9322d3f885e5f44317bf187c2143934dbd4f85938e",
+        "op_count": 8
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/sv3-swapModule.json",
+        "filename": "sv3-swapModule.json",
+        "title": "prod/tqETH/sv3-swapModule",
+        "merkle_root": "0xa2a5b2701253fd7974d9a93310e1aefaf417c7a296a7ca3c0571a75a4b72cb5d",
+        "op_count": 18
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/sv3-ccipBridge-wstETH-monad.json",
+        "filename": "sv3-ccipBridge-wstETH-monad.json",
+        "title": "prod/tqETH/sv3-ccipBridge-wstETH-monad",
+        "merkle_root": "0x123db9c0155645012bc463017445ec378bb2008313352dd95f17324dd5ea28d0",
+        "op_count": 2
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/sv3-nttBridge-WETH-monad.json",
+        "filename": "sv3-nttBridge-WETH-monad.json",
+        "title": "prod/tqETH/sv3-nttBridge-WETH-monad",
+        "merkle_root": "0x52e2724cba19cda3a7086d8503164cc4d90c864692d1d1399557c17b58653c0b",
+        "op_count": 2
+      }
+    ]
+  },
   "merkle_proofs": [
     {
       "verificationType": 3,

@@ -1,4 +1,4 @@
-# Flexible Vaults — Claude Quick Reference
+# Flexible Vaults — Codex Quick Reference
 
 This is a Mellow tqETH flexible-vaults fork. Work centers on generating merkle-root-gated permission JSONs, merging them into one `all.json` per subvault, validating on mainnet forks, then rotating the on-chain root.
 

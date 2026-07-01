@@ -227,6 +227,19 @@ contract GenerateMorphoJSON is Script, Test {
     bytes32 public constant MARKET_PT_SNUSD_4JUN2026_USDC = 0xb62aac664f81d19f21a158aa0373967ef60fd1ac8de4a9091bd225c007973ca6;
     bytes32 public constant MARKET_PT_REUSD_25JUN2026_USDC = 0x9bc98c2f20ac58287ef2c860eea53a2fdc27c17a7817ff1206c0b7840cc7cd79;
 
+    // SV4 Morpho additions (all verified on-chain: collateral/loan/LLTV confirmed).
+    bytes32 public constant MARKET_PT_REUSD_10DEC2026_USDC = 0x1e9d614631a7df0ec07fb05b2c8cb2491575fd1a63a33bf187a6afb295a4fc64; // PT-reUSD-10DEC / USDC, 91.5%
+    bytes32 public constant MARKET_USD3_USDC = 0xe3df58f9d3011b7481ff36b939fa5f8da642f34ea5792d25d3958dbf1efa26d7; // USD3 / USDC, 91.5%
+    bytes32 public constant MARKET_AA_FALCONX_USDC = 0xe83d72fa5b00dcd46d9e0e860d95aa540d5ec106da5833108a9f826f21f36f52; // AA_FalconXUSDC / USDC, 77%
+    bytes32 public constant MARKET_CBBTC_USDC = 0x64d65c9a2d91c36d56fbc42d69e979335320169b3df63bf92789e2c8883fcc64; // cbBTC / USDC, 86%
+    bytes32 public constant MARKET_XAUT_USDT = 0xb7843fe78e7e7fd3106a1b939645367967d1f986c2e45edb8932ad1896450877; // XAUt / USDT, 77%
+    bytes32 public constant MARKET_WSTETH_USDC = 0x7e585a933ffe8443c371b4f8cfeb4430f5f6a14c2f32a898c26662c67a1cb8b8; // wstETH / USDC, 86%
+    bytes32 public constant MARKET_WBTC_USDC = 0x3a85e619751152991742810df6ec69ce473daef99e28a64ab2340d7b7ccfee49; // WBTC / USDC, 86%
+    bytes32 public constant MARKET_WETH_USDC = 0x94b823e6bd8ea533b4e33fbc307faea0b307301bc48763acc4d4aa4def7636cd; // WETH / USDC, 86%
+    bytes32 public constant MARKET_WETH_USDT = 0x3758a9e2abbd67b5621f23ec482608f2f98b3c792874661ce49df7843aadcfd2; // WETH / USDT, 86%
+    bytes32 public constant MARKET_WBTC_USDT = 0xa921ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99; // WBTC / USDT, 86%
+    bytes32 public constant MARKET_WSTETH_USDT = 0xe7e9694b754c4d4f7e21faf7223f6fa71abaeb10296a4c43a54a7977149687d2; // wstETH / USDT, 86%
+
     /// @notice Generate Morpho ops for PROD subvault 2 (all sv4 USDC markets + EURC markets)
     function generateProdSv2Morpho() public {
         Vault vault = Vault(payable(VAULT_PROD));
@@ -242,19 +255,30 @@ contract GenerateMorphoJSON is Script, Test {
         generateJSON("prod/tqETH/sv2-morphoOps", subvault, prodCurator, marketIds);
     }
 
-    /// @notice Generate Morpho ops for PROD subvault 4
-    /// sNUSD/USDC + reUSD/USDC + savUSD/USDC + sUSN/USDC + PT-savUSD/USDC + PT-sNUSD-4JUN2026/USDC + PT-reUSD-25JUN2026/USDC
+    /// @notice Generate Morpho ops for PROD subvault 4 (14 markets, 112 ops)
+    /// Live stables: sNUSD/USDC, reUSD/USDC, savUSD/USDC
+    /// PT: PT-reUSD-10DEC2026/USDC
+    /// ERC4626: USD3/USDC, AA_FalconXUSDC/USDC
+    /// Blue-chips: cbBTC/USDC, XAUt/USDT, wstETH/USDC, WBTC/USDC, WETH/USDC, WETH/USDT, WBTC/USDT, wstETH/USDT
+    /// Removed (were expired PTs + sUSN): sUSN/USDC, PT-savUSD-14MAY2026, PT-sNUSD-4JUN2026, PT-reUSD-25JUN2026
     function generateProdSv4Morpho() public {
         Vault vault = Vault(payable(VAULT_PROD));
         address subvault = vault.subvaultAt(4);
-        bytes32[] memory marketIds = new bytes32[](7);
+        bytes32[] memory marketIds = new bytes32[](14);
         marketIds[0] = SV2_MARKET_SNUSD_USDC;
         marketIds[1] = SV2_MARKET_REUSD_USDC;
         marketIds[2] = SV2_MARKET_SAVUSD_USDC;
-        marketIds[3] = MARKET_SUSN_USDC;
-        marketIds[4] = MARKET_PT_SAVUSD_USDC;
-        marketIds[5] = MARKET_PT_SNUSD_4JUN2026_USDC;
-        marketIds[6] = MARKET_PT_REUSD_25JUN2026_USDC;
+        marketIds[3] = MARKET_PT_REUSD_10DEC2026_USDC;
+        marketIds[4] = MARKET_USD3_USDC;
+        marketIds[5] = MARKET_AA_FALCONX_USDC;
+        marketIds[6] = MARKET_CBBTC_USDC;
+        marketIds[7] = MARKET_XAUT_USDT;
+        marketIds[8] = MARKET_WSTETH_USDC;
+        marketIds[9] = MARKET_WBTC_USDC;
+        marketIds[10] = MARKET_WETH_USDC;
+        marketIds[11] = MARKET_WETH_USDT;
+        marketIds[12] = MARKET_WBTC_USDT;
+        marketIds[13] = MARKET_WSTETH_USDT;
         generateJSON("prod/tqETH/sv4-morphoOps", subvault, prodCurator, marketIds);
     }
 

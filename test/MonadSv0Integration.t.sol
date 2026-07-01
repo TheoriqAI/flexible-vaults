@@ -73,6 +73,21 @@ contract MonadSv0IntegrationTest is Test {
     bytes32 merkleRoot;
     string json;
 
+    // ---- Group-offset index map (group order == merge_metadata.sources order in sv0 all.json) ----
+    // Proof indices are addressed as _g(FILE, offsetWithinGroup). Group START indices are read from
+    // the merged JSON's merge_metadata at setUp — never hardcoded — so appending/inserting an op in
+    // one per-protocol file and re-merging only shifts downstream group starts automatically.
+    // See CLAUDE.md §"Group-offset test indices".
+    string constant F_EULER0 = "monad:tqMON:prod:sv0:eulerOps.json";
+    string constant F_SWAP0 = "monad:tqMON:prod:sv0:swapModule.json";
+    string constant F_NTT0 = "monad:tqMON:prod:sv0:nttBridge.json";
+    string constant F_CCIP0 = "monad:tqMON:prod:sv0:ccipBridge.json";
+    string constant F_CCTP0 = "monad:tqMON:prod:sv0:cctpBridge.json";
+    string constant F_MORPHO0 = "monad:tqMON:prod:sv0:morphoOps.json";
+    string constant F_MERKL0 = "monad:tqMON:prod:sv0:merklClaim.json";
+
+    mapping(bytes32 => uint256) internal _groupStart;
+
     function setUp() public {
         vm.createSelectFork("https://rpc.monad.xyz");
 
@@ -104,6 +119,25 @@ contract MonadSv0IntegrationTest is Test {
 
         require(verifier.merkleRoot() == merkleRoot, "Merkle root mismatch");
         console.log("Merkle root set on verifier");
+
+        _loadGroupOffsets();
+    }
+
+    /// @dev Builds groupStart[file] from the merged JSON's merge_metadata.sources (in merge order).
+    function _loadGroupOffsets() internal {
+        uint256 acc = 0;
+        uint256 n = vm.parseJsonUint(json, ".merge_metadata.source_count");
+        for (uint256 i = 0; i < n; i++) {
+            string memory b = string.concat(".merge_metadata.sources[", vm.toString(i), "]");
+            string memory fn = vm.parseJsonString(json, string.concat(b, ".filename"));
+            _groupStart[keccak256(bytes(fn))] = acc;
+            acc += vm.parseJsonUint(json, string.concat(b, ".op_count"));
+        }
+    }
+
+    /// @dev Absolute proof index for op `off` within per-protocol group `file`.
+    function _g(string memory file, uint256 off) internal view returns (uint256) {
+        return _groupStart[keccak256(bytes(file))] + off;
     }
 
     function _waitForRPC() internal {
@@ -145,41 +179,41 @@ contract MonadSv0IntegrationTest is Test {
         deal(Constants.WSTETH, subvault0, 1 ether);
 
         // --- USDC supply (indices 0, 1, 2) ---
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)), 0);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)), _g(F_EULER0, 0));
         console.log("USDC approve for Euler - SUCCESS");
         _waitForRPC();
 
-        _exec(EULER_USDC, 0, abi.encodeCall(IERC4626.deposit, (500e6, subvault0)), 1);
+        _exec(EULER_USDC, 0, abi.encodeCall(IERC4626.deposit, (500e6, subvault0)), _g(F_EULER0, 1));
         console.log("USDC deposit to Euler - SUCCESS");
         _waitForRPC();
 
-        _exec(EULER_USDC, 0, abi.encodeCall(IERC4626.withdraw, (100e6, subvault0, subvault0)), 2);
+        _exec(EULER_USDC, 0, abi.encodeCall(IERC4626.withdraw, (100e6, subvault0, subvault0)), _g(F_EULER0, 2));
         console.log("USDC withdraw from Euler - SUCCESS");
         _waitForRPC();
 
         // --- WETH supply (indices 3, 4, 5) ---
-        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (EULER_WETH, type(uint256).max)), 3);
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (EULER_WETH, type(uint256).max)), _g(F_EULER0, 3));
         console.log("WETH approve for Euler - SUCCESS");
         _waitForRPC();
 
-        _exec(EULER_WETH, 0, abi.encodeCall(IERC4626.deposit, (1 ether, subvault0)), 4);
+        _exec(EULER_WETH, 0, abi.encodeCall(IERC4626.deposit, (1 ether, subvault0)), _g(F_EULER0, 4));
         console.log("WETH deposit to Euler - SUCCESS");
         _waitForRPC();
 
-        _exec(EULER_WETH, 0, abi.encodeCall(IERC4626.withdraw, (0.5 ether, subvault0, subvault0)), 5);
+        _exec(EULER_WETH, 0, abi.encodeCall(IERC4626.withdraw, (0.5 ether, subvault0, subvault0)), _g(F_EULER0, 5));
         console.log("WETH withdraw from Euler - SUCCESS");
         _waitForRPC();
 
         // --- wstETH supply (indices 6, 7, 8) ---
-        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (EULER_WSTETH, type(uint256).max)), 6);
+        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (EULER_WSTETH, type(uint256).max)), _g(F_EULER0, 6));
         console.log("wstETH approve for Euler - SUCCESS");
         _waitForRPC();
 
-        _exec(EULER_WSTETH, 0, abi.encodeCall(IERC4626.deposit, (0.5 ether, subvault0)), 7);
+        _exec(EULER_WSTETH, 0, abi.encodeCall(IERC4626.deposit, (0.5 ether, subvault0)), _g(F_EULER0, 7));
         console.log("wstETH deposit to Euler - SUCCESS");
         _waitForRPC();
 
-        _exec(EULER_WSTETH, 0, abi.encodeCall(IERC4626.withdraw, (0.2 ether, subvault0, subvault0)), 8);
+        _exec(EULER_WSTETH, 0, abi.encodeCall(IERC4626.withdraw, (0.2 ether, subvault0, subvault0)), _g(F_EULER0, 8));
         console.log("wstETH withdraw from Euler - SUCCESS");
 
         console.log("\n=== All Euler Supply/Withdraw Tests Passed ===");
@@ -196,7 +230,7 @@ contract MonadSv0IntegrationTest is Test {
         deal(Constants.WETH, subvault0, 5 ether);
 
         // Setup EVC: enable USDC as collateral, enable WETH vault as controller
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_USDC)), 17);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_USDC)), _g(F_EULER0, 17));
         console.log("EVC enableCollateral(USDC) - SUCCESS");
         _waitForRPC();
 
@@ -204,7 +238,7 @@ contract MonadSv0IntegrationTest is Test {
         try ICallModule(subvault0).call(
             Constants.EULER_EVC, 0,
             abi.encodeCall(IEVC.enableController, (subvault0, EULER_WETH)),
-            _payload(23)
+            _payload(_g(F_EULER0, 23))
         ) {
             console.log("EVC enableController(WETH) - SUCCESS");
         } catch {
@@ -214,27 +248,27 @@ contract MonadSv0IntegrationTest is Test {
         _waitForRPC();
 
         // Supply USDC as collateral
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)), 0);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)), _g(F_EULER0, 0));
         _waitForRPC();
-        _exec(EULER_USDC, 0, abi.encodeCall(IERC4626.deposit, (5000e6, subvault0)), 1);
+        _exec(EULER_USDC, 0, abi.encodeCall(IERC4626.deposit, (5000e6, subvault0)), _g(F_EULER0, 1));
         console.log("USDC deposited as collateral - SUCCESS");
         _waitForRPC();
 
         // Borrow WETH (index 9 = approve, 10 = borrow)
-        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (EULER_WETH, type(uint256).max)), 9);
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (EULER_WETH, type(uint256).max)), _g(F_EULER0, 9));
         _waitForRPC();
 
-        _exec(EULER_WETH, 0, abi.encodeCall(IEulerVault.borrow, (0.01 ether, subvault0)), 10);
+        _exec(EULER_WETH, 0, abi.encodeCall(IEulerVault.borrow, (0.01 ether, subvault0)), _g(F_EULER0, 10));
         console.log("WETH borrow - SUCCESS");
         _waitForRPC();
 
         // Repay WETH (index 11)
-        _exec(EULER_WETH, 0, abi.encodeCall(IEulerVault.repay, (0.01 ether, subvault0)), 11);
+        _exec(EULER_WETH, 0, abi.encodeCall(IEulerVault.repay, (0.01 ether, subvault0)), _g(F_EULER0, 11));
         console.log("WETH repay - SUCCESS");
         _waitForRPC();
 
         // Disable controller (index 25)
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableController, (subvault0)), 25);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableController, (subvault0)), _g(F_EULER0, 25));
         console.log("EVC disableController - SUCCESS");
 
         console.log("\n=== All Euler Borrow/Repay Tests Passed ===");
@@ -248,39 +282,39 @@ contract MonadSv0IntegrationTest is Test {
         console.log("\n=== Testing Monad SV0 - EVC Operations ===");
 
         // Enable collateral for all 3 vaults (indices 17, 19, 21)
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_USDC)), 17);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_USDC)), _g(F_EULER0, 17));
         console.log("enableCollateral(USDC) - SUCCESS");
         _waitForRPC();
 
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_WETH)), 19);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_WETH)), _g(F_EULER0, 19));
         console.log("enableCollateral(WETH) - SUCCESS");
         _waitForRPC();
 
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_WSTETH)), 21);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableCollateral, (subvault0, EULER_WSTETH)), _g(F_EULER0, 21));
         console.log("enableCollateral(wstETH) - SUCCESS");
         _waitForRPC();
 
         // Disable collateral (indices 18, 20, 22)
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableCollateral, (subvault0, EULER_USDC)), 18);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableCollateral, (subvault0, EULER_USDC)), _g(F_EULER0, 18));
         console.log("disableCollateral(USDC) - SUCCESS");
         _waitForRPC();
 
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableCollateral, (subvault0, EULER_WETH)), 20);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableCollateral, (subvault0, EULER_WETH)), _g(F_EULER0, 20));
         console.log("disableCollateral(WETH) - SUCCESS");
         _waitForRPC();
 
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableCollateral, (subvault0, EULER_WSTETH)), 22);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableCollateral, (subvault0, EULER_WSTETH)), _g(F_EULER0, 22));
         console.log("disableCollateral(wstETH) - SUCCESS");
         _waitForRPC();
 
         // Enable/disable controller for WETH (indices 23, 25)
         // Note: enableController triggers a vault status check callback on the controller vault.
         // WETH controller is tested here; USDC controller is validated in the borrow/repay test.
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableController, (subvault0, EULER_WETH)), 23);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.enableController, (subvault0, EULER_WETH)), _g(F_EULER0, 23));
         console.log("enableController(WETH) - SUCCESS");
         _waitForRPC();
 
-        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableController, (subvault0)), 25);
+        _exec(Constants.EULER_EVC, 0, abi.encodeCall(IEVC.disableController, (subvault0)), _g(F_EULER0, 25));
         console.log("disableController - SUCCESS");
 
         console.log("\n=== All EVC Operations Tests Passed ===");
@@ -295,28 +329,28 @@ contract MonadSv0IntegrationTest is Test {
         deal(Constants.USDC, subvault0, 1000e6);
 
         // WMON push/pull (indices 26, 27, 28)
-        _exec(Constants.WMON, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 26);
+        _exec(Constants.WMON, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), _g(F_SWAP0, 0));
         console.log("WMON approve for SwapModule - SUCCESS");
         _waitForRPC();
 
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.WMON, 1 ether)), 27);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.WMON, 1 ether)), _g(F_SWAP0, 1));
         console.log("WMON pushAssets - SUCCESS");
         _waitForRPC();
 
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.WMON, 0.5 ether)), 28);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.WMON, 0.5 ether)), _g(F_SWAP0, 2));
         console.log("WMON pullAssets - SUCCESS");
         _waitForRPC();
 
         // USDC push/pull (indices 31, 32, 33)
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), 31);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (SWAP_MODULE, type(uint256).max)), _g(F_SWAP0, 5));
         console.log("USDC approve for SwapModule - SUCCESS");
         _waitForRPC();
 
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.USDC, 100e6)), 32);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pushAssets, (Constants.USDC, 100e6)), _g(F_SWAP0, 6));
         console.log("USDC pushAssets - SUCCESS");
         _waitForRPC();
 
-        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.USDC, 50e6)), 33);
+        _exec(SWAP_MODULE, 0, abi.encodeCall(ISwapModule.pullAssets, (Constants.USDC, 50e6)), _g(F_SWAP0, 7));
         console.log("USDC pullAssets - SUCCESS");
 
         console.log("\n=== All SwapModule Tests Passed ===");
@@ -333,7 +367,7 @@ contract MonadSv0IntegrationTest is Test {
         _exec(
             Constants.USDC, 0,
             abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)),
-            41
+            _g(F_CCTP0, 0)
         );
         console.log("USDC approve for TokenMessengerV2 - SUCCESS");
         _waitForRPC();
@@ -348,7 +382,7 @@ contract MonadSv0IntegrationTest is Test {
                 ITokenMessengerV2.depositForBurn,
                 (100e6, Constants.CCTP_ETHEREUM_DOMAIN, mintRecipient, Constants.USDC, bytes32(0), 0, 0)
             ),
-            42
+            _g(F_CCTP0, 1)
         );
 
         uint256 usdcAfter = IERC20(Constants.USDC).balanceOf(subvault0);
@@ -365,17 +399,17 @@ contract MonadSv0IntegrationTest is Test {
         console.log("\n=== Testing Monad SV0 - Bridge Approves ===");
 
         // NTT: Approve WETH for NTT router (index 37)
-        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (NTT_ROUTER, type(uint256).max)), 37);
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (NTT_ROUTER, type(uint256).max)), _g(F_NTT0, 0));
         console.log("WETH approve for NTT Router - SUCCESS");
         _waitForRPC();
 
         // CCIP: Approve wstETH for CCIP router (index 39)
-        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (CCIP_ROUTER, type(uint256).max)), 39);
+        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (CCIP_ROUTER, type(uint256).max)), _g(F_CCIP0, 0));
         console.log("wstETH approve for CCIP Router - SUCCESS");
         _waitForRPC();
 
         // CCTP: Approve USDC for TokenMessengerV2 (index 41)
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)), 41);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)), _g(F_CCTP0, 0));
         console.log("USDC approve for CCTP TokenMessengerV2 - SUCCESS");
 
         console.log("\n=== All Bridge Approve Tests Passed ===");
@@ -397,7 +431,7 @@ contract MonadSv0IntegrationTest is Test {
         deal(Constants.USDC, subvault0, 1000e6);
 
         // Approve USDC to Morpho (index 44)
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (MORPHO, type(uint256).max)), 44);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (MORPHO, type(uint256).max)), _g(F_MORPHO0, 1));
         console.log("USDC approve for Morpho - SUCCESS");
         _waitForRPC();
 
@@ -406,7 +440,7 @@ contract MonadSv0IntegrationTest is Test {
         _exec(
             MORPHO, 0,
             abi.encodeCall(IMorpho.supply, (params, 100e6, 0, subvault0, "")),
-            45
+            _g(F_MORPHO0, 2)
         );
         uint256 usdcAfter = IERC20(Constants.USDC).balanceOf(subvault0);
         console.log("USDC supplied to Morpho:", usdcBefore - usdcAfter);
@@ -419,7 +453,7 @@ contract MonadSv0IntegrationTest is Test {
         _exec(
             MORPHO, 0,
             abi.encodeCall(IMorpho.withdraw, (params, 50e6, 0, subvault0, subvault0)),
-            49
+            _g(F_MORPHO0, 6)
         );
         usdcAfter = IERC20(Constants.USDC).balanceOf(subvault0);
         console.log("USDC withdrawn from Morpho:", usdcAfter - usdcBefore);
@@ -438,7 +472,7 @@ contract MonadSv0IntegrationTest is Test {
         _exec(
             MERKL_DISTRIBUTOR, 0,
             abi.encodeWithSelector(0xbdac7ca3, subvault0, prodCurator),
-            67
+            _g(F_MERKL0, 0)
         );
         console.log("toggleOperator(subvault, curator) - SUCCESS");
 
@@ -453,7 +487,7 @@ contract MonadSv0IntegrationTest is Test {
 
         deal(Constants.USDC, subvault0, 1000e6);
 
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)), 0);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)), _g(F_EULER0, 0));
         _waitForRPC();
 
         // Try deposit to wrong recipient (should revert — bitmask locks receiver to subvault)
@@ -463,7 +497,7 @@ contract MonadSv0IntegrationTest is Test {
         ICallModule(subvault0).call(
             EULER_USDC, 0,
             abi.encodeCall(IERC4626.deposit, (100e6, wrongRecipient)),
-            _payload(1)
+            _payload(_g(F_EULER0, 1))
         );
         console.log("Wrong Euler recipient REVERTED as expected - SUCCESS");
     }
@@ -474,7 +508,7 @@ contract MonadSv0IntegrationTest is Test {
 
         deal(Constants.USDC, subvault0, 1000e6);
 
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)), 41);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)), _g(F_CCTP0, 0));
         _waitForRPC();
 
         bytes32 wrongRecipient = bytes32(uint256(uint160(address(0xdead))));
@@ -487,7 +521,7 @@ contract MonadSv0IntegrationTest is Test {
                 ITokenMessengerV2.depositForBurn,
                 (100e6, Constants.CCTP_ETHEREUM_DOMAIN, wrongRecipient, Constants.USDC, bytes32(0), 0, 0)
             ),
-            _payload(42)
+            _payload(_g(F_CCTP0, 1))
         );
         console.log("Wrong CCTP recipient REVERTED as expected - SUCCESS");
     }
@@ -498,7 +532,7 @@ contract MonadSv0IntegrationTest is Test {
 
         deal(Constants.USDC, subvault0, 1000e6);
 
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)), 41);
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (CCTP_TOKEN_MESSENGER, type(uint256).max)), _g(F_CCTP0, 0));
         _waitForRPC();
 
         bytes32 mintRecipient = bytes32(uint256(uint160(ETH_SV4)));
@@ -511,7 +545,7 @@ contract MonadSv0IntegrationTest is Test {
                 ITokenMessengerV2.depositForBurn,
                 (100e6, uint32(99), mintRecipient, Constants.USDC, bytes32(0), 0, 0) // wrong domain
             ),
-            _payload(42)
+            _payload(_g(F_CCTP0, 1))
         );
         console.log("Wrong CCTP domain REVERTED as expected - SUCCESS");
     }
@@ -527,7 +561,7 @@ contract MonadSv0IntegrationTest is Test {
         ICallModule(subvault0).call(
             Constants.USDC, 0,
             abi.encodeCall(IERC20.approve, (EULER_USDC, type(uint256).max)),
-            _payload(0)
+            _payload(_g(F_EULER0, 0))
         );
         console.log("Non-curator access REVERTED as expected - SUCCESS");
     }
@@ -543,7 +577,7 @@ contract MonadSv0IntegrationTest is Test {
         deal(Constants.WETH, subvault0, 1 ether);
 
         // 1. WETH approve to NTT router (index 37)
-        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (NTT_ROUTER, type(uint256).max)), 37);
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (NTT_ROUTER, type(uint256).max)), _g(F_NTT0, 0));
         console.log("WETH approve for NTT Router - SUCCESS");
         _waitForRPC();
 
@@ -582,7 +616,7 @@ contract MonadSv0IntegrationTest is Test {
         vm.deal(subvault0, callValue + 1 ether);
 
         vm.prank(prodCurator);
-        ICallModule(subvault0).call(NTT_ROUTER, callValue, callData, _payload(38));
+        ICallModule(subvault0).call(NTT_ROUTER, callValue, callData, _payload(_g(F_NTT0, 1)));
         console.log("NTT transfer call - SUCCESS");
 
         console.log("\n=== Monad SV0 NTT Bridge Test Passed ===");

@@ -1,6 +1,63 @@
 {
-  "title": "monad:tqETH:prod:sv0:all",
+  "title": "monad:tqMON:prod:sv0:all",
   "merkle_root": "0x7275f345f55cbe2f8cb73bddc53dc90dac7722a61248a40d06afbada60a14c27",
+  "merge_metadata": {
+    "merged_at_utc": "2026-06-29T15:01:51+00:00",
+    "merged_at_unix": 1782745311,
+    "total_ops": 68,
+    "source_count": 7,
+    "sources": [
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:eulerOps.json",
+        "filename": "monad:tqMON:prod:sv0:eulerOps.json",
+        "title": "monad:tqMON:prod:sv0:eulerOps",
+        "merkle_root": "0x751600f4b142c6d96e68504270da2caf33070e459409fddd4d3d8460a1bde993",
+        "op_count": 26
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:swapModule.json",
+        "filename": "monad:tqMON:prod:sv0:swapModule.json",
+        "title": "monad:tqMON:prod:sv0:swapModule",
+        "merkle_root": "0x973032efba9e210a76e922dda83fd3b20873148bd168e3735572427cb77e5280",
+        "op_count": 11
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:nttBridge.json",
+        "filename": "monad:tqMON:prod:sv0:nttBridge.json",
+        "title": "monad:tqMON:prod:sv0:nttBridge",
+        "merkle_root": "0x6b7fe756c01007dd1009736f0a8689cf5b2ed8fc8d5a8a2cf1d8a6298632f24a",
+        "op_count": 2
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:ccipBridge.json",
+        "filename": "monad:tqMON:prod:sv0:ccipBridge.json",
+        "title": "monad:tqMON:prod:sv0:ccipBridge",
+        "merkle_root": "0x6498a85b71f4bdfaec2463c50220b381bc9a3a96b55d120eb3421cc8ae29accf",
+        "op_count": 2
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:cctpBridge.json",
+        "filename": "monad:tqMON:prod:sv0:cctpBridge.json",
+        "title": "monad:tqMON:prod:sv0:cctpBridge",
+        "merkle_root": "0x2d095542e5faf3eacc871ad7b7d3a55cceba9cb85b5d8c94e41832ae713d076b",
+        "op_count": 2
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:morphoOps.json",
+        "filename": "monad:tqMON:prod:sv0:morphoOps.json",
+        "title": "monad:tqMON:prod:sv0:morphoOps",
+        "merkle_root": "0x01019b749155eef0497b7ff88cb1ddf581e3aa34998ed07c4d5d9cc2ba396da5",
+        "op_count": 24
+      },
+      {
+        "path": "scripts/jsons/prod/tqETH/monad:tqMON:prod:sv0:merklClaim.json",
+        "filename": "monad:tqMON:prod:sv0:merklClaim.json",
+        "title": "monad:tqMON:prod:sv0:merklClaim",
+        "merkle_root": "0xc1e6e2fc9b7e54740039a653bb93da015260090c85d44ec6d39ee21ab335a523",
+        "op_count": 1
+      }
+    ]
+  },
   "merkle_proofs": [
     {
       "verificationType": 3,
