@@ -390,15 +390,31 @@ contract ProdSv4EMode44IntegrationTest is Test {
         console.log("\n=== Testing Prod SV4 - Aave eMode 24 Operations ===");
 
         deal(Constants.SUSDE, subvault4, 20 ether);
+        deal(Constants.WSTETH, subvault4, 20 ether);
+        deal(Constants.WETH, subvault4, 20 ether);
 
-        // sUSDe collateral (offsets 1, 2)
+        // sUSDe collateral (approve 1, supply 2) — eMode-24 boosted collateral
         _exec(Constants.SUSDE, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 1));
         _waitForRPC();
         _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.SUSDE, 5 ether, subvault4, 0)), _g(F_AAVE, 2));
         console.log("sUSDe supply - SUCCESS");
         _waitForRPC();
 
-        // Set eMode 24 (offset 0)
+        // wstETH collateral (approve 4, supply 5) — base-param (non-eMode) collateral; ETH vault needs this
+        _exec(Constants.WSTETH, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 4));
+        _waitForRPC();
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.WSTETH, 5 ether, subvault4, 0)), _g(F_AAVE, 5));
+        console.log("wstETH supply - SUCCESS");
+        _waitForRPC();
+
+        // WETH collateral (approve 7, supply 8)
+        _exec(Constants.WETH, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 7));
+        _waitForRPC();
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.supply, (Constants.WETH, 5 ether, subvault4, 0)), _g(F_AAVE, 8));
+        console.log("WETH supply - SUCCESS");
+        _waitForRPC();
+
+        // Set eMode 24 (offset 0) — sUSDe becomes boosted; wstETH/WETH stay base-param collateral (V3.2 liquid eMode)
         _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.setUserEMode, (24)), _g(F_AAVE, 0));
         console.log("Set eMode 24 - SUCCESS");
         _waitForRPC();
@@ -406,44 +422,50 @@ contract ProdSv4EMode44IntegrationTest is Test {
         (uint256 totalCollateral,,,,,) = IAavePoolV3(Constants.AAVE_CORE).getUserAccountData(subvault4);
         require(totalCollateral > 0, "Should have collateral");
 
-        // USDe borrow/repay (offsets 4, 5, 6)
-        _exec(Constants.USDE, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 4));
+        // USDe borrow/repay (10, 11, 12)
+        _exec(Constants.USDE, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 10));
         _waitForRPC();
-        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDE, 1e18, 2, 0, subvault4)), _g(F_AAVE, 5));
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDE, 1e18, 2, 0, subvault4)), _g(F_AAVE, 11));
         console.log("USDe borrow - SUCCESS");
         _waitForRPC();
-        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDE, 1e18, 2, subvault4)), _g(F_AAVE, 6));
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDE, 1e18, 2, subvault4)), _g(F_AAVE, 12));
         console.log("USDe repay - SUCCESS");
         _waitForRPC();
 
-        // USDC borrow/repay (offsets 7, 8, 9)
-        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 7));
+        // USDC borrow/repay (13, 14, 15)
+        _exec(Constants.USDC, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 13));
         _waitForRPC();
-        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDC, 1e6, 2, 0, subvault4)), _g(F_AAVE, 8));
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDC, 1e6, 2, 0, subvault4)), _g(F_AAVE, 14));
         console.log("USDC borrow - SUCCESS");
         _waitForRPC();
-        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDC, 1e6, 2, subvault4)), _g(F_AAVE, 9));
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDC, 1e6, 2, subvault4)), _g(F_AAVE, 15));
         console.log("USDC repay - SUCCESS");
         _waitForRPC();
 
-        // USDT borrow/repay (offsets 10, 11, 12) — reset residual USDT->pool allowance (non-zero->non-zero quirk)
+        // USDT borrow/repay (16, 17, 18) — reset residual USDT->pool allowance (non-zero->non-zero quirk)
         vm.prank(subvault4);
         (bool _r,) = Constants.USDT.call(abi.encodeWithSelector(IERC20.approve.selector, Constants.AAVE_CORE, uint256(0)));
         _r;
-        _exec(Constants.USDT, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 10));
+        _exec(Constants.USDT, 0, abi.encodeCall(IERC20.approve, (Constants.AAVE_CORE, type(uint256).max)), _g(F_AAVE, 16));
         _waitForRPC();
-        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDT, 1e6, 2, 0, subvault4)), _g(F_AAVE, 11));
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.borrow, (Constants.USDT, 1e6, 2, 0, subvault4)), _g(F_AAVE, 17));
         console.log("USDT borrow - SUCCESS");
         _waitForRPC();
-        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDT, 1e6, 2, subvault4)), _g(F_AAVE, 12));
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.repay, (Constants.USDT, 1e6, 2, subvault4)), _g(F_AAVE, 18));
         console.log("USDT repay - SUCCESS");
         _waitForRPC();
 
-        // withdraw sUSDe collateral (offset 3)
+        // withdraw collateral: sUSDe (3), wstETH (6), WETH (9)
         _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.SUSDE, 1 ether, subvault4)), _g(F_AAVE, 3));
         console.log("sUSDe withdraw - SUCCESS");
+        _waitForRPC();
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.WSTETH, 1 ether, subvault4)), _g(F_AAVE, 6));
+        console.log("wstETH withdraw - SUCCESS");
+        _waitForRPC();
+        _exec(Constants.AAVE_CORE, 0, abi.encodeCall(IAavePoolV3.withdraw, (Constants.WETH, 1 ether, subvault4)), _g(F_AAVE, 9));
+        console.log("WETH withdraw - SUCCESS");
 
-        console.log("\n=== All Aave eMode 24 Tests Passed ===");
+        console.log("\n=== All Aave eMode 24 Tests Passed (sUSDe + wstETH + WETH collateral) ===");
     }
 
     // =================== MORPHO TESTS ===================

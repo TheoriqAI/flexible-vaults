@@ -4,6 +4,8 @@ This is a Mellow tqETH flexible-vaults fork. Work centers on generating merkle-r
 
 > **Repo root:** `/Users/jpickett713/theoriq/flexible-vaults` (use this in every `cd`/path — older docs referenced a `chainML/forks` path that no longer applies).
 
+> ⛔ **BEFORE changing any permission JSON, read [`PERMISSION_GUARDRAILS.md`](PERMISSION_GUARDRAILS.md).** Permission changes are **additive by default** — never remove/narrow an allowed asset or op unless the user explicitly names it. Config/eMode switches are NOT a reason to drop leaves. wstETH + WETH must always stay as Aave/Spark collateral (ETH vault).
+
 ---
 
 ## 0. Mental model — how a permission becomes a merkle leaf
@@ -258,23 +260,25 @@ python3 scripts/merge_jsons_new.py ethereum:tqETH:prod:sv4:all \
 
 > Always re-derive these from `merge_metadata.sources` after a merge; the snapshots below are point-in-time.
 
-#### SV4 — **307 ops** (Jun 2026 expansion), root `0x9c30020e85f7f73f7dd98a40bbf3fc81909cd113be1eec3118979b75af3142a1`
+#### SV4 — **313 ops** (Jun–Jul 2026 expansion), root `0x702414b8216d459f200c74d2e529090f0677e63be958e1a83f623d81507a9c1a`
 | Start | Source file | Ops | Contents |
 |-------|-------------|-----|----------|
-| 0 | `sv4-aaveOps-emode24.json` | 13 | **Aave eMode 24** (sUSDe coll, borrow USDe/USDC/USDT). *Replaced eMode 44 — its PT-srUSDe collateral expired* |
-| 13 | `sv4-morphoOps.json` | 112 | **Morpho 14 markets** (3 stables + PT-reUSD-10DEC + USD3 + AA_FalconX + cbBTC + XAUt + wstETH/WBTC/WETH×USDC/USDT). *Removed sUSN + 3 expired PTs* |
-| 125 | `sv4-swapModule.json` | 41 | SwapModule 14 assets (added sNUSD/USD3/reUSDe/sUSD3) |
-| 166 | `sv4-pendlePT.json` | 58 | Pendle 12 strategies (4 expired→exit-only; live: Sierra-01JUL/06AUG, USDG, nOPAL, reUSDe, USD3, sUSD3, reUSD) |
-| 224 | `sv4-pendleLp.json` | 33 | **Pendle LP** (add/remove single-token + 1 reward claim) on 8 live markets — full `0xff` locks |
-| 257 | `sv4-withdrawals.json` | 19 | Lido/sUSDe/sNUSD/srUSDe + **USD3 (4) + sUSD3 (5, `startCooldown`)** |
-| 276 | `sv4-cctpBridge-USDC-monad.json` | 2 | CCTP USDC → Monad |
-| 278 | `sv4-sparkOps-emode0.json` | 19 | Spark eMode 0 |
-| 297 | `sv4-nest.json` | 10 | **Nest nOPAL** deposit (predicate proxy, 644-byte leaf) + redeem (USDC+USDT vaults: requestRedeem/redeem/updateRedeem) |
+| 0 | `sv4-aaveOps-emode24.json` | 19 | **Aave eMode 24** — collateral **sUSDe (boosted) + wstETH + WETH** (base-param, V3.2 liquid eMode), borrow USDe/USDC/USDT. *Replaced eMode 44 (expired PT-srUSDe coll); wstETH/WETH restored — it's an ETH vault* |
+| 19 | `sv4-morphoOps.json` | 112 | **Morpho 14 markets** (3 stables + PT-reUSD-10DEC + USD3 + AA_FalconX + cbBTC + XAUt + wstETH/WBTC/WETH×USDC/USDT). *Removed sUSN + 3 expired PTs* |
+| 131 | `sv4-swapModule.json` | 41 | SwapModule 14 assets (added sNUSD/USD3/reUSDe/sUSD3) |
+| 172 | `sv4-pendlePT.json` | 58 | Pendle 12 strategies (4 expired→exit-only; live: Sierra-01JUL/06AUG, USDG, nOPAL, reUSDe, USD3, sUSD3, reUSD) |
+| 230 | `sv4-pendleLp.json` | 33 | **Pendle LP** (add/remove single-token + 1 reward claim) on 8 live markets — full `0xff` locks |
+| 263 | `sv4-withdrawals.json` | 19 | Lido/sUSDe/sNUSD/srUSDe + **USD3 (4) + sUSD3 (5, `startCooldown`)** |
+| 282 | `sv4-cctpBridge-USDC-monad.json` | 2 | CCTP USDC → Monad |
+| 284 | `sv4-sparkOps-emode0.json` | 19 | Spark eMode 0 |
+| 303 | `sv4-nest.json` | 10 | **Nest nOPAL** deposit (predicate proxy, 644-byte leaf) + redeem (USDC+USDT vaults: requestRedeem/redeem/updateRedeem) |
 
-> Older root snapshots: `0x1e0613…` (164), `0xdae750…` (165). Always re-derive group starts from `merge_metadata.sources` and **verify `verifier4.merkleRoot()` on-chain before any rotation.**
+Aave group (19 ops) offsets: `0` setUserEMode(24); `1-3` sUSDe approve/supply/withdraw; `4-6` wstETH; `7-9` WETH; `10-12` USDe approve/borrow/repay; `13-15` USDC; `16-18` USDT.
+
+> Older root snapshots: `0x9c3002…` (307, before wstETH/WETH Aave collateral), `0x1e0613…` (164), `0xdae750…` (165). Always re-derive group starts from `merge_metadata.sources` and **verify `verifier4.merkleRoot()` on-chain before any rotation.**
 
 **Open TODOs / operational notes for this SV4 expansion:**
-- **Test migration pending** — the SV4 test suite needs updating for the changed groups (Aave eMode24, Morpho 14 markets, Pendle PT exit-only + new, Pendle LP, withdrawals USD3/sUSD3, Nest, SwapModule 4 tokens). CCTP/Spark tests auto-pass via `_g`.
+- **Test suite migrated + green** — full SV4 suite (12/12) passes at head against the 313-op root; run with `--skip PermissionedChainlink --gas-limit 9000000000000000000`.
 - **SwapModule roles (mainnet op)** — admin `0x8907D6089fC71AA6a9a7bb9EC5b1170e92489ebf` must `grantRole(TOKEN_IN_ROLE/TOKEN_OUT_ROLE, token)` for sNUSD/USD3/reUSDe/sUSD3 so swaps validate (push/pull work from the root alone). Separate from rotating the root.
 - **TODO: fix existing PT-swap masking** — `PendleLibrary._makeSwap*` masks locked addresses with the address value (partial lock) and wildcards `pendleSwap`/`extRouter` (`mask=0`) — the "no external router" lock is *not* enforced (medium-high: a curator could route swap inputs through an arbitrary aggregator). The new `GeneratePendleLpJSON` uses correct full `type(uint160).max` locks; fold the same into `PendleLibrary` and regen `sv4-pendlePT.json`.
 - **Large generations need `--gas-limit 9000000000000000000`** — the O(n²) JSON-string builder hits `MemoryOOG` above ~80 ops (Morpho 112, etc.).
